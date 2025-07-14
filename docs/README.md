@@ -1,7 +1,3 @@
-<div align="center">
-  <img src="../assets/entain-logo.png" alt="Entain Logo" width="200">
-</div>
-
 # Angular MCP Toolkit Documentation
 
 Welcome to the Angular MCP (Model Context Protocol) Toolkit documentation! This toolkit provides tools for Angular development, focusing on design system migration, component refactoring, and code analysis.

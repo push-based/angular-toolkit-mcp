@@ -1,7 +1,3 @@
-<div align="center">
-  <img src="assets/entain-logo.png" alt="Entain Logo" width="200">
-</div>
-
 # Angular Toolkit MCP
 
 A Model Context Protocol (MCP) server that provides Angular project analysis and refactoring capabilities. This server enables LLMs to analyze Angular projects for component usage patterns, dependency analysis, code quality issues, and provides automated refactoring assistance.
