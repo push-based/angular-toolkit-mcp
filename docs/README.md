@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="../assets/entain-logo.png" alt="Entain Logo" width="200">
+</div>
+
 # Angular MCP Toolkit Documentation
 
 Welcome to the Angular MCP (Model Context Protocol) Toolkit documentation! This toolkit provides tools for Angular development, focusing on design system migration, component refactoring, and code analysis.
@@ -100,5 +104,10 @@ If you're interested in contributing to the toolkit:
 - **Technical Details**: Consult [Architecture & Internal Design](architecture-internal-design.md)
 
 ---
+
+<div align="center">
+  <p><strong>Sponsored by</strong></p>
+  <img src="../assets/entain.png" alt="Entain" width="150">
+</div>
 
 *This toolkit is designed to work with Cursor IDE, but should also be compatible with other AI-powered development environments like Windsurf or GitHub Copilot.* 
