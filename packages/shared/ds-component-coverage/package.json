@@ -1,0 +1,79 @@
+{
+  "name": "@push-based/ds-component-coverage",
+  "version": "0.0.1",
+  "private": true,
+  "type": "commonjs",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "development": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "nx": {
+    "name": "ds-component-coverage",
+    "targets": {
+      "ds-component-coverage:demo": {
+        "command": "npx @code-pushup/cli collect --config=packages/shared/ds-component-coverage/mocks/fixtures/e2e/demo/code-pushup.config.ts",
+        "options": {
+          "onlyPlugins": "ds-component-coverage",
+          "progress": false
+        }
+      },
+      "ds-component-coverage:asset-location": {
+        "command": "npx @code-pushup/cli collect --config=packages/ds-component-coverage/mocks/fixtures/e2e/asset-location/code-pushup.config.ts",
+        "options": {
+          "onlyPlugins": "ds-component-coverage",
+          "progress": false
+        }
+      },
+      "ds-component-coverage:line-number": {
+        "command": "npx @code-pushup/cli collect --config=packages/ds-component-coverage/mocks/fixtures/e2e/line-number/code-pushup.config.ts",
+        "options": {
+          "onlyPlugins": "ds-component-coverage",
+          "progress": false
+        }
+      },
+      "ds-component-coverage:style-format": {
+        "command": "npx @code-pushup/cli collect --config=packages/ds-component-coverage/mocks/fixtures/e2e/style-format/code-pushup.config.ts",
+        "options": {
+          "onlyPlugins": "ds-component-coverage",
+          "progress": false
+        }
+      },
+      "ds-component-coverage:template-syntax": {
+        "command": "npx @code-pushup/cli collect --config=packages/ds-component-coverage/mocks/fixtures/e2e/template-syntax/code-pushup.config.ts",
+        "options": {
+          "onlyPlugins": "ds-component-coverage",
+          "progress": false
+        }
+      },
+      "ds-quality:demo": {
+        "command": "npx @code-pushup/cli collect --config=packages/ds-quality/mocks/fixtures/minimal-design-system/code-pushup.config.ts",
+        "options": {
+          "onlyPlugins": "ds-quality",
+          "progress": false
+        }
+      },
+      "ds-quality:variable-usage": {
+        "command": "npx @code-pushup/cli collect --config=packages/ds-quality/mocks/fixtures/variable-usage/code-pushup.config.ts",
+        "options": {
+          "onlyPlugins": "ds-quality",
+          "progress": false
+        }
+      },
+      "ds-quality:mixin-usage": {
+        "command": "npx @code-pushup/cli collect --config=packages/ds-quality/mocks/fixtures/mixin-usage/code-pushup.config.ts",
+        "options": {
+          "onlyPlugins": "ds-quality",
+          "progress": false
+        }
+      }
+    }
+  }
+}

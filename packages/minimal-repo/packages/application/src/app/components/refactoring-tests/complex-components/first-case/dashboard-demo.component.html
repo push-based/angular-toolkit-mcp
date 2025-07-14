@@ -1,0 +1,50 @@
+<div class="demo-container">
+  <app-dashboard-header
+    [badgeType]="'premium'"
+    [badgeSize]="'medium'"
+    [animated]="true"
+    [pulsing]="false"
+    [dismissible]="true"
+    [userProfile]="userProfile()"
+    [darkMode]="darkMode()"
+    (searchPerformed)="onSearchPerformed($event)"
+    (badgeDismissed)="onBadgeDismissed()"
+    (notificationClicked)="onNotificationClicked($event)"
+    (userActionClicked)="onUserActionClicked($event)"
+    (themeToggled)="onThemeToggled($event)">
+    
+    <!-- Custom icon for the offer badge -->
+    <span slot="start">⭐</span>
+    
+    <!-- Custom badge content -->
+    Premium Features Available!
+  </app-dashboard-header>
+  
+  <div class="demo-content">
+    <h2>Dashboard Content</h2>
+    <p>This is a demo of the complex dashboard header component.</p>
+    
+    <div class="demo-actions">
+      <button (click)="toggleTheme()" class="demo-button">
+        Toggle Theme (Current: {{ darkMode() ? 'Dark' : 'Light' }})
+      </button>
+      
+      <button (click)="changeUser()" class="demo-button">
+        Change User
+      </button>
+      
+      <button (click)="addNotification()" class="demo-button">
+        Add Notification
+      </button>
+    </div>
+    
+    <div class="demo-log">
+      <h3>Event Log:</h3>
+      <div class="log-entries">
+        @for (entry of eventLog(); track $index) {
+          <div class="log-entry">{{ entry }}</div>
+        }
+      </div>
+    </div>
+  </div>
+</div> 

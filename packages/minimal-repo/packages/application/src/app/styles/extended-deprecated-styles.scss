@@ -1,0 +1,505 @@
+// Extended stylesheet with nested and combined selectors for deprecated classes
+// This file demonstrates various ways deprecated classes might be used in real applications
+
+// Nested selectors for badge-related deprecated classes
+.container {
+  .pill-with-badge {
+    color: red;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    border-radius: 15px;
+    display: inline-block;
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+
+    &.active {
+      background-color: #e0e0e0;
+    }
+  }
+
+  .pill-with-badge-v2 {
+    color: blue;
+    border: 2px solid #aaa;
+    padding: 6px 12px;
+    border-radius: 20px;
+    display: inline-block;
+
+    &.large {
+      padding: 8px 16px;
+    }
+  }
+
+  .sports-pill {
+    color: green;
+    background-color: #f0f0f0;
+    padding: 8px 16px;
+    border-radius: 25px;
+    display: inline-block;
+
+    &.highlighted {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  .offer-badge {
+    color: yellow;
+    background-color: #333;
+    padding: 4px 8px;
+    border-radius: 10px;
+    display: inline-block;
+
+    &.urgent {
+      animation: pulse 1s infinite;
+    }
+  }
+}
+
+// Combined selectors for navigation deprecated classes
+.navigation-wrapper {
+  .tab-nav,
+  .nav-tabs {
+    padding: 10px;
+    border-bottom: 2px solid #ddd;
+
+    .tab-nav-item {
+      color: pink;
+      padding: 10px 15px;
+      border-radius: 5px;
+      display: inline-block;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #f5f5f5;
+      }
+
+      &.active {
+        background-color: #007bff;
+        color: white;
+      }
+    }
+  }
+
+  .tab-nav {
+    color: orange;
+    background-color: #fff;
+  }
+
+  .nav-tabs {
+    color: purple;
+    background-color: #eee;
+  }
+}
+
+// Nested button selectors
+.button-group {
+  .btn {
+    color: brown;
+    background-color: #f5f5f5;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #e0e0e0;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  .btn-primary {
+    color: cyan;
+    background-color: #007bff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+
+    &.loading {
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        border: 2px solid transparent;
+        border-top: 2px solid currentColor;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+    }
+  }
+
+  .legacy-button {
+    color: magenta;
+    background-color: #f8f9fa;
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &.deprecated-style {
+      border-style: dashed;
+    }
+  }
+}
+
+// Modal and card combinations
+.content-area {
+  .modal {
+    color: lime;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    .card {
+      color: olive;
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 15px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    &.with-loading {
+      .loading,
+      .loading-v2,
+      .loading-v3 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 20px 0;
+      }
+
+      .loading {
+        color: teal;
+        font-size: 16px;
+      }
+
+      .loading-v2 {
+        color: navy;
+        font-size: 18px;
+      }
+
+      .loading-v3 {
+        color: maroon;
+        font-size: 20px;
+      }
+    }
+  }
+}
+
+// Complex nested form controls
+.form-section {
+  .form-control-tabs-segmented,
+  .form-control-tabs-segmented-v2,
+  .form-control-tabs-segmented-v3,
+  .form-control-tabs-segmented-v4,
+  .form-control-tabs-segmented-flex,
+  .form-control-tabs-segmented-v2-dark {
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+
+    &.with-custom-controls {
+      .custom-control-checkbox,
+      .custom-control-radio,
+      .custom-control-switcher {
+        display: flex;
+        align-items: center;
+        margin-right: 15px;
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+
+  .form-control-tabs-segmented {
+    color: wheat;
+    background-color: #fff;
+  }
+
+  .form-control-tabs-segmented-v2 {
+    color: salmon;
+    background-color: #fff;
+  }
+
+  .form-control-tabs-segmented-v3 {
+    color: turquoise;
+    background-color: #fff;
+  }
+
+  .form-control-tabs-segmented-v4 {
+    color: violet;
+    background-color: #f8f9fa;
+  }
+
+  .form-control-tabs-segmented-flex {
+    color: sienna;
+    background-color: #f8f9fa;
+  }
+
+  .form-control-tabs-segmented-v2-dark {
+    color: tan;
+    background-color: #333;
+  }
+}
+
+// Utility classes with nested selectors
+.utility-section {
+  .collapsible-container {
+    color: silver;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+
+    &.expanded {
+      max-height: none;
+    }
+
+    &.collapsed {
+      max-height: 50px;
+    }
+
+    .divider {
+      color: gray;
+      border-top: 1px solid #ccc;
+      margin: 10px 0;
+
+      &.thick {
+        border-top-width: 2px;
+      }
+    }
+  }
+
+  .count,
+  .badge-circle {
+    padding: 5px 10px;
+    border-radius: 50%;
+    display: inline-block;
+
+    &.small {
+      padding: 3px 6px;
+      font-size: 12px;
+    }
+
+    &.large {
+      padding: 8px 16px;
+      font-size: 18px;
+    }
+  }
+
+  .count {
+    color: gold;
+    background-color: #333;
+  }
+
+  .badge-circle {
+    color: coral;
+    background-color: #f0f0f0;
+  }
+}
+
+// Random classes with various combinations
+.random-section {
+  @for $i from 1 through 50 {
+    .random-class-#{$i} {
+      background-color: lighten(#000, $i * 2%);
+
+      &:hover {
+        background-color: lighten(#000, ($i * 2% + 10%));
+      }
+
+      &.active {
+        background-color: darken(#000, $i * 1%);
+      }
+
+      // Nested combinations
+      .pill-with-badge,
+      .offer-badge {
+        margin: 5px;
+
+        &.inline {
+          display: inline-block;
+        }
+      }
+
+      .btn,
+      .btn-primary,
+      .legacy-button {
+        margin-right: 10px;
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+}
+
+// Complex multi-level nesting
+.complex-layout {
+  .header {
+    .nav-tabs {
+      .tab-nav-item {
+        .pill-with-badge {
+          font-size: 12px;
+
+          &.notification {
+            .count {
+              position: absolute;
+              top: -5px;
+              right: -5px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .main-content {
+    .modal {
+      .card {
+        .form-control-tabs-segmented {
+          .custom-control-checkbox {
+            .loading {
+              margin-left: 10px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .sidebar {
+    .collapsible-container {
+      .sports-pill,
+      .offer-badge {
+        display: block;
+        margin-bottom: 5px;
+
+        &:hover {
+          .badge-circle {
+            transform: scale(1.1);
+          }
+        }
+      }
+    }
+  }
+}
+
+// Media query combinations
+@media (max-width: 768px) {
+  .mobile-specific {
+    .pill-with-badge,
+    .pill-with-badge-v2,
+    .sports-pill,
+    .offer-badge {
+      display: block;
+      width: 100%;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .btn,
+    .btn-primary,
+    .legacy-button {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .form-control-tabs-segmented,
+    .form-control-tabs-segmented-v2,
+    .form-control-tabs-segmented-v3,
+    .form-control-tabs-segmented-v4 {
+      flex-direction: column;
+
+      .custom-control-checkbox,
+      .custom-control-radio,
+      .custom-control-switcher {
+        margin-bottom: 10px;
+      }
+    }
+  }
+}
+
+// Keyframe animations for deprecated classes
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+// Pseudo-element combinations
+.enhanced-deprecated {
+  .pill-with-badge::before,
+  .sports-pill::before,
+  .offer-badge::before {
+    content: '⚠️';
+    margin-right: 5px;
+  }
+
+  .btn::after,
+  .btn-primary::after,
+  .legacy-button::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, currentColor, transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .btn:hover::after,
+  .btn-primary:hover::after,
+  .legacy-button:hover::after {
+    opacity: 1;
+  }
+}

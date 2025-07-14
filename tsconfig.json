@@ -1,0 +1,43 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compileOnSave": false,
+  "files": [],
+  "references": [
+    {
+      "path": "./packages/angular-mcp-server"
+    },
+    {
+      "path": "./packages/angular-mcp"
+    },
+    {
+      "path": "./packages/shared/typescript-ast-utils"
+    },
+    {
+      "path": "./packages/shared/models"
+    },
+    {
+      "path": "./packages/shared/angular-ast-utils"
+    },
+    {
+      "path": "./packages/shared/styles-ast-utils"
+    },
+    {
+      "path": "./packages/shared/utils"
+    },
+    {
+      "path": "./packages/shared/ds-component-coverage"
+    },
+    {
+      "path": "./packages/shared/angular-cli-utils"
+    },
+    {
+      "path": "./testing/vitest-setup"
+    },
+    {
+      "path": "./testing/setup"
+    },
+    {
+      "path": "./testing/utils"
+    }
+  ]
+}

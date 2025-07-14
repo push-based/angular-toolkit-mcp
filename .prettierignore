@@ -1,0 +1,13 @@
+# Add files here to ignore them from prettier formatting
+/dist
+**/dist
+
+/coverage
+/.nx/cache
+/.nx/workspace-data
+packages/minimal-repo/packages/application
+
+*.md
+*.mdx
+**/*.md
+**/*.mdx

@@ -1,0 +1,41 @@
+import { Canvas } from '@storybook/blocks';
+
+import * as BadgeStories from '../badge.component.stories';
+
+## Default
+
+<Canvas of={BadgeStories.Default} />
+
+## With Icon
+
+### Only for xsmall and medium badges
+
+<Canvas of={BadgeStories.WithIcon} />
+
+## With Icon Only
+
+### Only for xsmall and medium badges
+
+<Canvas of={BadgeStories.WithIconOnly} />
+
+## With Notification Bubble
+
+### Only for medium badges
+
+<Canvas of={BadgeStories.WithNotificationBubble} />
+
+## With Success
+
+### Only for xsmall and medium badges
+
+<Canvas of={BadgeStories.WithSuccess} />
+
+## With Icon and Success
+
+### Only for xsmall and medium badges
+
+<Canvas of={BadgeStories.WithIconAndSuccess} />
+
+## All Variants
+
+<Canvas of={BadgeStories.LargeExamples} withToolbar={false} withSource="none" />

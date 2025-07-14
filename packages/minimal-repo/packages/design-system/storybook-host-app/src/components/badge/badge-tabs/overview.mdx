@@ -1,0 +1,76 @@
+import { Canvas } from '@storybook/blocks';
+
+import * as BadgeStories from '../badge.component.stories';
+
+The `DsBadge` component provides a way to display badges with various sizes, variants and additional features such as icons or placeholders (like success icon in our case).
+You can make icon movable with properties slot for start and end position.
+
+<Canvas of={BadgeStories.Default} />
+
+---
+
+## Usage
+
+Import `DsBadge` in your component and apply `ds-badge` selector in your template.
+
+```ts
+import { DsBadge } from '@frontend/ui/badge'; // 👈 add to file imports
+
+@Component({
+  imports: [DsBadge], // 👈 add to component imports
+  template: `...`,
+})
+export class AppComponent {}
+```
+
+---
+
+## Badge variants
+
+- By default, badges don't have any icons attached and are set in medium size and in primary variant
+- Badges with icon are available only in xsmall and medium sizes
+- Badges with icon are available only in xsmall and medium sizes
+- Badges with icon are available only in medium sizes
+- Badges with success icon are available only in xsmall and medium sizes
+- Badges with both icon and success icon are available only in xsmall and medium sizes
+
+---
+
+## Accessibility
+
+- The host sets `role="img"` for screen reader compatibility (interim solution until NVDA-compatible alternative is found).
+- The `aria-label` is automatically generated from the badge text content.
+- If `disabled` is true, the label is prefixed with `"Disabled badge: "`.
+- Otherwise, it's `"Badge: {text}"`.
+
+---
+
+## Test Coverage
+
+The component is comprehensively tested using Angular CDK Testing and a custom `DsBadgeHarness`.
+
+### Functional Behavior
+
+- Retrieves and verifies label text content
+- Filters badges by:
+- `size` (e.g., `'xsmall'`, `'medium'`)
+- `variant` (e.g., `'secondary'`)
+- label using a regex matcher
+- Validates dynamic input changes:
+- Updates to `size` correctly toggle size class
+- Changes to `variant` are reflected in DOM state
+
+### Slot Content
+
+- Verifies rendering of text in the `[slot=start]` and `[slot=end]` containers
+- Confirms SVG elements are supported and rendered in the start slot
+
+### State & Styling
+
+- Verifies toggling of the `inverse` class using `inverse` input
+- Confirms `ds-badge-disabled` class presence when `disabled` is set
+
+### Accessibility
+
+- Checks that the computed `aria-label` accurately reflects the text and disabled state
+- Validates screen reader output using `@guidepup/virtual-screen-reader`

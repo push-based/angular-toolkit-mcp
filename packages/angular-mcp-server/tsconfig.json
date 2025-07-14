@@ -1,0 +1,28 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "../shared/ds-component-coverage"
+    },
+    {
+      "path": "../shared/styles-ast-utils"
+    },
+    {
+      "path": "../shared/angular-ast-utils"
+    },
+    {
+      "path": "../shared/utils"
+    },
+    {
+      "path": "../shared/models"
+    },
+    {
+      "path": "./tsconfig.lib.json"
+    }
+  ],
+  "nx": {
+    "addTypecheckTarget": false
+  }
+}

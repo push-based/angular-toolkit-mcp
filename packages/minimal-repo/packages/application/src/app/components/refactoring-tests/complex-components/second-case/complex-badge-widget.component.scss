@@ -1,0 +1,620 @@
+.widget-container {
+  padding: 2rem;
+  background: #f8fafc;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.widget-container h3 {
+  margin: 0 0 1.5rem 0;
+  color: #1f2937;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.badge-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.badge-item {
+  position: relative;
+  background: white;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.badge-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+// Complex custom badge styles that will be difficult to refactor
+.offer-badge {
+  display: flex;
+  flex-direction: column;
+  background: var(--badge-color, #6b7280);
+  color: white;
+  border-radius: 0.75rem;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: 120px;
+  
+  // Complex pseudo-elements that DsBadge won't support
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.3) 100%);
+    animation: shimmer 2s infinite;
+  }
+  
+  &::after {
+    content: attr(data-custom-prop);
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  
+  // Level-specific complex styling
+  &.offer-badge-low {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    
+    .offer-badge-header {
+      background: rgba(5, 150, 105, 0.2);
+      border-bottom: 2px solid rgba(5, 150, 105, 0.3);
+    }
+    
+    .level-dot.active {
+      background: #34d399;
+      box-shadow: 0 0 8px #34d399;
+    }
+  }
+  
+  &.offer-badge-medium {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    
+    .offer-badge-header {
+      background: rgba(217, 119, 6, 0.2);
+      border-bottom: 2px solid rgba(217, 119, 6, 0.3);
+    }
+    
+    .level-dot.active {
+      background: #fbbf24;
+      box-shadow: 0 0 8px #fbbf24;
+    }
+  }
+  
+  &.offer-badge-high {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    
+    .offer-badge-header {
+      background: rgba(37, 99, 235, 0.2);
+      border-bottom: 2px solid rgba(37, 99, 235, 0.3);
+    }
+    
+    .level-dot.active {
+      background: #60a5fa;
+      box-shadow: 0 0 8px #60a5fa;
+    }
+  }
+  
+  &.offer-badge-critical {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    animation: pulse-critical 2s infinite;
+    
+    .offer-badge-header {
+      background: rgba(220, 38, 38, 0.2);
+      border-bottom: 2px solid rgba(220, 38, 38, 0.3);
+    }
+    
+    .level-dot.active {
+      background: #f87171;
+      box-shadow: 0 0 8px #f87171;
+      animation: blink 1s infinite;
+    }
+  }
+  
+  // Type-specific complex styling
+  &.offer-badge-offer-badge {
+    .offer-badge-type-indicator {
+      animation: bounce 2s infinite;
+    }
+    
+    .offer-badge-content {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+  }
+  
+  &.offer-badge-status {
+    .offer-badge-header {
+      background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.2) 100%);
+    }
+    
+    .badge-status-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #10b981;
+      animation: pulse-status 1.5s infinite;
+    }
+  }
+  
+  &.offer-badge-priority {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    
+    .offer-badge-type-indicator {
+      color: #fbbf24;
+      text-shadow: 0 0 8px #fbbf24;
+    }
+  }
+  
+  // Interactive states
+  &.offer-badge-interactive {
+    &:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      
+      .offer-badge-header {
+        background: rgba(255, 255, 255, 0.2);
+      }
+      
+      .offer-badge-footer {
+        background: rgba(255, 255, 255, 0.1);
+      }
+    }
+    
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+  
+  &.offer-badge-selected {
+    border: 3px solid #fbbf24;
+    box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.3);
+    
+    &::before {
+      background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 50%, #fbbf24 100%);
+    }
+  }
+  
+  // Advanced mode modifications
+  &.modified-badge {
+    border: 2px dashed rgba(255, 255, 255, 0.5);
+    
+    .offer-badge-content {
+      filter: hue-rotate(30deg);
+    }
+  }
+}
+
+// Complex nested structure that DsBadge cannot replicate
+.offer-badge-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  
+  &.hover-active {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+  }
+}
+
+.offer-badge-type-indicator {
+  font-size: 1.25rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  &::after {
+    content: attr(data-type);
+    font-size: 0.75rem;
+    opacity: 0.8;
+  }
+}
+
+.offer-badge-level-dots {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.level-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+  
+  &.active {
+    background: white;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+  }
+}
+
+.offer-badge-content {
+  flex: 1;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%);
+    pointer-events: none;
+  }
+}
+
+.offer-badge-primary-text {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.offer-badge-metadata {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  opacity: 0.9;
+}
+
+.badge-id,
+.badge-timestamp {
+  font-size: 0.75rem;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.offer-badge-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  
+  &.hover-active {
+    background: rgba(0, 0, 0, 0.2);
+    transform: translateY(1px);
+  }
+}
+
+.badge-action {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+  }
+  
+  &.danger {
+    background: rgba(239, 68, 68, 0.3);
+    border-color: rgba(239, 68, 68, 0.5);
+    
+    &:hover {
+      background: rgba(239, 68, 68, 0.5);
+    }
+  }
+}
+
+.badge-status-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #10b981;
+  
+  // Dynamic status classes that depend on complex logic
+  &.status-low-offer-badge {
+    background: #10b981;
+    animation: pulse-green 2s infinite;
+  }
+  
+  &.status-medium-status {
+    background: #f59e0b;
+    animation: pulse-yellow 2s infinite;
+  }
+  
+  &.status-high-priority {
+    background: #3b82f6;
+    animation: pulse-blue 2s infinite;
+  }
+  
+  &.status-critical-priority {
+    background: #ef4444;
+    animation: pulse-red 1s infinite;
+  }
+}
+
+// Tooltip system that depends on custom badge structure
+.badge-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1f2937;
+  color: white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  min-width: 200px;
+  
+  &.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0.5rem);
+  }
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #1f2937;
+  }
+}
+
+.tooltip-content {
+  h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  
+  p {
+    margin: 0 0 0.25rem 0;
+    font-size: 0.875rem;
+    opacity: 0.9;
+  }
+}
+
+.custom-data {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.data-item {
+  font-size: 0.75rem;
+  margin-bottom: 0.25rem;
+  
+  strong {
+    color: #fbbf24;
+  }
+}
+
+// Widget controls
+.widget-controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  align-items: center;
+  
+  button {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background: #2563eb;
+      transform: translateY(-1px);
+    }
+  }
+  
+  label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #374151;
+    cursor: pointer;
+    
+    input[type="checkbox"] {
+      width: 1rem;
+      height: 1rem;
+    }
+  }
+}
+
+// Status display
+.status-display {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+  h4 {
+    margin: 0 0 1rem 0;
+    color: #1f2937;
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.status-item {
+  padding: 0.75rem;
+  background: #f9fafb;
+  border-radius: 0.375rem;
+  text-align: center;
+  
+  strong {
+    display: block;
+    color: #374151;
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  // Dynamic content that depends on badge counting
+  &:nth-child(1) strong::after {
+    content: ' 📊';
+  }
+  
+  &:nth-child(2) strong::after {
+    content: ' 🎯';
+  }
+  
+  &:nth-child(3) strong::after {
+    content: ' ✅';
+  }
+  
+  &:nth-child(4) strong::after {
+    content: ' ⚠️';
+  }
+}
+
+// Complex animations that DsBadge won't support
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes pulse-critical {
+  0%, 100% { 
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  50% { 
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+  }
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0.3; }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-4px); }
+  60% { transform: translateY(-2px); }
+}
+
+@keyframes pulse-status {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.7; }
+}
+
+@keyframes pulse-green {
+  0%, 100% { background: #10b981; }
+  50% { background: #34d399; }
+}
+
+@keyframes pulse-yellow {
+  0%, 100% { background: #f59e0b; }
+  50% { background: #fbbf24; }
+}
+
+@keyframes pulse-blue {
+  0%, 100% { background: #3b82f6; }
+  50% { background: #60a5fa; }
+}
+
+@keyframes pulse-red {
+  0%, 100% { background: #ef4444; }
+  50% { background: #f87171; }
+}
+
+// Responsive design with complex badge adaptations
+@media (max-width: 768px) {
+  .badge-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .offer-badge {
+    min-height: 100px;
+    
+    .offer-badge-header {
+      padding: 0.5rem;
+    }
+    
+    .offer-badge-content {
+      padding: 0.75rem;
+    }
+    
+    .offer-badge-footer {
+      padding: 0.5rem;
+    }
+    
+    .offer-badge-primary-text {
+      font-size: 1rem;
+    }
+    
+    // Complex responsive behavior that DsBadge won't handle
+    &.offer-badge-critical {
+      .offer-badge-type-indicator {
+        font-size: 1rem;
+      }
+      
+      .level-dot {
+        width: 6px;
+        height: 6px;
+      }
+    }
+  }
+  
+  .widget-controls {
+    flex-direction: column;
+    align-items: stretch;
+    
+    button {
+      width: 100%;
+    }
+  }
+} 

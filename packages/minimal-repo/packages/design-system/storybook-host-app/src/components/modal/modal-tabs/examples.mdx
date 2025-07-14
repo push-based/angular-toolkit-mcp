@@ -1,0 +1,37 @@
+import { Canvas } from '@storybook/blocks';
+
+import * as ModalStories from '../modal.component.stories';
+
+## DsModal
+
+<Canvas of={ModalStories.Default} />
+
+## DsModalHeader and DsModalContent
+
+<Canvas of={ModalStories.WithTitleAndClose} />
+
+## DsModalHeaderDrag
+
+<Canvas of={ModalStories.WithDragger} />
+
+## Usage with CdkDialog
+
+<Canvas of={ModalStories.WithCdkDialog} />
+
+## Usage with MatDialog
+
+<Canvas of={ModalStories.WithMatDialog} />
+
+## Other examples
+
+<Canvas of={ModalStories.BolderSubtitleThanTitle}></Canvas>
+
+<Canvas of={ModalStories.CloseTitleLabelAction} />
+
+<Canvas of={ModalStories.ActionsAndCenteredTitle} />
+
+<Canvas of={ModalStories.BackBtnTitleLabelAction} />
+
+## All variants
+
+<Canvas of={ModalStories.ModalHeaderTypes} />

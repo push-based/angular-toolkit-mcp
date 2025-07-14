@@ -1,0 +1,709 @@
+{
+  "commit": {
+    "hash": "523fdf3354f4fdb952ab324ac92f7e0f3cd61957",
+    "message": "wip",
+    "date": "2025-02-10T22:11:27.000Z",
+    "author": "Michael"
+  },
+  "packageName": "@push-based/core",
+  "version": "0.57.0",
+  "date": "2025-02-10T22:48:50.259Z",
+  "duration": 418,
+  "categories": [
+    {
+      "slug": "design-system-coverage",
+      "refs": [
+        {
+          "slug": "coverage-dsbutton",
+          "weight": 1,
+          "type": "audit",
+          "plugin": "ds-component-coverage"
+        },
+        {
+          "slug": "coverage-dstabsmodule",
+          "weight": 1,
+          "type": "audit",
+          "plugin": "ds-component-coverage"
+        },
+        {
+          "slug": "coverage-dscard",
+          "weight": 1,
+          "type": "audit",
+          "plugin": "ds-component-coverage"
+        },
+        {
+          "slug": "coverage-dsmodal",
+          "weight": 1,
+          "type": "audit",
+          "plugin": "ds-component-coverage"
+        },
+        {
+          "slug": "coverage-dsinput",
+          "weight": 1,
+          "type": "audit",
+          "plugin": "ds-component-coverage"
+        },
+        {
+          "slug": "coverage-dsdropdown",
+          "weight": 1,
+          "type": "audit",
+          "plugin": "ds-component-coverage"
+        },
+        {
+          "slug": "coverage-dsaccordion",
+          "weight": 1,
+          "type": "audit",
+          "plugin": "ds-component-coverage"
+        },
+        {
+          "slug": "coverage-dsalert",
+          "weight": 1,
+          "type": "audit",
+          "plugin": "ds-component-coverage"
+        },
+        {
+          "slug": "coverage-dstooltip",
+          "weight": 1,
+          "type": "audit",
+          "plugin": "ds-component-coverage"
+        },
+        {
+          "slug": "coverage-dsbreadcrumb",
+          "weight": 1,
+          "type": "audit",
+          "plugin": "ds-component-coverage"
+        },
+        {
+          "slug": "coverage-dsprogressbar",
+          "weight": 1,
+          "type": "audit",
+          "plugin": "ds-component-coverage"
+        },
+        {
+          "slug": "coverage-dsslider",
+          "weight": 1,
+          "type": "audit",
+          "plugin": "ds-component-coverage"
+        },
+        {
+          "slug": "coverage-dsnavbar",
+          "weight": 1,
+          "type": "audit",
+          "plugin": "ds-component-coverage"
+        }
+      ],
+      "title": "Design System Coverage",
+      "description": "Usage of design system components"
+    }
+  ],
+  "plugins": [
+    {
+      "title": "Angular Design System Coverage",
+      "slug": "ds-component-coverage",
+      "icon": "angular",
+      "date": "2025-02-10T22:48:50.286Z",
+      "duration": 366,
+      "audits": [
+        {
+          "slug": "coverage-dsbutton",
+          "displayValue": "7 classes found",
+          "value": 7,
+          "score": 0,
+          "details": {
+            "issues": [
+              {
+                "message": "✏️🔲  Element <code>button</code> in attribute <code>class</code> uses deprecated class <code>btn</code>. Use <code>DSButton</code> instead. <a href=\"https://storybook.company.com/latest/?path=/docs/components-button--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/bad-mixed.component.ts",
+                  "position": {
+                    "startLine": 10,
+                    "startColumn": 4,
+                    "endLine": 10,
+                    "endColumn": 55
+                  }
+                }
+              },
+              {
+                "message": "✏️🔲  Element <code>button</code> in attribute <code>class</code> uses deprecated class <code>btn-primary</code>. Use <code>DSButton</code> instead. <a href=\"https://storybook.company.com/latest/?path=/docs/components-button--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/bad-mixed.component.ts",
+                  "position": {
+                    "startLine": 10,
+                    "startColumn": 4,
+                    "endLine": 10,
+                    "endColumn": 55
+                  }
+                }
+              },
+              {
+                "message": "✏️🔲  Element <code>button</code> in attribute <code>class</code> uses deprecated class <code>btn</code>. Use <code>DSButton</code> instead. <a href=\"https://storybook.company.com/latest/?path=/docs/components-button--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/bad-button-dropdown.component.ts",
+                  "position": {
+                    "startLine": 6,
+                    "startColumn": 4,
+                    "endLine": 6,
+                    "endColumn": 53
+                  }
+                }
+              },
+              {
+                "message": "✏️🔲  Element <code>button</code> in attribute <code>class</code> uses deprecated class <code>btn-primary</code>. Use <code>DSButton</code> instead. <a href=\"https://storybook.company.com/latest/?path=/docs/components-button--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/bad-button-dropdown.component.ts",
+                  "position": {
+                    "startLine": 6,
+                    "startColumn": 4,
+                    "endLine": 6,
+                    "endColumn": 53
+                  }
+                }
+              },
+              {
+                "message": "🔗🔲  Element <code>button</code> in attribute <code>class</code> uses deprecated class <code>btn</code>. Use <code>DSButton</code> instead. <a href=\"https://storybook.company.com/latest/?path=/docs/components-button--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/mixed-external-assets.component.html",
+                  "position": {
+                    "startLine": 6,
+                    "endLine": 6,
+                    "endColumn": 54
+                  }
+                }
+              },
+              {
+                "message": "🔗🔲  Element <code>button</code> in attribute <code>class</code> uses deprecated class <code>btn-primary</code>. Use <code>DSButton</code> instead. <a href=\"https://storybook.company.com/latest/?path=/docs/components-button--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/mixed-external-assets.component.html",
+                  "position": {
+                    "startLine": 6,
+                    "endLine": 6,
+                    "endColumn": 54
+                  }
+                }
+              },
+              {
+                "message": "🔗🎨 ️ The selector's class <code>btn</code> is deprecated. Use <code>DSButton</code> and delete the styles. <a href=\"https://storybook.company.com/latest/?path=/docs/components-button--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/mixed-external-assets.component.css",
+                  "position": {
+                    "startLine": 7,
+                    "startColumn": 1,
+                    "endLine": 14,
+                    "endColumn": 1
+                  }
+                }
+              }
+            ]
+          },
+          "title": "Usage coverage for DSButton component",
+          "description": "Coverage audit for DSButton component. Matching classes: btn, btn-primary, legacy-button"
+        },
+        {
+          "slug": "coverage-dstabsmodule",
+          "displayValue": "0 classes found",
+          "value": 0,
+          "score": 1,
+          "details": {
+            "issues": []
+          },
+          "title": "Usage coverage for DSTabsModule component",
+          "description": "Coverage audit for DSTabsModule component. Matching classes: ms-tab-bar, legacy-tabs, custom-tabs"
+        },
+        {
+          "slug": "coverage-dscard",
+          "displayValue": "0 classes found",
+          "value": 0,
+          "score": 1,
+          "details": {
+            "issues": []
+          },
+          "title": "Usage coverage for DSCard component",
+          "description": "Coverage audit for DSCard component. Matching classes: card, legacy-card, custom-card"
+        },
+        {
+          "slug": "coverage-dsmodal",
+          "displayValue": "4 classes found",
+          "value": 4,
+          "score": 0,
+          "details": {
+            "issues": [
+              {
+                "message": "✏️🔲  Element <code>div</code> in attribute <code>class</code> uses deprecated class <code>modal</code>. Use <code>DSModal</code> instead. <a href=\"https://storybook.company.com/latest/?path=/docs/components-modal--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/bad-modal-progress.component.ts",
+                  "position": {
+                    "startLine": 6,
+                    "startColumn": 4,
+                    "endLine": 11,
+                    "endColumn": 10
+                  }
+                }
+              },
+              {
+                "message": "✏️🔲  Element <code>div</code> in attribute <code>class</code> uses deprecated class <code>modal</code>. Use <code>DSModal</code> instead. <a href=\"https://storybook.company.com/latest/?path=/docs/components-modal--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/bad-mixed.component.ts",
+                  "position": {
+                    "startLine": 18,
+                    "startColumn": 4,
+                    "endLine": 23,
+                    "endColumn": 10
+                  }
+                }
+              },
+              {
+                "message": "🔗🔲  Element <code>div</code> in attribute <code>class</code> uses deprecated class <code>modal</code>. Use <code>DSModal</code> instead. <a href=\"https://storybook.company.com/latest/?path=/docs/components-modal--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/mixed-external-assets.component.html",
+                  "position": {
+                    "startLine": 9,
+                    "endLine": 14,
+                    "endColumn": 6
+                  }
+                }
+              },
+              {
+                "message": "🔗🎨 ️ The selector's class <code>modal</code> is deprecated. Use <code>DSModal</code> and delete the styles. <a href=\"https://storybook.company.com/latest/?path=/docs/components-modal--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/mixed-external-assets.component.css",
+                  "position": {
+                    "startLine": 17,
+                    "startColumn": 1,
+                    "endLine": 25,
+                    "endColumn": 1
+                  }
+                }
+              }
+            ]
+          },
+          "title": "Usage coverage for DSModal component",
+          "description": "Coverage audit for DSModal component. Matching classes: modal, popup, legacy-dialog"
+        },
+        {
+          "slug": "coverage-dsinput",
+          "displayValue": "1 class found",
+          "value": 1,
+          "score": 0,
+          "details": {
+            "issues": [
+              {
+                "message": "✏️🔲  Element <code>input</code> in attribute <code>class</code> uses deprecated class <code>form-control</code>. Use <code>DSInput</code> instead. <a href=\"https://storybook.company.com/latest/?path=/docs/components-input--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/bad-alert-tooltip-input.component.ts",
+                  "position": {
+                    "startLine": 10,
+                    "startColumn": 4,
+                    "endLine": 10,
+                    "endColumn": 64
+                  }
+                }
+              }
+            ]
+          },
+          "title": "Usage coverage for DSInput component",
+          "description": "Coverage audit for DSInput component. Matching classes: input, form-control, legacy-input"
+        },
+        {
+          "slug": "coverage-dsdropdown",
+          "displayValue": "4 classes found",
+          "value": 4,
+          "score": 0,
+          "details": {
+            "issues": [
+              {
+                "message": "✏️🔲  Element <code>select</code> in attribute <code>class</code> uses deprecated class <code>dropdown</code>. Use <code>DSDropdown</code> instead. <a href=\"https://storybook.company.com/latest/?path=/docs/components-dropdown--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/bad-mixed.component.ts",
+                  "position": {
+                    "startLine": 37,
+                    "startColumn": 4,
+                    "endLine": 40,
+                    "endColumn": 13
+                  }
+                }
+              },
+              {
+                "message": "✏️🔲  Element <code>select</code> in attribute <code>class</code> uses deprecated class <code>dropdown</code>. Use <code>DSDropdown</code> instead. <a href=\"https://storybook.company.com/latest/?path=/docs/components-dropdown--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/bad-button-dropdown.component.ts",
+                  "position": {
+                    "startLine": 7,
+                    "startColumn": 4,
+                    "endLine": 10,
+                    "endColumn": 13
+                  }
+                }
+              },
+              {
+                "message": "🔗🔲  Element <code>select</code> in attribute <code>class</code> uses deprecated class <code>dropdown</code>. Use <code>DSDropdown</code> instead. <a href=\"https://storybook.company.com/latest/?path=/docs/components-dropdown--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/mixed-external-assets.component.html",
+                  "position": {
+                    "startLine": 25,
+                    "endLine": 28,
+                    "endColumn": 9
+                  }
+                }
+              },
+              {
+                "message": "🔗🎨 ️ The selector's class <code>dropdown</code> is deprecated. Use <code>DSDropdown</code> and delete the styles. <a href=\"https://storybook.company.com/latest/?path=/docs/components-dropdown--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/mixed-external-assets.component.css",
+                  "position": {
+                    "startLine": 50,
+                    "startColumn": 1,
+                    "endLine": 54,
+                    "endColumn": 1
+                  }
+                }
+              }
+            ]
+          },
+          "title": "Usage coverage for DSDropdown component",
+          "description": "Coverage audit for DSDropdown component. Matching classes: dropdown, legacy-dropdown, custom-dropdown"
+        },
+        {
+          "slug": "coverage-dsaccordion",
+          "displayValue": "0 classes found",
+          "value": 0,
+          "score": 1,
+          "details": {
+            "issues": []
+          },
+          "title": "Usage coverage for DSAccordion component",
+          "description": "Coverage audit for DSAccordion component. Matching classes: accordion, collapse-panel, legacy-accordion"
+        },
+        {
+          "slug": "coverage-dsalert",
+          "displayValue": "6 classes found",
+          "value": 6,
+          "score": 0,
+          "details": {
+            "issues": [
+              {
+                "message": "✏️🔲  Element <code>div</code> in attribute <code>class</code> uses deprecated class <code>alert</code>. Use <code>DSAlert</code> instead. <a href=\"https://storybook.company.com/latest/?path=/docs/components-alert--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/bad-mixed.component.ts",
+                  "position": {
+                    "startLine": 46,
+                    "startColumn": 4,
+                    "endLine": 46,
+                    "endColumn": 51
+                  }
+                }
+              },
+              {
+                "message": "✏️🔲  Element <code>div</code> in attribute <code>class</code> uses deprecated class <code>alert</code>. Use <code>DSAlert</code> instead. <a href=\"https://storybook.company.com/latest/?path=/docs/components-alert--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/bad-alert-tooltip-input.component.ts",
+                  "position": {
+                    "startLine": 6,
+                    "startColumn": 4,
+                    "endLine": 6,
+                    "endColumn": 67
+                  }
+                }
+              },
+              {
+                "message": "✏️🔲  Element <code>div</code> in attribute <code>class</code> uses deprecated class <code>alert</code>. Use <code>DSAlert</code> instead. <a href=\"https://storybook.company.com/latest/?path=/docs/components-alert--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/bad-alert.component.ts",
+                  "position": {
+                    "startLine": 5,
+                    "startColumn": 1,
+                    "endLine": 5,
+                    "endColumn": 62
+                  }
+                }
+              },
+              {
+                "message": "✏️🎨 ️ The selector's class <code>alert</code> is deprecated. Use <code>DSAlert</code> and delete the styles. <a href=\"https://storybook.company.com/latest/?path=/docs/components-alert--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/bad-alert.component.ts",
+                  "position": {
+                    "startLine": 7,
+                    "startColumn": 1,
+                    "endLine": 10,
+                    "endColumn": 7
+                  }
+                }
+              },
+              {
+                "message": "🔗🔲  Element <code>div</code> in attribute <code>class</code> uses deprecated class <code>alert</code>. Use <code>DSAlert</code> instead. <a href=\"https://storybook.company.com/latest/?path=/docs/components-alert--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/mixed-external-assets.component.html",
+                  "position": {
+                    "startLine": 22,
+                    "endLine": 22,
+                    "endColumn": 61
+                  }
+                }
+              },
+              {
+                "message": "🔗🎨 ️ The selector's class <code>alert</code> is deprecated. Use <code>DSAlert</code> and delete the styles. <a href=\"https://storybook.company.com/latest/?path=/docs/components-alert--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/mixed-external-assets.component.css",
+                  "position": {
+                    "startLine": 43,
+                    "startColumn": 1,
+                    "endLine": 47,
+                    "endColumn": 1
+                  }
+                }
+              }
+            ]
+          },
+          "title": "Usage coverage for DSAlert component",
+          "description": "Coverage audit for DSAlert component. Matching classes: alert, notification, legacy-alert"
+        },
+        {
+          "slug": "coverage-dstooltip",
+          "displayValue": "5 classes found",
+          "value": 5,
+          "score": 0,
+          "details": {
+            "issues": [
+              {
+                "message": "✏️🔲  Element <code>div</code> in attribute <code>class</code> uses deprecated class <code>tooltip</code>. Use <code>DSTooltip</code> instead. <a href=\"https://storybook.company.com/latest/?path=/docs/components-tooltip--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/bad-mixed.component.ts",
+                  "position": {
+                    "startLine": 52,
+                    "startColumn": 4,
+                    "endLine": 52,
+                    "endColumn": 42
+                  }
+                }
+              },
+              {
+                "message": "✏️🔲  Element <code>div</code> in attribute <code>class</code> uses deprecated class <code>tooltip</code>. Use <code>DSTooltip</code> instead. <a href=\"https://storybook.company.com/latest/?path=/docs/components-tooltip--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/bad-alert-tooltip-input.component.ts",
+                  "position": {
+                    "startLine": 8,
+                    "startColumn": 4,
+                    "endLine": 8,
+                    "endColumn": 45
+                  }
+                }
+              },
+              {
+                "message": "🔗🔲  Element <code>div</code> in attribute <code>class</code> uses deprecated class <code>tooltip</code>. Use <code>DSTooltip</code> instead. <a href=\"https://storybook.company.com/latest/?path=/docs/components-tooltip--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/mixed-external-assets.component.html",
+                  "position": {
+                    "startLine": 31,
+                    "endLine": 31,
+                    "endColumn": 49
+                  }
+                }
+              },
+              {
+                "message": "🔗🎨 ️ The selector's class <code>tooltip</code> is deprecated. Use <code>DSTooltip</code> and delete the styles. <a href=\"https://storybook.company.com/latest/?path=/docs/components-tooltip--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/mixed-external-assets.component.css",
+                  "position": {
+                    "startLine": 57,
+                    "startColumn": 1,
+                    "endLine": 61,
+                    "endColumn": 1
+                  }
+                }
+              },
+              {
+                "message": "🔗🎨 ️ The selector's class <code>tooltip</code> is deprecated. Use <code>DSTooltip</code> and delete the styles. <a href=\"https://storybook.company.com/latest/?path=/docs/components-tooltip--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/mixed-external-assets.component.css",
+                  "position": {
+                    "startLine": 63,
+                    "startColumn": 1,
+                    "endLine": 73,
+                    "endColumn": 1
+                  }
+                }
+              }
+            ]
+          },
+          "title": "Usage coverage for DSTooltip component",
+          "description": "Coverage audit for DSTooltip component. Matching classes: tooltip, legacy-tooltip, info-bubble"
+        },
+        {
+          "slug": "coverage-dsbreadcrumb",
+          "displayValue": "4 classes found",
+          "value": 4,
+          "score": 0,
+          "details": {
+            "issues": [
+              {
+                "message": "✏️🔲  Element <code>nav</code> in attribute <code>class</code> uses deprecated class <code>breadcrumb</code>. Use <code>DSBreadcrumb</code> instead. <a href=\"https://storybook.company.com/latest/?path=/docs/components-breadcrumb--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/bad-mixed.component.ts",
+                  "position": {
+                    "startLine": 62,
+                    "startColumn": 4,
+                    "endLine": 64,
+                    "endColumn": 10
+                  }
+                }
+              },
+              {
+                "message": "🔗🔲  Element <code>nav</code> in attribute <code>class</code> uses deprecated class <code>breadcrumb</code>. Use <code>DSBreadcrumb</code> instead. <a href=\"https://storybook.company.com/latest/?path=/docs/components-breadcrumb--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/mixed-external-assets.component.html",
+                  "position": {
+                    "startLine": 34,
+                    "endLine": 36,
+                    "endColumn": 6
+                  }
+                }
+              },
+              {
+                "message": "🔗🎨 ️ The selector's class <code>breadcrumb</code> is deprecated. Use <code>DSBreadcrumb</code> and delete the styles. <a href=\"https://storybook.company.com/latest/?path=/docs/components-breadcrumb--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/mixed-external-assets.component.css",
+                  "position": {
+                    "startLine": 76,
+                    "startColumn": 1,
+                    "endLine": 79,
+                    "endColumn": 1
+                  }
+                }
+              },
+              {
+                "message": "🔗🎨 ️ The selector's class <code>breadcrumb</code> is deprecated. Use <code>DSBreadcrumb</code> and delete the styles. <a href=\"https://storybook.company.com/latest/?path=/docs/components-breadcrumb--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/mixed-external-assets.component.css",
+                  "position": {
+                    "startLine": 81,
+                    "startColumn": 1,
+                    "endLine": 84,
+                    "endColumn": 1
+                  }
+                }
+              }
+            ]
+          },
+          "title": "Usage coverage for DSBreadcrumb component",
+          "description": "Coverage audit for DSBreadcrumb component. Matching classes: breadcrumb, legacy-breadcrumb, nav-breadcrumb"
+        },
+        {
+          "slug": "coverage-dsprogressbar",
+          "displayValue": "4 classes found",
+          "value": 4,
+          "score": 0,
+          "details": {
+            "issues": [
+              {
+                "message": "✏️🔲  Element <code>div</code> in attribute <code>class</code> uses deprecated class <code>progress-bar</code>. Use <code>DSProgressBar</code> instead. <a href=\"https://storybook.company.com/latest/?path=/docs/components-progressbar--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/bad-modal-progress.component.ts",
+                  "position": {
+                    "startLine": 13,
+                    "startColumn": 4,
+                    "endLine": 15,
+                    "endColumn": 10
+                  }
+                }
+              },
+              {
+                "message": "✏️🔲  Element <code>div</code> in attribute <code>class</code> uses deprecated class <code>progress-bar</code>. Use <code>DSProgressBar</code> instead. <a href=\"https://storybook.company.com/latest/?path=/docs/components-progressbar--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/bad-mixed.component.ts",
+                  "position": {
+                    "startLine": 29,
+                    "startColumn": 4,
+                    "endLine": 31,
+                    "endColumn": 10
+                  }
+                }
+              },
+              {
+                "message": "🔗🔲  Element <code>div</code> in attribute <code>class</code> uses deprecated class <code>progress-bar</code>. Use <code>DSProgressBar</code> instead. <a href=\"https://storybook.company.com/latest/?path=/docs/components-progressbar--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/mixed-external-assets.component.html",
+                  "position": {
+                    "startLine": 17,
+                    "endLine": 19,
+                    "endColumn": 6
+                  }
+                }
+              },
+              {
+                "message": "🔗🎨 ️ The selector's class <code>progress-bar</code> is deprecated. Use <code>DSProgressBar</code> and delete the styles. <a href=\"https://storybook.company.com/latest/?path=/docs/components-progressbar--overview\" target=\"_blank\">Learn more</a>.",
+                "severity": "error",
+                "source": {
+                  "file": "plugins/ds-component-coverage/mocks/fixtures/coverage-audit/demo/mixed-external-assets.component.css",
+                  "position": {
+                    "startLine": 32,
+                    "startColumn": 1,
+                    "endLine": 35,
+                    "endColumn": 1
+                  }
+                }
+              }
+            ]
+          },
+          "title": "Usage coverage for DSProgressBar component",
+          "description": "Coverage audit for DSProgressBar component. Matching classes: progress-bar, loading-bar, legacy-progress"
+        },
+        {
+          "slug": "coverage-dsslider",
+          "displayValue": "0 classes found",
+          "value": 0,
+          "score": 1,
+          "details": {
+            "issues": []
+          },
+          "title": "Usage coverage for DSSlider component",
+          "description": "Coverage audit for DSSlider component. Matching classes: slider, range-slider, legacy-slider"
+        },
+        {
+          "slug": "coverage-dsnavbar",
+          "displayValue": "0 classes found",
+          "value": 0,
+          "score": 1,
+          "details": {
+            "issues": []
+          },
+          "title": "Usage coverage for DSNavbar component",
+          "description": "Coverage audit for DSNavbar component. Matching classes: navbar, navigation, legacy-navbar"
+        }
+      ],
+      "description": "A plugin to measure and assert usage of styles in an Angular project."
+    }
+  ]
+}

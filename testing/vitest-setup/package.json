@@ -1,0 +1,21 @@
+{
+  "name": "@push-based/testing-vitest-setup",
+  "version": "0.0.1",
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "private": true,
+  "nx": {
+    "sourceRoot": "testing/vitest-setup/src",
+    "projectType": "library",
+    "name": "testing-vitest-setup"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "module": "./dist/index.js"
+}

@@ -1,0 +1,375 @@
+// Extended and more meaningful classes
+.pill-with-badge {
+  color: red;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  border-radius: 15px;
+  display: inline-block;
+}
+
+.pill-with-badge-v2 {
+  color: blue;
+  border: 2px solid #aaa;
+  padding: 6px 12px;
+  border-radius: 20px;
+  display: inline-block;
+}
+
+.sports-pill {
+  color: green;
+  background-color: #f0f0f0;
+  padding: 8px 16px;
+  border-radius: 25px;
+  display: inline-block;
+}
+
+.offer-badge {
+  color: yellow;
+  background-color: #333;
+  padding: 4px 8px;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+.tab-nav {
+  color: orange;
+  background-color: #fff;
+  padding: 10px;
+  border-bottom: 2px solid #ddd;
+}
+
+.nav-tabs {
+  color: purple;
+  background-color: #eee;
+  padding: 10px;
+  border-bottom: 2px solid #ccc;
+}
+
+.tab-nav-item {
+  color: pink;
+  padding: 10px 15px;
+  border-radius: 5px;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.btn {
+  color: brown;
+  background-color: #f5f5f5;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  color: cyan;
+  background-color: #007bff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.legacy-button {
+  color: magenta;
+  background-color: #f8f9fa;
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal {
+  color: lime;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card {
+  color: olive;
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.loading {
+  color: teal;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-v2 {
+  color: navy;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-v3 {
+  color: maroon;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.collapsible-container {
+  color: silver;
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.divider {
+  color: gray;
+  border-top: 1px solid #ccc;
+  margin: 10px 0;
+}
+
+.count {
+  color: gold;
+  background-color: #333;
+  padding: 5px 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.badge-circle {
+  color: coral;
+  background-color: #f0f0f0;
+  padding: 5px 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.custom-control-checkbox {
+  color: khaki;
+  display: flex;
+  align-items: center;
+}
+
+.custom-control-radio {
+  color: lavender;
+  display: flex;
+  align-items: center;
+}
+
+.form-control-tabs-segmented-v2 {
+  color: salmon;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-control-tabs-segmented-flex {
+  color: sienna;
+  background-color: #f8f9fa;
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-control-tabs-segmented-v2-dark {
+  color: tan;
+  background-color: #333;
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-control-tabs-segmented-v3 {
+  color: turquoise;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-control-tabs-segmented-v4 {
+  color: violet;
+  background-color: #f8f9fa;
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-control-tabs-segmented {
+  color: wheat;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.custom-control-switcher {
+  color: azure;
+  display: flex;
+  align-items: center;
+}
+
+// 50 more random classes
+.random-class-1 {
+  background-color: #f0f0f0;
+}
+.random-class-2 {
+  background-color: #e0e0e0;
+}
+.random-class-3 {
+  background-color: #d0d0d0;
+}
+.random-class-4 {
+  background-color: #c0c0c0;
+}
+.random-class-5 {
+  background-color: #b0b0b0;
+}
+.random-class-6 {
+  background-color: #a0a0a0;
+}
+.random-class-7 {
+  background-color: #909090;
+}
+.random-class-8 {
+  background-color: #808080;
+}
+.random-class-9 {
+  background-color: #707070;
+}
+.random-class-10 {
+  background-color: #606060;
+}
+.random-class-11 {
+  background-color: #505050;
+}
+.random-class-12 {
+  background-color: #404040;
+}
+.random-class-13 {
+  background-color: #303030;
+}
+.random-class-14 {
+  background-color: #202020;
+}
+.random-class-15 {
+  background-color: #101010;
+}
+.random-class-16 {
+  background-color: #f8f8f8;
+}
+.random-class-17 {
+  background-color: #e8e8e8;
+}
+.random-class-18 {
+  background-color: #d8d8d8;
+}
+.random-class-19 {
+  background-color: #c8c8c8;
+}
+.random-class-20 {
+  background-color: #b8b8b8;
+}
+.random-class-21 {
+  background-color: #a8a8a8;
+}
+.random-class-22 {
+  background-color: #989898;
+}
+.random-class-23 {
+  background-color: #888888;
+}
+.random-class-24 {
+  background-color: #787878;
+}
+.random-class-25 {
+  background-color: #686868;
+}
+.random-class-26 {
+  background-color: #585858;
+}
+.random-class-27 {
+  background-color: #484848;
+}
+.random-class-28 {
+  background-color: #383838;
+}
+.random-class-29 {
+  background-color: #282828;
+}
+.random-class-30 {
+  background-color: #181818;
+}
+.random-class-31 {
+  background-color: #080808;
+}
+.random-class-32 {
+  background-color: #fefefe;
+}
+.random-class-33 {
+  background-color: #ededed;
+}
+.random-class-34 {
+  background-color: #dcdcdc;
+}
+.random-class-35 {
+  background-color: #cbcbcb;
+}
+.random-class-36 {
+  background-color: #bababa;
+}
+.random-class-37 {
+  background-color: #a9a9a9;
+}
+.random-class-38 {
+  background-color: #989898;
+}
+.random-class-39 {
+  background-color: #878787;
+}
+.random-class-40 {
+  background-color: #767676;
+}
+.random-class-41 {
+  background-color: #656565;
+}
+.random-class-42 {
+  background-color: #545454;
+}
+.random-class-43 {
+  background-color: #434343;
+}
+.random-class-44 {
+  background-color: #323232;
+}
+.random-class-45 {
+  background-color: #212121;
+}
+.random-class-46 {
+  background-color: #101010;
+}
+.random-class-47 {
+  background-color: #f7f7f7;
+}
+.random-class-48 {
+  background-color: #e6e6e6;
+}
+.random-class-49 {
+  background-color: #d5d5d5;
+}
+.random-class-50 {
+  background-color: #c4c4c4;
+}

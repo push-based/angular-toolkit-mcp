@@ -1,0 +1,78 @@
+import { Canvas } from '@storybook/blocks';
+
+import * as SegmentedControlStories from '../segmented-control.component.stories';
+
+The `DsSegmentedControlModule` is used for toggling between multiple options within a group. It enhances user experience by providing a visually distinct and easily navigable selection mechanism.
+
+<Canvas of={SegmentedControlStories.Default} />
+
+---
+
+## Usage
+
+Import `DsSegmentedControlModule` in your component, apply `ds-segmented-control` and `ds-segmented-options` selectors in your template.
+
+```ts
+import { DsSegmentedControlModule } from '@frontend/ui/segmented-control'; // 👈 add to file imports
+
+@Component({
+  imports: [DsSegmentedControlModule], // 👈 add to component imports
+  template: `...`,
+})
+export class AppComponent {}
+```
+
+---
+
+## Additional Configuration
+
+### Segmented item width (max-width)
+
+For text truncation we have token for min-width(44px) so it will apply the same for all the items but you need to specify the "max-width" for segmented item so that it will take the max width for the option and then it will truncate if it is more than that width.
+You can customize the width of the segment item in the `segmented-control` using CSS variables. Set these variables in your CSS to adjust the width:
+
+- `--ds-segment-item-text-max-width`: Sets the max-width of the segment item. Default is `auto`.
+
+To adjust the width, add the following CSS to your styles:
+
+```html
+<ds-segmented-control class="ds-segmented-control component-class-name">
+  <ds-segment-item>...</ds-segment-item>
+</ds-segmented-control>
+```
+
+```css
+.component-class-name {
+  --ds-segment-item-text-max-width: 100px;
+}
+```
+
+---
+
+## Accessibility
+
+- The `role` attribute on the segmented control is dynamically set to `tablist` or `radiogroup`.
+- Each `ds-segmented-option`:
+- Uses `role="tab"` or `role="radio"` depending on control type
+- Has `aria-selected` or `aria-checked` to reflect selection state
+- Includes `aria-label` using the option's `title` or `name`
+- Uses `tabindex="0"` for selected, `-1` for others
+- Supports keyboard navigation:
+- `ArrowLeft` / `ArrowRight` for focus movement
+- `Enter` / `Space` to activate
+- Screen reader support confirmed via virtual-screen-reader tests
+
+---
+
+## Test Coverage
+
+- Loads and renders segmented control and its options
+- Selects options using:
+- `selectTabByText`
+- `selectTabByName`
+- Supports toggling `fullWidth` and `inverse` inputs
+- Switches between `tablist` and `radiogroup` roles
+- Emits `activeOptionChange` when selection changes
+- Keyboard navigation (arrow keys, enter, space)
+- All roles and ARIA states validated for accessibility
+- Screen reader flows tested using `@guidepup/virtual-screen-reader`

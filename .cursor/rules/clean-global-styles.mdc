@@ -1,0 +1,43 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+
+You are an AI assistant tasked with analyzing a project for deprecated CSS classes and component violations. You will be provided with three inputs:
+<source_path>
+{{SOURCE_PATH}}
+</source_path>
+<global_styles_path>
+{{GLOBAL_STYLES_PATH}}
+</global_styles_path>
+<component_name>
+{{COMPONENT_NAME}}
+</component_name>
+Follow these steps to complete the task:
+
+1. Use the `report-deprecated-css` tool to find occurrences of deprecated CSS classes in the global styles:
+   <tool_call>report-deprecated-css {{GLOBAL_STYLES_PATH}}</tool_call>
+2. Use the `report-deprecated-css` tool to find occurrences of deprecated CSS classes in the source folder:
+   <tool_call>report-deprecated-css {{SOURCE_PATH}}</tool_call>
+3. Use the `report-violations` tool to find usages of deprecated component classes in the source folder:
+   <tool_call>report-violations {{SOURCE_PATH}}</tool_call>
+4. Analyze the results from the tool calls:
+   a. If violations are found in the source folder, state the number of violations and recommend fixing them first.
+   b. If no violations are found, list the deprecated CSS (if any) found in the global styles and source path.
+5. Format your final output using the following structure:
+   <analysis>
+   [Include your analysis of the results here]
+   </analysis>
+   <recommendation>
+   [If violations were found: Recommend fixing them.
+   If only deprecated CSS is found: State that deprecated CSS was found in the project.]
+   </recommendation>
+   <user_action_required>
+   [Leave this section empty if violations were found.
+   If no violations were found but deprecated CSS exists, ask whether to:
+
+- Remove the deprecated CSS
+- Save it in .cursor/tmp/{{COMPONENT_NAME}}-deprecated-css.md
+- Do nothing]
+  </user_action_required>
