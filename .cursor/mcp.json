@@ -7,7 +7,7 @@
       "command": "node",
       "args": [
         "./packages/angular-mcp/dist/main.js",
-        "--workspaceRoot=/Users/kyrylokarnaukhov/Documents/projects/angular-mcp-toolkit",
+        "--workspaceRoot=root/path/to/workspace",
         "--ds.storybookDocsRoot=packages/minimal-repo/packages/design-system/storybook-host-app/src/components",
         "--ds.deprecatedCssClassesPath=packages/minimal-repo/packages/design-system/component-options.js",
         "--ds.uiRoot=packages/minimal-repo/packages/design-system/ui"
