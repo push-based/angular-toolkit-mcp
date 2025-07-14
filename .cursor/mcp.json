@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "nx-mcp": {
+      "url": "http://localhost:9665/sse"
+    },
+    "angular-toolkit-mcp": {
+      "command": "node",
+      "args": [
+        "./packages/angular-mcp/dist/main.js",
+        "--workspaceRoot=root/path/to/workspace",
+        "--ds.storybookDocsRoot=packages/minimal-repo/packages/design-system/storybook-host-app/src/components",
+        "--ds.deprecatedCssClassesPath=packages/minimal-repo/packages/design-system/component-options.js",
+        "--ds.uiRoot=packages/minimal-repo/packages/design-system/ui"
+      ]
+    }
+  }
+}

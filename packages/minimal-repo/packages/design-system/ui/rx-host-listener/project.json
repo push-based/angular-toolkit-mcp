@@ -1,0 +1,7 @@
+{
+  "name": "design-system-rx-host-listener-ui",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "packages/design-system/ui/rx-host-listener/src",
+  "tags": ["type:ui", "scope:shared"]
+}

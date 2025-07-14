@@ -1,0 +1,7 @@
+{
+  "name": "design-system-modal-ui",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "packages/design-system/ui/modal/src",
+  "tags": ["type:ui", "scope:shared"]
+}

@@ -1,0 +1,88 @@
+## Inputs
+
+### `ds-modal-header`
+
+| Name      | Type                                                               | Default     | Description                           |
+| --------- | ------------------------------------------------------------------ | ----------- | ------------------------------------- |
+| `variant` | `'surface-lowest' \| 'surface-low' \| 'surface' \| 'surface-high'` | `'surface'` | Background style for the modal header |
+
+Other components (`ds-modal`, `ds-modal-content`, `ds-modal-header-drag`) do not define any `@Input()` bindings.
+
+---
+
+## Outputs
+
+None of the modal-related components emit Angular `@Output()` events.
+
+---
+
+## Content Projection
+
+### `ds-modal`
+
+Supports default slot:
+
+```html
+<ds-modal>
+  <ds-modal-header>...</ds-modal-header>
+  <ds-modal-content>...</ds-modal-content>
+</ds-modal>
+```
+
+### `ds-modal-header`
+
+Defines multiple named slots:
+
+```html
+<ds-modal-header>
+  <span slot="start">Back</span>
+  <div slot="center">Title</div>
+  <button slot="end">Close</button>
+</ds-modal-header>
+```
+
+Content is rendered into:
+
+- `[slot=start]` → left section
+- `[slot=center]` → center section
+- `ds-modal-header-drag`, `[modal-header-image]` → center below title
+- `[slot=end]` → right section
+
+### `ds-modal-content`
+
+Projects content as modal body:
+
+```html
+<ds-modal-content> Modal text goes here. </ds-modal-content>
+```
+
+---
+
+## Host Element Behavior
+
+### `ds-modal`
+
+- Host class: `ds-modal`
+- Attributes:
+- `role="dialog"`
+- `aria-label="Modal dialog"`
+
+### `ds-modal-header`
+
+- Host class: `ds-modal-header`
+- Dynamic class based on `variant`: `ds-modal-header-surface`, `ds-modal-header-surface-low`, etc.
+- Attributes:
+- `role="dialog"`
+- `aria-label="Modal header dialog"`
+
+### `ds-modal-header-drag`
+
+- Host class: `ds-modal-header-drag`
+- Attributes:
+- `role="dialog"`
+- `aria-label="Modal header drag dialog"`
+
+### `ds-modal-content`
+
+- Host class: `ds-modal-content`
+- No interactive attributes applied

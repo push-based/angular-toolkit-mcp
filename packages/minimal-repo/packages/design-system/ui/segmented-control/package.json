@@ -1,0 +1,11 @@
+{
+  "name": "@frontend/ui/segmented-control",
+  "version": "0.0.0",
+  "type": "module",
+  "peerDependencies": {
+    "@angular/cdk": "19.2.9",
+    "@angular/common": "19.2.7",
+    "@angular/core": "19.2.7",
+    "@frontend/ui/rx-host-listener": "0.0.0"
+  }
+}

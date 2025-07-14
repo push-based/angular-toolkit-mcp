@@ -1,0 +1,48 @@
+{
+  "name": "@push-based/angular-mcp",
+  "version": "0.0.1",
+  "private": true,
+  "bin": "main.js",
+  "files": [
+    "main.js",
+    "README.md"
+  ],
+  "nx": {
+    "implicitDependencies": [
+      "angular-mcp-server"
+    ],
+    "targets": {
+      "serve": {
+        "executor": "@nx/js:node",
+        "defaultConfiguration": "development",
+        "dependsOn": [
+          "build"
+        ],
+        "options": {
+          "buildTarget": "angular-mcp:build",
+          "runBuildTargetDependencies": false
+        },
+        "configurations": {
+          "development": {
+            "buildTarget": "angular-mcp:build:development"
+          },
+          "production": {
+            "buildTarget": "angular-mcp:build:production"
+          }
+        }
+      },
+      "serve-static": {
+        "dependsOn": [
+          "^build"
+        ],
+        "command": "node packages/angular-mcp/dist/main.js"
+      },
+      "debug": {
+        "dependsOn": [
+          "build"
+        ],
+        "command": "npx @modelcontextprotocol/inspector node packages/angular-mcp/dist/main.js --workspaceRoot=/root/path/to/workspace   --ds.uiRoot=packages/minimal-repo/packages/design-system/ui --ds.storybookDocsRoot=packages/minimal-repo/packages/design-system/storybook-host-app/src/components --ds.deprecatedCssClassesPath=packages/minimal-repo/packages/design-system/component-options.js"
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+# Add files here to ignore them from prettier formatting
+/dist
+**/dist
+
+/coverage
+/.nx/cache
+/.nx/workspace-data
+packages/minimal-repo/packages/application
+
+*.md
+*.mdx
+**/*.md
+**/*.mdx
+
+# Additional file types that should be ignored
+*.mdc
+**/*.mdc
+.aiignore
+.gitignore
+.nvmrc
+.prettierignore
+*.gitkeep
+**/*.gitkeep
+*.swcrc
+**/*.swcrc
+*.tsbuildinfo
+**/*.tsbuildinfo
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+**/*.png
+**/*.jpg
+**/*.jpeg
+**/*.gif
+**/*.svg

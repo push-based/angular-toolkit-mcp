@@ -1,0 +1,188 @@
+<header class="dashboard-header">
+  <!-- Logo and Title Section -->
+  <div class="header-brand">
+    <div class="brand-logo">
+      <svg width="32" height="32" viewBox="0 0 32 32" class="logo-icon">
+        <circle cx="16" cy="16" r="14" fill="#4F46E5"/>
+        <path d="M12 16l4 4 8-8" stroke="white" stroke-width="2" fill="none"/>
+      </svg>
+    </div>
+    <h1 class="brand-title">Dashboard Pro</h1>
+    
+    <!-- DsBadge Component -->
+    <ds-badge 
+      [size]="badgeSize() === 'large' ? 'medium' : badgeSize() === 'medium' ? 'medium' : 'xsmall'"
+      [variant]="getBadgeVariant()">
+      <!-- Start slot for icon -->
+      <span slot="start">
+        @if (!hasIconSlot()) {
+          <span class="offer-badge-default-icon">🎯</span>
+        }
+        <ng-content select="[slot=start]" />
+      </span>
+      <!-- Main content -->
+      <ng-content />
+      @if (!hasContent()) {
+        {{ defaultBadgeText() }}
+      }
+      <!-- End slot for dismiss button -->
+      <span slot="end">
+        @if (dismissible()) {
+          <button 
+            class="offer-badge-dismiss"
+            (click)="dismissBadge()"
+            aria-label="Dismiss offer">
+            ×
+          </button>
+        }
+        <ng-content select="[slot=end]" />
+      </span>
+    </ds-badge>
+  </div>
+
+  <!-- Search Section -->
+  <div class="header-search">
+    <div *ngIf="true" class="search-container" [class.search-focused]="searchFocused()">
+      <svg class="search-icon" width="20" height="20" viewBox="0 0 20 20">
+        <path d="M9 2a7 7 0 1 1 0 14 7 7 0 0 1 0-14zM2 9a7 7 0 1 0 14 0 7 7 0 0 0-14 0z" fill="currentColor"/>
+        <path d="m13 13 4 4-1.5 1.5-4-4" fill="currentColor"/>
+      </svg>
+      <input 
+        type="text"
+        class="search-input"
+        placeholder="Search dashboard..."
+        [(ngModel)]="searchQuery"
+        (focus)="searchFocused.set(true)"
+        (blur)="searchFocused.set(false)"
+        (keyup.enter)="performSearch()"
+        [disabled]="searchDisabled()">
+      @if (searchQuery()) {
+        <button 
+          class="search-clear"
+          (click)="clearSearch()"
+          aria-label="Clear search">
+          ×
+        </button>
+      }
+    </div>
+    @if (searchSuggestions().length > 0 && searchFocused()) {
+      <div class="search-suggestions">
+        @for (suggestion of searchSuggestions(); track suggestion.id) {
+          <button 
+            class="suggestion-item"
+            (click)="selectSuggestion(suggestion)">
+            {{ suggestion.text }}
+          </button>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Actions Section -->
+  <div class="header-actions">
+    <!-- Notifications -->
+    <div class="action-item notification-container">
+      <button 
+        class="action-button notification-button"
+        [class.has-notifications]="unreadNotifications() > 0"
+        (click)="toggleNotifications()"
+        [attr.aria-label]="'Notifications (' + unreadNotifications() + ' unread)'">
+        <svg width="24" height="24" viewBox="0 0 24 24" class="notification-icon">
+          <path d="M12 2a7 7 0 0 1 7 7v4.29l1.71 1.71a1 1 0 0 1-.71 1.71H4a1 1 0 0 1-.71-1.71L5 13.29V9a7 7 0 0 1 7-7z" fill="currentColor"/>
+          <path d="M10 20a2 2 0 1 0 4 0" fill="currentColor"/>
+        </svg>
+        @if (unreadNotifications() > 0) {
+          <span class="notification-badge">{{ unreadNotifications() }}</span>
+        }
+      </button>
+      
+      @if (showNotifications()) {
+        <div class="notifications-dropdown">
+          <div class="dropdown-header">
+            <h3>Notifications</h3>
+            @if (unreadNotifications() > 0) {
+              <button 
+                class="mark-all-read"
+                (click)="markAllNotificationsRead()">
+                Mark all read
+              </button>
+            }
+          </div>
+          <div class="notifications-list">
+            @for (notification of notifications(); track notification.id) {
+              <div 
+                class="notification-item"
+                [class.notification-unread]="!notification.read"
+                [class.notification-{{ notification.type }}]="true">
+                <div class="notification-content">
+                  <h4 class="notification-title">{{ notification.title }}</h4>
+                  <p class="notification-message">{{ notification.message }}</p>
+                  <span class="notification-time">{{ formatTime(notification.timestamp) }}</span>
+                </div>
+                <button 
+                  class="notification-dismiss"
+                  (click)="dismissNotification(notification.id)"
+                  aria-label="Dismiss notification">
+                  ×
+                </button>
+              </div>
+            } @empty {
+              <div class="no-notifications">
+                <p>No notifications</p>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- User Menu -->
+    <div class="action-item user-container">
+      <button 
+        class="action-button user-button"
+        (click)="toggleUserMenu()"
+        [attr.aria-label]="'User menu for ' + userProfile()?.name">
+        @if (userProfile()?.avatar) {
+          <img 
+            [src]="userProfile()!.avatar" 
+            [alt]="userProfile()!.name"
+            class="user-avatar">
+        } @else {
+          <div class="user-avatar-placeholder">
+            {{ getUserInitials() }}
+          </div>
+        }
+        <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 12 12">
+          <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        </svg>
+      </button>
+
+      @if (showUserMenu()) {
+        <div class="user-dropdown">
+          <div class="user-info">
+            <div class="user-details">
+              <h4>{{ userProfile()?.name }}</h4>
+              <p>{{ userProfile()?.email }}</p>
+              <span class="user-role">{{ userProfile()?.role }}</span>
+            </div>
+          </div>
+          <div class="user-actions">
+            <button class="dropdown-item" (click)="navigateToProfile()">
+              Profile Settings
+            </button>
+            <button class="dropdown-item" (click)="navigateToPreferences()">
+              Preferences
+            </button>
+            <button class="dropdown-item" (click)="toggleTheme()">
+              {{ darkMode() ? 'Light Mode' : 'Dark Mode' }}
+            </button>
+            <hr class="dropdown-divider">
+            <button class="dropdown-item logout" (click)="logout()">
+              Sign Out
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</header> 

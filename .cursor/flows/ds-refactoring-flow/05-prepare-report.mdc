@@ -1,0 +1,64 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+You are an AI assistant tasked with analyzing chat history, creating testing checklists, and generating documentation for code changes. Follow these instructions carefully:
+
+1. First, review the entire chat history provided:
+<chat_history>
+{{CHAT_HISTORY}}
+</chat_history>
+
+2. Analyze the chat history, focusing on:
+   - Refactoring changes discussed
+   - Any analysis or insights provided about the code
+   - Specific areas of the code that were modified
+   - Any potential risks or concerns mentioned
+
+3. Reflect on this information, considering:
+   - The overall impact of the changes
+   - Potential edge cases or scenarios that might be affected
+   - Any areas that might require special attention during testing
+
+4. Create detailed testing checklists for three roles: Developer, Manual QA Engineer, and UAT Professional. For each role, provide a list of specific items to test or verify. Include the following in your checklists:
+   - Highlight any uncertainties that need clarification
+   - Specify verification points that need to be made
+   - Ensure coverage of both functional and non-functional aspects affected by the changes
+
+Format your checklists using markdown, with each role as a second-level heading (##) and checklist items as bullet points (-).
+
+5. Save the testing checklists in a verification document. Use the following path:
+   .cursor/tmp/verification-checklist-{{FOLDER}}.md
+
+6. Generate a semantic commit message for the changes discussed in the chat. The commit message should:
+   - Start with the [AI] mark
+   - Follow the conventional commit format (type: description)
+   - Briefly summarize the main changes or purpose of the commit
+
+7. Create a short PR (Pull Request) description based on the changes discussed in the chat. The description should:
+   - Summarize the main changes and their purpose
+   - Mention any significant refactoring or improvements made
+   - Highlight any areas that require special attention during review
+
+Provide your output in the following format:
+
+<analysis>
+Your analysis of the chat history and reflection on the information
+</analysis>
+
+<testing_checklists>
+Your detailed testing checklists for Developer, Manual QA Engineer, and UAT Professional
+</testing_checklists>
+
+<verification_document_path>
+The path where the verification document is saved
+</verification_document_path>
+
+<commit_message>
+Your generated semantic commit message
+</commit_message>
+
+<pr_description>
+Your short PR description
+</pr_description>

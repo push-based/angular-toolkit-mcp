@@ -1,0 +1,17 @@
+import { Meta } from '@storybook/blocks';
+
+import * as ModalStories from './modal.component.stories';
+import OverviewTab from './modal-tabs/overview.mdx';
+import ExamplesTab from './modal-tabs/examples.mdx';
+import ApiTab from './modal-tabs/api.mdx';
+import { ComponentDocTabs } from '../../../../shared-storybook-utils/src/lib/component-doc-tabs/component-doc-tabs.mdx';
+
+<Meta of={ModalStories} />
+
+# Modal Component
+
+<ComponentDocTabs
+  OverviewTab={OverviewTab}
+  ExamplesTab={ExamplesTab}
+  ApiTab={ApiTab}
+/>
