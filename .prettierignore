@@ -11,3 +11,27 @@ packages/minimal-repo/packages/application
 *.mdx
 **/*.md
 **/*.mdx
+
+# Additional file types that should be ignored
+*.mdc
+**/*.mdc
+.aiignore
+.gitignore
+.nvmrc
+.prettierignore
+*.gitkeep
+**/*.gitkeep
+*.swcrc
+**/*.swcrc
+*.tsbuildinfo
+**/*.tsbuildinfo
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+**/*.png
+**/*.jpg
+**/*.jpeg
+**/*.gif
+**/*.svg
