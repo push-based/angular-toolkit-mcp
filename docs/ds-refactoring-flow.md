@@ -8,11 +8,13 @@ This document describes a 5-step AI-assisted refactoring process for migrating l
 **Process Summary:**
 1. **Find Violations** → Identify deprecated component usage
 2. **Plan Refactoring** → Create detailed migration strategy  
+   - **If viable:** Proceed to step 3 with normal checklist
+   - **If non-viable:** Use alternative handling (see Non-Viable Cases section below)
 3. **Fix Violations** → Execute code changes
 4. **Validate Changes** → Verify refactoring safety
 5. **Prepare Report** → Generate testing checklists and documentation
 
-The process includes three quality gates where human review and approval are required.
+The process includes three quality gates where human review and approval are required. When components are identified as non-viable during planning, an alternative handling process is used instead of proceeding to the normal fix violations step.
 
 ## Prerequisites
 
@@ -108,10 +110,13 @@ Before proceeding to Phase 3, you must review the migration plan.
 
 **Required Actions:**
 - Review the suggested plan thoroughly
-- Approve or request modifications
+- **If components are viable for migration:** Approve or request modifications, then proceed with checklist creation
+- **If components are non-viable:** Developer must thoroughly review and confirm non-viability, then use `@03-non-viable-cases.mdc` instead of normal checklist
 - Clarify any uncertainties
 
-**Next Step:** When you are satisfied with the plan, the agent will create a checklist.
+**Next Step:** 
+- **Viable migrations:** When satisfied with the plan, the agent will create a checklist
+- **Non-viable migrations:** Use the non-viable cases rule instead of proceeding to fix violations
 ---
 
 **Phase 3: Checklist Creation**
@@ -158,6 +163,99 @@ The rule enforces structured output with `<comprehensive_analysis>`, `<migration
 
 - Non-complex cases: Claude-4-Sonnet
 - Complex cases: Claude-4-Sonnet (thinking)
+
+## Non-Viable Cases Handling
+
+### When to Use
+
+During the **02-plan-refactoring.mdc** step, if the AI identifies components as non-viable for migration, this must be **thoroughly reviewed by an actual developer**. Only after developer confirmation should you proceed with non-viable handling instead of the normal checklist confirmation.
+
+### Process
+
+When non-viable cases are confirmed during planning, instead of proceeding with the normal checklist, use the non-viable cases rule:
+- Reference: `@03-non-viable-cases.mdc` (or `@03-non-viable-cases.mdc` depending on your rule setup)
+- **Critical:** This replaces the normal "Fix Violations" step entirely
+
+The rule implements a systematic three-phase process for handling non-migratable components:
+
+**Phase 1: Identification & Discovery**
+- Identifies the target component class name from conversation context
+- Runs CSS discovery using `report-deprecated-css` tool on both global styles and style overrides directories
+- Creates a comprehensive implementation checklist with validation checks
+- Saves checklist to `.cursor/tmp/css-cleanup/[class-name]-[scope]-non-viable-migration-checklist.md`
+
+**Phase 2: Implementation**
+- Works systematically from the saved checklist file
+- **Step 1: HTML Template Updates (FIRST PRIORITY)**
+  - Replaces original component classes with `after-migration-[ORIGINAL_CLASS]` in HTML files/templates
+  - Must be done BEFORE any CSS changes to ensure consistency
+- **Step 2: CSS Selector Duplication (NOT REPLACEMENT)**
+  - Duplicates CSS selectors rather than replacing them
+  - Transforms: `.custom-radio {}` → `.custom-radio, .after-migration-custom-radio {}`
+  - Maintains visual parity between original and prefixed versions
+
+**Phase 3: Validation (Mandatory)**
+- **Validation 1 - CSS Count Consistency**: Re-runs `report-deprecated-css` tool to verify deprecated class count remains identical
+- **Validation 2 - Violation Reduction**: Runs `report-violations` tool to verify the expected reduction in violations
+- Updates checklist with validation results and marks all items complete
+
+### Key Features
+
+**Exclusion Strategy**: The `after-migration-` prefix serves as a marker that excludes these components from future violation reports, effectively removing them from the migration pipeline while preserving functionality.
+
+**Visual Consistency**: By duplicating CSS selectors rather than replacing them, the workflow ensures that both the original classes and the new prefixed classes render identically.
+
+**Comprehensive Tracking**: The workflow maintains detailed checklists and validation steps to ensure all instances are properly handled and tracked.
+
+**Error Prevention**: Systematic validation ensures that the transformation doesn't break existing functionality or miss any instances.
+
+### Tools used
+
+- `report-deprecated-css` - Identifies deprecated CSS classes in style directories
+  - Parameters: `directory`, `componentName`
+  - Returns: List of deprecated CSS usage with file locations and line numbers
+  - Used for: Discovery phase and validation of CSS count consistency
+
+- `report-violations` - Analyzes deprecated component usage in templates and code
+  - Parameters: `directory`, `componentName`  
+  - Returns: List of component violations with file locations
+  - Used for: Validation of violation reduction after implementation
+
+### Flow
+
+> You don't need to manually perform any of the listed actions except providing directory paths when requested.
+
+1. **Component Identification**: Extract target component class name from conversation context
+2. **Directory Input**: Request global styles and style overrides directories from user (with fallback handling)
+3. **CSS Discovery**: Run parallel `report-deprecated-css` scans on both directories
+4. **Checklist Creation**: Generate comprehensive implementation checklist with validation checks
+5. **HTML Updates**: Replace component classes with `after-migration-` prefixed versions in templates
+6. **CSS Duplication**: Add prefixed selectors alongside original selectors in CSS files
+7. **Validation Execution**: Run mandatory validation checks using actual tools
+8. **Progress Tracking**: Update checklist file throughout the process with completion status
+9. **Final Verification**: Confirm all validation criteria are met before completion
+
+The rule enforces structured output with `<target_component>`, `<checklist_summary>`, `<validation_1>`, and `<validation_2>` tags, and maintains strict validation criteria to ensure process integrity.
+
+### When to Use This Workflow
+
+This workflow should be used when:
+- A component is identified as non-viable for migration during the planning phase
+- Legacy components cannot be updated due to technical constraints
+- Components need to be excluded from future violation reports
+- Maintaining existing visual appearance is critical during transition periods
+
+### Integration with Main Flow
+
+This handling is integrated within the design system refactoring process:
+- **Decision Point**: During `02-plan-refactoring.mdc` when components are classified as "Non-viable"
+- **Developer Review Required**: Must be thoroughly reviewed and approved by actual developer before proceeding
+- **Replaces Steps 3-5**: When used, this replaces the normal Fix Violations → Validate Changes → Prepare Report sequence
+- **Outcome**: Successfully processed components will be excluded from subsequent violation reports
+
+### Preferred model
+
+Claude-4-Sonnet
 
 ## 03-fix-violations.mdc
 

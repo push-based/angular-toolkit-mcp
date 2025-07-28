@@ -27,12 +27,21 @@ Flows are collections of rule files (.mdc) that guide the AI through multi-step 
 **Location:** `ds-refactoring-flow/`
 **Purpose:** Migrate components from deprecated design system patterns to modern alternatives
 
-**Note:** This flow appears to be empty in the current directory but rule files exist in `.cursor/rules/` for:
-- Finding violations
-- Planning refactoring
-- Fixing violations
-- Validating changes
-- Preparing reports
+**Files:**
+- `01-find-violations.mdc` - Identify deprecated component usage
+- `02-plan-refactoring.mdc` - Create detailed migration strategy
+- `03-non-viable-cases.mdc` - Handle non-migratable components by marking them for exclusion
+- `03-fix-violations.mdc` - Execute code changes
+- `04-validate-changes.mdc` - Verify improvements through contract comparison
+- `05-prepare-report.mdc` - Generate testing checklists and documentation
+- `clean-global-styles.mdc` - Independent analysis of deprecated CSS usage
+
+**Special Handling:**
+- **Non-Viable Cases**: When components are identified as non-viable during the planning step, use `03-non-viable-cases.mdc` instead of proceeding with the normal fix violations step. This marks components with special prefixes (`after-migration-[ORIGINAL_CLASS]`) to exclude them from future violation reports.
+
+**Use Cases:** 
+- **Primary Flow**: Migrating components to modern design system patterns
+- **Non-Viable Handling**: Alternative handling within the main flow for legacy components that cannot be migrated
 
 ## How to Use Flows
 

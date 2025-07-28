@@ -138,6 +138,20 @@ This document provides comprehensive guidance for AI agents working with Angular
 4. lint-changes → Ensure code quality
 ```
 
+### 4. Non-Viable Cases Handling (Alternative to Steps 3-5)
+```
+1. report-deprecated-css → Identify CSS usage in global styles
+2. report-deprecated-css → Identify CSS usage in component overrides
+3. [Replace HTML classes with after-migration- prefix]
+4. [Duplicate CSS selectors with prefixed versions]
+5. report-deprecated-css → Validate CSS count consistency
+6. report-violations → Validate violation reduction
+```
+**Purpose**: Used during the main DS refactoring workflow when components are identified as non-viable during planning step
+**Trigger**: Requires developer review and approval after AI identifies non-viable cases in step 2
+**Key Pattern**: Use `after-migration-[ORIGINAL_CLASS]` prefix to exclude components from future analysis
+**Replaces**: Normal fix violations → validate changes → prepare report sequence
+
 ## Error Handling for AI Agents
 
 - **Path Resolution**: Always use relative paths starting with `./`
