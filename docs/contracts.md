@@ -124,6 +124,8 @@ The contracts system is fully integrated into the 5-step refactoring workflow:
 - **Contract role**: Analysis of component structure informs refactoring strategy
 - **Output**: Comprehensive migration plan with complexity scoring
 
+**Note on Non-Viable Cases**: When components are identified as non-viable during step 2 and developer approval is obtained, the non-viable cases handling (`03-non-viable-cases.mdc`) is used instead of proceeding to steps 3-5. This handling does not use contracts as it maintains existing component structure while marking components for exclusion from future reports.
+
 ### Step 3: Fix Violations (`03-fix-violations.mdc`)
 - **Purpose**: Execute the refactoring plan systematically
 - **Contract role**: **Pre-refactoring contracts are automatically generated** for each component before changes begin

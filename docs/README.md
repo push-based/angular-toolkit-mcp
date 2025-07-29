@@ -30,8 +30,9 @@ This documentation is organized into several sections to help you get started qu
 
 ### For Design System Migration
 1. Use **[Design System Refactoring Flow](ds-refactoring-flow.md)** for systematic legacy component migration
-2. Learn about **[Component Contracts](contracts.md)** for validation and safety
-3. Reference **[Tools Reference](tools.md)** for specific tool details
+2. When components are identified as non-viable during planning, use the **Non-Viable Cases handling** instead of normal fix violations step (requires developer review and approval)
+3. Learn about **[Component Contracts](contracts.md)** for validation and safety
+4. Reference **[Tools Reference](tools.md)** for specific tool details
 
 ### For Developers & Contributors
 1. Read **[Architecture & Internal Design](architecture-internal-design.md)** to understand the system
@@ -54,8 +55,10 @@ graph LR
 ### Design System Migration
 ```mermaid
 graph LR
-    A[Find Violations] --> B[Plan Refactoring] --> C[Fix Violations] --> D[Validate Changes] --> E[Prepare Report]
+    A[Find Violations] --> B[Plan Refactoring] --> B1{Viable?}
     B --> F[Human Review]
+    B1 -->|Yes| C[Fix Violations] --> D[Validate Changes] --> E[Prepare Report]
+    B1 -->|No + Dev Approval| B2[Non-Viable Cases<br/>Handling]
     C --> G[Quality Gate]
     D --> H[Final Validation]
 ```
