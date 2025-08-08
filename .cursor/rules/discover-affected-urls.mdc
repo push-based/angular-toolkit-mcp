@@ -6,7 +6,7 @@ alwaysApply: false
 {
   "schema_version": "1.0",
   "task": "Angular routing analysis and URL discovery",
-  "description": "Analyze Angular routing hierarchy using bottom-up approach: identify complete routing structure from app_directory (top point) and parent routes for specific files (bottom point), then connect them bottom-up with comprehensive redirect resolution. Output ONLY plain text with markdown syntax - DO NOT generate any files.",
+  "description": "Analyze Angular routing hierarchy using bottom-up approach: identify complete routing structure from app_directory (top point) and parent routes for specific files (bottom point), then connect them bottom-up with comprehensive redirect resolution. Output plain text with markdown syntax throughout; at the end, persist discovered URLs to JSON files as specified.",
   "inputs": {
     "app_directory": "Directory path where route definition files should be scanned (e.g., 'src/app')",
     "files": "Array of specific file paths to analyze (e.g., ['src/app/components/user.component.ts'])"
@@ -58,7 +58,8 @@ alwaysApply: false
       "response_format": "plain text with markdown syntax wrapped with <parameter_analysis> tags, maximum 200 tokens, NO file generation",
       "steps": [
         "Extract parameter constraints from TypeScript files using ALL established routing connections from Phase 3.",
-        "Scan for visibility conditions: @if, *ngIf directives, route guards, permissions along ALL discovered route paths.",
+        "Scan for visibility conditions: @if, *ngIf directives, route guards, resolvers, route data, permissions, and feature flags along ALL discovered route paths.",
+        "HUMAN-FRIENDLY VISIBILITY SUMMARY: Produce a concise developer-friendly object with keys such as: 'authorization' ('required' | 'not required'), 'guards' (array of guard class names), 'resolvers' (string like 'A or B' when multiple), 'redirectBehavior' (e.g., '/old redirects to /new'), 'featureFlags' (array), 'conditions' (bullet-like phrases distilled from *ngIf/@if and route data), and optional 'notes'. Normalize common patterns (e.g., allowAnonymous: true → authorization: 'not required'). Include inherited conditions across the bottom-up chain.",
         "Provide realistic examples with different culture codes and parameter values for ALL traced paths (direct and indirect).",
         "Validate that all routing scenarios maintain parameter inheritance and visibility constraints across different access methods."
       ]
@@ -67,13 +68,13 @@ alwaysApply: false
       "id": 5,
       "name": "MANDATORY Comprehensive Summary Generation",
       "requires_approval": false,
-      "response_format": "plain text with markdown syntax wrapped with <quick_access_summary> tags, NO file generation",
+      "response_format": "plain text with markdown syntax wrapped with <quick_access_summary> tags",
       "steps": [
         "COLLECT ALL SCENARIOS: Gather route examples from Phase 3 for EVERY routing scenario discovered. Include both direct routes and parent-access routes. MANDATORY: Every component must have at least one URL example for each routing scenario identified.",
         "GENERATE SUMMARY STRUCTURE: Create '🎯 QUICK ACCESS SUMMARY' section with exact format: Header 'Files Analyzed: [List all files]' followed by subsections '## File: [Filename.extension]' for each file.",
         "FORMAT VALIDATION: Use MANDATORY bullet list format with markdown bullets (-) for route examples. CRITICAL: Each route example MUST start with '- /' (markdown bullet + forward slash). FORBIDDEN: NO tables, NO pipes (|), NO table formatting whatsoever.",
         "COMPLETE SCENARIO COVERAGE: Include ALL discovered routing scenarios: direct routes, redirected routes, and parent-access routes. Add clear notation: '(direct route)', '(redirects to X)', '(non-routable, found in parent component at URL)'. MANDATORY: Cover every routing scenario from Phase 1 discovery.",
-        "FINAL COMPLETENESS VERIFICATION: Confirm Quick Access Summary contains ALL files AND ALL routing scenarios discovered in Phase 1. CRITICAL: Verify every routing scenario has at least one URL example. Cross-reference against Phase 1 findings to ensure no routes were missed. Analysis is NOT complete until ALL discovered scenarios are represented."
+        "FINAL VERIFICATION AND PERSISTENCE (MANDATORY): Confirm the summary contains ALL files AND ALL routing scenarios. Then, for each analyzed component, WRITE a JSON file at `.cursor/tmp/discovered-urls/{{component-name}}.json` with schema: { \"component\": { \"urls\": [from summary], \"visibilityConditions\": <human-friendly object from Phase 4, or an array of such objects when scenarios differ> } }. Use the component TypeScript class name when available for {{component-name}}, otherwise the component file basename without extensions. Create the target directory if it does not exist and overwrite existing files."
       ]
     }
   ]
