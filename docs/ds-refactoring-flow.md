@@ -598,3 +598,121 @@ While this rule operates independently, it can inform the main refactoring flow:
 ### Preferred model
 
 Claude-4-Sonnet
+
+
+## discover-affected-urls.mdc (Independent Step)
+
+### Goal
+
+Analyze Angular routing hierarchy to discover URL(s) where specific component files can be accessed in a web application. This rule performs comprehensive routing analysis using a bottom-up approach to identify both directly routable components and non-routable components (modals, dialogs, child components) that are accessible through their parent routes, providing complete URL discovery with redirect resolution.
+
+### Process
+
+To start this process, drag file `discover-affected-urls.mdc` to the cursor chat and provide the required parameters:
+
+```
+app_directory=src/app
+files=["src/app/components/user.component.ts", "src/app/dialogs/confirmation.component.ts"]
+
+@discover-affected-urls.mdc
+```
+
+This rule implements a comprehensive five-phase analysis process:
+
+**Phase 1: Routing Hierarchy Discovery & Bottom-Top Point Identification**
+- Scans the complete app directory to identify ALL routing files and build routing hierarchy tree
+- Discovers top point (complete app routing structure) and bottom point (file parent routes)
+- Classifies each file as either directly routable or non-routable
+- Validates that both routing points are properly identified before proceeding
+
+**Phase 2: Non-Routable Component Analysis**
+- Identifies components without direct route definitions (modals, dialogs, library components)
+- Traverses component hierarchy upward through multiple levels to find routable parent components
+- Analyzes modal/dialog trigger mechanisms (MatDialog.open, component selectors, service calls)
+- Maps complete relationship chains from non-routable components to their accessible routes
+
+**Phase 3: Bottom-Up Route Connection & Path Construction**
+- Creates comprehensive redirect mapping from all routing files in the hierarchy
+- Traces routable components upward through routing hierarchy with full redirect resolution
+- Resolves non-routable component paths using parent relationships from Phase 2
+- Constructs complete paths with redirect audit trails and concrete URL examples
+
+**Phase 4: Parameter & Visibility Analysis**
+- Extracts parameter constraints from TypeScript files using established connections
+- Scans for visibility conditions (@if, *ngIf directives, route guards, permissions)
+- Provides realistic examples with culture codes and parameter values
+- Validates parameter inheritance and visibility constraints along routing paths
+
+**Phase 5: Quick Access Summary Generation**
+- Collects and organizes all route examples from previous phases
+- Generates structured summary with mandatory bullet list format
+- Provides 1-3 concrete URL examples per file with realistic parameters
+- Ensures complete coverage of all analyzed files with proper formatting
+
+### Tools used
+
+None - This rule uses pure Angular routing analysis without external MCP tools
+
+### Flow
+
+> You don't need to manually perform any of the listed actions except providing the initial parameters.
+
+1. **Parameter Setup**: User provides `{{APP_DIRECTORY}}` and `{{FILES}}` array for analysis
+2. **Routing Discovery**: Scan app directory for complete routing hierarchy and classify files
+3. **Non-Routable Analysis**: Identify parent relationships for components without direct routes
+4. **Route Construction**: Build complete paths with redirect resolution and concrete examples
+5. **Parameter Analysis**: Extract constraints and visibility conditions along routing paths
+6. **Summary Generation**: Create quick access summary with formatted URL examples for all files
+7. **Validation**: Ensure complete coverage and proper formatting of all analyzed components
+
+### Output Structure
+
+The rule provides structured output across five tagged sections:
+
+**Routing Discovery Section** (`<routing_discovery>`)
+- Complete app routing hierarchy tree
+- File classification (routable vs non-routable)
+- Top and bottom point identification
+
+**Non-Routable Analysis Section** (`<non_routable_analysis>`)
+- Parent component relationships
+- Multi-level hierarchy traversal results
+- Modal/dialog trigger analysis
+
+**Bottom-Up Connection Section** (`<bottom_up_connection>`)
+- Comprehensive redirect mapping
+- Complete path construction with examples
+- Redirect audit trails
+
+**Parameter Analysis Section** (`<parameter_analysis>`)
+- Parameter constraints and visibility conditions
+- Realistic examples with culture codes
+- Guard and permission analysis
+
+**Quick Access Summary Section** (`<quick_access_summary>`)
+- Structured summary with bullet format
+- 1-3 URL examples per file
+- Complete coverage verification
+
+### Use Cases
+
+This rule is particularly useful for:
+
+- **Component Migration Planning**: Understanding where components are accessible before refactoring
+- **Testing Strategy**: Identifying all URLs that need testing after component changes
+- **Documentation**: Creating comprehensive route documentation for components
+- **Debugging**: Troubleshooting routing issues and finding component access points
+- **Impact Analysis**: Understanding the scope of changes when modifying routable components
+
+### Integration with Main Flow
+
+While this rule operates independently, it complements the design system refactoring flow:
+
+- **Before Refactoring**: Identify all URLs where legacy components are accessible
+- **During Planning**: Understand routing impact of component changes
+- **After Migration**: Verify that refactored components remain accessible at expected URLs
+- **Testing Phase**: Use discovered URLs for comprehensive component testing
+
+### Preferred model
+
+Claude-4-Sonnet
