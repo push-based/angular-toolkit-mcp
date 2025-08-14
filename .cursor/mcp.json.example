@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "nx-mcp": {
+      "url": "http://localhost:9665/sse"
+    },
+    "angular-toolkit-mcp": {
+      "command": "node",
+      "args": [
+        "/absolute/path/to/angular-mcp-server/packages/angular-mcp-server/dist/index.js",
+        "--workspaceRoot=/absolute/path/to/your/angular/workspace",
+        "--ds.storybookDocsRoot=relative/path/to/storybook/docs",
+        "--ds.deprecatedCssClassesPath=relative/path/to/component-options.js",
+        "--ds.uiRoot=relative/path/to/ui/components"
+      ]
+    },
+    "ESLint": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["@eslint/mcp@latest"]
+    }
+  }
+}

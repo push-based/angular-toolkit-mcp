@@ -47,11 +47,12 @@ Add the server to your MCP client configuration (e.g., Claude Desktop, Cursor, C
 
 #### For Cursor (`.cursor/mcp.json` or MCP settings):
 
-Open the project you working with and register the mcp with next parameters:
+Copy `.cursor/mcp.json.example` to the project you're working on. Copied file should be: `.cursor/mcp.json` and update `angular-toolkit-mcp` values accordingly:
 
 ```json
 {
   "mcpServers": {
+     ...(other servers)...
     "angular-toolkit-mcp": {
       "command": "node",
       "args": [
@@ -65,6 +66,8 @@ Open the project you working with and register the mcp with next parameters:
   }
 }
 ```
+
+> **Note**: The example file contains configuration for `ESLint` official MCP which is required for the toolkit to work properly.
 
 ### Configuration Parameters
 

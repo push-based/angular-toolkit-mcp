@@ -21,10 +21,7 @@ This contains the list of available component contracts.
 
 Now, follow these steps:
 
-1. Use the `lint-changes` tool to perform static code analysis on the refactored files. Call the tool like this:
-   <tool_call>lint-changes {{REFACTORED_FILES}}</tool_call>
-   
-   If there are any errors reported by the lint tool, list them and ask the user what to do. Wait for the user's response before proceeding.
+1. Fix eslint issues in {{REFACTORED_FILES}} using `lint-files`. DO NOT go to next step until lint errors are fixed. If there are unfixable errors ask user what to do.
 
 2. Use the `build_component_contract` tool to capture the refactored state of the components:
    <tool_call>build_component_contract {{REFACTORED_FILES}}</tool_call>
