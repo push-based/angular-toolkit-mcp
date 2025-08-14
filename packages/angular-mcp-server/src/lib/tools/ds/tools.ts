@@ -5,7 +5,6 @@ import { reportDeprecatedCssTools } from './project/report-deprecated-css.tool';
 import { buildComponentUsageGraphTools } from './component-usage-graph';
 import { getDsComponentDataTools } from './component/get-ds-component-data.tool';
 import { getDeprecatedCssClassesTools } from './component/get-deprecated-css-classes.tool';
-import { validateAngularComponentsTools } from './angular-eslint/lint-changes.tool';
 import {
   buildComponentContractTools,
   diffComponentContractTools,
@@ -18,7 +17,6 @@ export const dsTools: ToolsConfig[] = [
   ...getProjectDependenciesTools,
   ...reportDeprecatedCssTools,
   ...buildComponentUsageGraphTools,
-  ...validateAngularComponentsTools,
   // Component contract tools
   ...buildComponentContractTools,
   ...diffComponentContractTools,
