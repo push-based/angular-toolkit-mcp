@@ -49,4 +49,5 @@ vitest.config.*.timestamp*
 .code-pushup
 
 .cursor/rules/nx-rules.mdc
+.cursor/mcp.json
 .github/instructions/nx.instructions.md
