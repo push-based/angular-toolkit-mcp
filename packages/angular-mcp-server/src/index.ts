@@ -1,1 +1,1 @@
-export * from './lib/angular-mcp-server';
+export * from './lib/angular-mcp-server.js';

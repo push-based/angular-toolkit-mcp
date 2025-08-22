@@ -1,7 +1,7 @@
 import { PluginConfig } from '@push-based/models';
-import { CreateRunnerConfig, runnerFunction } from './runner/create-runner';
-import { getAudits } from './utils';
-import { ANGULAR_DS_USAGE_PLUGIN_SLUG } from './constants';
+import { CreateRunnerConfig, runnerFunction } from './runner/create-runner.js';
+import { getAudits } from './utils.js';
+import { ANGULAR_DS_USAGE_PLUGIN_SLUG } from './constants.js';
 
 export type DsComponentUsagePluginConfig = CreateRunnerConfig;
 

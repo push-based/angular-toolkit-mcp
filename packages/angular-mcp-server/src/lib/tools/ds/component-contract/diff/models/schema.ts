@@ -2,7 +2,8 @@ import { ToolSchemaOptions } from '@push-based/models';
 import {
   createProjectAnalysisSchema,
   COMMON_ANNOTATIONS,
-} from '../../../shared';
+} from '../../../shared/index.js';
+export * from '../../../shared/index.js';
 
 /**
  * Schema for diffing component contracts

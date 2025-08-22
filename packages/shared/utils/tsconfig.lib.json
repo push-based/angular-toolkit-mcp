@@ -28,6 +28,8 @@
     "vite.config.mts",
     "vitest.config.ts",
     "vitest.config.mts",
+    "**/*.spec.ts",
+    "**/*.unit.test.ts",
     "src/**/*.test.tsx",
     "src/**/*.spec.tsx",
     "src/**/*.test.js",

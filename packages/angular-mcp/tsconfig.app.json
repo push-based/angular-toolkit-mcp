@@ -1,6 +1,9 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "baseUrl": ".",
+    "emitDeclarationOnly": false,
+    "declaration": true,
     "outDir": "dist",
     "types": ["node", "express"],
     "rootDir": "src",

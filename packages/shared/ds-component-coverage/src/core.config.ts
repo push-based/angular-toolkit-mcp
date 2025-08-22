@@ -1,35 +1,27 @@
-import { CategoryConfig, CoreConfig } from '@push-based/models';
-import angularDsUsagePlugin, {
-  DsComponentUsagePluginConfig,
-} from './lib/ds-component-coverage.plugin';
-import { getAngularDsUsageCategoryRefs } from './lib/utils';
+import { CoreConfig, CategoryConfig } from '@push-based/models';
+import {
+  dsComponentCoveragePlugin,
+  type DsComponentUsagePluginConfig,
+} from './lib/ds-component-coverage.plugin.js';
+import { getAngularDsUsageCategoryRefs } from './lib/utils.js';
 
-export async function dsComponentUsagePluginCoreConfig({
-  directory,
-  dsComponents,
-}: DsComponentUsagePluginConfig) {
-  return {
-    plugins: [
-      angularDsUsagePlugin({
-        directory,
-        dsComponents,
-      }),
-    ],
-    categories: await angularDsUsagePluginCategories({ dsComponents }),
-  } as const satisfies CoreConfig;
-}
-
-export async function angularDsUsagePluginCategories({
-  dsComponents,
-}: Pick<DsComponentUsagePluginConfig, 'dsComponents'>): Promise<
-  CategoryConfig[]
-> {
-  return [
+export const coreConfig: CoreConfig<DsComponentUsagePluginConfig> = {
+  meta: {
+    title: 'Design System Coverage',
+  },
+  categories: [
     {
-      slug: 'design-system-usage',
-      title: 'Design System Usage',
-      description: 'Usage of design system components',
-      refs: getAngularDsUsageCategoryRefs(dsComponents),
+      id: 'ds-coverage',
+      title: 'DS Coverage',
+      refs: getAngularDsUsageCategoryRefs([
+        { componentName: 'DsButton', deprecatedCssClasses: ['btn'] },
+      ]),
+    } satisfies CategoryConfig,
+  ],
+  plugins: [
+    {
+      module: () => dsComponentCoveragePlugin,
+      config: { directory: '' },
     },
-  ];
-}
+  ],
+};
