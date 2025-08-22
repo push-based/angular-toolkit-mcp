@@ -1,4 +1,4 @@
-import { mergeConfigs } from '@code-pushup/utils';
+import { mergeConfigs } from '@push-based/utils';
 import { dsComponentUsagePluginCoreConfig } from '../../../../../packages/shared/ds-component-coverage/src/core.config';
 import { ssrAdoptionPluginCoreConfig } from '../../../../../src/ssr-adoption/src/core.config';
 
