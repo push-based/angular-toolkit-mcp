@@ -7,7 +7,7 @@ import { getAngularDsUsageCategoryRefs } from './lib/utils.js';
 export async function dsComponentUsagePluginCoreConfig({
   directory,
   dsComponents,
-}: DsComponentUsagePluginConfig) {
+}: DsComponentUsagePluginConfig): Promise<CoreConfig> {
   return {
     plugins: [
       angularDsUsagePlugin({
