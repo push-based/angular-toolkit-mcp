@@ -1,5 +1,6 @@
 import * as path from 'path';
-import { toUnixPath, findAllFiles } from '@push-based/utils';
+import { toUnixPath } from '@code-pushup/utils';
+import { findAllFiles } from '@push-based/utils';
 import {
   BuildComponentUsageGraphOptions,
   ComponentUsageGraphResult,

@@ -25,7 +25,7 @@ This document provides an AI-friendly overview of the shared libraries in the `/
 #### `@push-based/utils`
 
 - **Purpose**: General utility functions and file system operations
-- **Key Exports**: toUnixPath, slugify, pluralize, findFilesWithPattern, resolveFile
+- **Key Exports**: findFilesWithPattern, resolveFile
 - **Dependencies**: models
 - **Used By**: angular-ast-utils, ds-component-coverage
 

@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as ts from 'typescript';
-import { toUnixPath } from '@push-based/utils';
+import { toUnixPath } from '@code-pushup/utils';
 
 import {
   DependencyInfo,
