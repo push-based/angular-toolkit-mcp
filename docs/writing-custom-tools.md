@@ -24,7 +24,7 @@ File name **must** end with `.tool.ts` so tests & registries can auto-discover i
 
 ```ts
 import { z } from 'zod';
-import { ToolSchemaOptions, ToolsConfig } from '@push-based/models';
+import { ToolSchemaOptions, ToolsConfig } from '@code-pushup/models';
 import { createHandler, RESULT_FORMATTERS } from '../shared/utils/handler-helpers.js';
 
 // 1️⃣ Schema

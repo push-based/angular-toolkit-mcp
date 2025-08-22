@@ -24,7 +24,7 @@ Each library provides three types of AI documentation:
 
 ## 🏗️ Foundation Layer <a id="foundation-layer"></a>
 
-### @push-based/models <a id="models"></a>
+### @code-pushup/models <a id="models"></a>
 
 Core types, interfaces, and Zod schemas for the entire ecosystem.
 
@@ -42,7 +42,7 @@ TypeScript AST parsing and manipulation utilities.
 
 ## 🔧 Intermediate Layer <a id="intermediate-layer"></a>
 
-### @push-based/utils <a id="utils"></a>
+### @code-pushup/utils <a id="utils"></a>
 
 General utility functions and file system operations.
 

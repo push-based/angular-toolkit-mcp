@@ -5,7 +5,7 @@
 > Execute commands with live output streaming and error handling.
 
 ```ts
-import { executeProcess, ProcessObserver } from '@push-based/utils';
+import { executeProcess, ProcessObserver } from '@code-pushup/utils';
 
 // Create an observer to handle process events
 const observer: ProcessObserver = {
@@ -53,7 +53,7 @@ import {
   findFilesWithPattern,
   findInFile,
   resolveFileCached,
-} from '@push-based/utils';
+} from '@code-pushup/utils';
 
 // Find all TypeScript files containing 'Component'
 const componentFiles = await findFilesWithPattern('./src', 'Component');
@@ -100,7 +100,7 @@ if (componentFiles.length > 0) {
 > Format commands with colors and context for better development experience.
 
 ```ts
-import { formatCommandLog, isVerbose, calcDuration } from '@push-based/utils';
+import { formatCommandLog, isVerbose, calcDuration } from '@code-pushup/utils';
 
 // Set verbose mode for demonstration
 process.env['NG_MCP_VERBOSE'] = 'true';
@@ -159,7 +159,7 @@ if (isVerbose()) {
 > Convert objects to command-line arguments for process execution.
 
 ```ts
-import { objectToCliArgs, executeProcess } from '@push-based/utils';
+import { objectToCliArgs, executeProcess } from '@code-pushup/utils';
 
 // Simple configuration object
 const config = {
@@ -226,7 +226,7 @@ complexArgs.forEach((arg) => console.log(`  ${arg}`));
 > Handle process errors gracefully with comprehensive error information.
 
 ```ts
-import { executeProcess, ProcessError } from '@push-based/utils';
+import { executeProcess, ProcessError } from '@code-pushup/utils';
 
 async function robustProcessExecution() {
   const commands = [
@@ -329,7 +329,7 @@ import {
   accessContent,
   getLineHits,
   isExcludedDirectory,
-} from '@push-based/utils';
+} from '@code-pushup/utils';
 
 // Custom file finder with filtering
 async function findLargeTypeScriptFiles(
@@ -435,4 +435,4 @@ if (largeFiles.length > 0) {
 
 
 
-These examples demonstrate the comprehensive capabilities of the `@push-based/utils` library for process execution, file operations, string manipulation, and development tooling in Node.js applications.
+These examples demonstrate the comprehensive capabilities of the `@code-pushup/utils` library for process execution, file operations, string manipulation, and development tooling in Node.js applications.

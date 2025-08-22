@@ -11,7 +11,7 @@ import {
   resolveFileCached,
   slugify,
   objectToCliArgs,
-} from '@push-based/utils';
+} from '@code-pushup/utils';
 
 // Execute a process with observer
 const result = await executeProcess({

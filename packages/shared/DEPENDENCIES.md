@@ -6,7 +6,7 @@ This document provides an AI-friendly overview of the shared libraries in the `/
 
 ### Foundation Layer (No Internal Dependencies)
 
-#### `@push-based/models`
+#### `@code-pushup/models`
 
 - **Purpose**: Core types, interfaces, and Zod schemas for the entire ecosystem
 - **Key Exports**: Issue, AuditOutput, PluginConfig, CategoryConfig, ToolSchemaOptions
@@ -22,7 +22,7 @@ This document provides an AI-friendly overview of the shared libraries in the `/
 
 ### Intermediate Layer (Single Foundation Dependency)
 
-#### `@push-based/utils`
+#### `@code-pushup/utils`
 
 - **Purpose**: General utility functions and file system operations
 - **Key Exports**: findFilesWithPattern, resolveFile
@@ -63,18 +63,18 @@ This document provides an AI-friendly overview of the shared libraries in the `/
 ## Dependency Graph
 
 ```
-models (foundation)
-├── utils
+@code-pushup/models (foundation)
+├── @code-pushup/utils
 ├── styles-ast-utils
 └── angular-ast-utils
-    ├── models
-    ├── utils
+    ├── @code-pushup/models
+    ├── @code-pushup/utils
     ├── typescript-ast-utils
     └── styles-ast-utils
 
 ds-component-coverage (most complex)
-├── models
-├── utils
+├── @code-pushup/models
+├── @code-pushup/utils
 ├── styles-ast-utils
 └── angular-ast-utils
 ```
@@ -128,7 +128,7 @@ Based on dependencies, the correct build order is:
 import { Issue, AuditOutput } from '@code-pushup/models';
 
 // File operations
-import { resolveFile, findFilesWithPattern } from '@push-based/utils';
+import { resolveFile, findFilesWithPattern } from '@code-pushup/utils';
 
 // Angular component parsing
 import {
