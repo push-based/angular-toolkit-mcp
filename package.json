@@ -62,7 +62,7 @@
     "@angular-devkit/schematics": "~19.2.0",
     "@angular/cli": "~19.2.0",
     "@angular/compiler": "~19.2.0",
-    "@code-pushup/core": "^0.69.0",
+    "@code-pushup/core": "^0.75.0",
     "@code-pushup/eslint-plugin": "^0.69.0",
     "@code-pushup/models": "^0.69.0",
     "@code-pushup/utils": "^0.69.0",

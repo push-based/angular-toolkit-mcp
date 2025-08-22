@@ -85,7 +85,10 @@ export const componentCoverageHandler = createHandler<
     });
 
     const { executePlugin } = await import('@code-pushup/core');
-    const result = await executePlugin(pluginConfig as any);
+    const result = await executePlugin(pluginConfig as any, {
+      cache: { read: false, write: false },
+      persist: { outputDir: '' },
+    });
     const reducedResult = {
       ...result,
       audits: result.audits.filter(({ score }) => score < 1),
