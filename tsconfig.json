@@ -28,9 +28,6 @@
       "path": "./packages/shared/ds-component-coverage"
     },
     {
-      "path": "./packages/shared/angular-cli-utils"
-    },
-    {
       "path": "./testing/vitest-setup"
     },
     {

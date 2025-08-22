@@ -36,13 +36,6 @@ This document provides an AI-friendly overview of the shared libraries in the `/
 - **Dependencies**: models
 - **Used By**: angular-ast-utils, ds-component-coverage
 
-#### `@push-based/angular-cli-utils`
-
-- **Purpose**: Angular CLI schema transformation for MCP tools
-- **Key Exports**: transformSchemaToMCPParameters, generateMcpSchemaForEachSchematic
-- **Dependencies**: models
-- **Used By**: None (standalone utility)
-
 ### Advanced Layer (Multiple Dependencies)
 
 #### `@push-based/angular-ast-utils`
@@ -73,7 +66,6 @@ This document provides an AI-friendly overview of the shared libraries in the `/
 models (foundation)
 ├── utils
 ├── styles-ast-utils
-├── angular-cli-utils
 └── angular-ast-utils
     ├── models
     ├── utils
@@ -92,7 +84,7 @@ ds-component-coverage (most complex)
 Based on dependencies, the correct build order is:
 
 1. **Foundation**: `models`, `typescript-ast-utils`
-2. **Intermediate**: `utils`, `styles-ast-utils`, `angular-cli-utils`
+2. **Intermediate**: `utils`, `styles-ast-utils`
 3. **Advanced**: `angular-ast-utils`
 4. **Top-level**: `ds-component-coverage`
 
@@ -127,7 +119,6 @@ Based on dependencies, the correct build order is:
 - **typescript-ast-utils**: For TypeScript code analysis and manipulation
 - **styles-ast-utils**: For CSS/SCSS parsing and analysis
 - **angular-ast-utils**: For Angular component analysis and template/style processing
-- **angular-cli-utils**: For Angular CLI schema transformations
 - **ds-component-coverage**: For Design System migration analysis and reporting
 
 ### Common Import Patterns
