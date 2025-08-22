@@ -4,7 +4,7 @@ import {
 } from './shared/utils/handler-helpers.js';
 import { ToolSchemaOptions } from '@push-based/models';
 import { dsComponentCoveragePlugin } from '@push-based/ds-component-coverage';
-import { baseToolsSchema } from '../schema';
+import { baseToolsSchema } from '../schema.js';
 import { join } from 'node:path';
 import { reportViolationsTools } from './report-violations/index.js';
 

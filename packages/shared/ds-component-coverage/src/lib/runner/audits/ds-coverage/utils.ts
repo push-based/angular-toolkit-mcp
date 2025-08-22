@@ -1,6 +1,6 @@
 import { Audit, AuditOutput, Issue } from '@push-based/models';
 import { pluralize, slugify } from '@push-based/utils';
-import { ComponentReplacement } from './schema';
+import { ComponentReplacement } from './schema.js';
 
 /**
  * Creates a scored audit output.

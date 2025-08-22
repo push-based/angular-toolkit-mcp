@@ -1,8 +1,8 @@
 import { CategoryConfig, CoreConfig } from '@push-based/models';
 import angularDsUsagePlugin, {
   DsComponentUsagePluginConfig,
-} from './lib/ds-component-coverage.plugin';
-import { getAngularDsUsageCategoryRefs } from './lib/utils';
+} from './lib/ds-component-coverage.plugin.js';
+import { getAngularDsUsageCategoryRefs } from './lib/utils.js';
 
 export async function dsComponentUsagePluginCoreConfig({
   directory,

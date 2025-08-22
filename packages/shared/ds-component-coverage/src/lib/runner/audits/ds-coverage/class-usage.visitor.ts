@@ -37,9 +37,9 @@ import {
   EXTERNAL_ASSET_ICON,
   INLINE_ASSET_ICON,
   TEMPLATE_ASSET_ICON,
-} from './constants';
+} from './constants.js';
 
-import { ComponentReplacement } from './schema';
+import { ComponentReplacement } from './schema.js';
 
 function generateClassUsageMessage({
   element,

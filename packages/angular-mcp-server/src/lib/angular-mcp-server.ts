@@ -11,16 +11,16 @@ import {
   ListResourcesResult,
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
-import { TOOLS } from './tools/tools';
-import { toolNotFound } from './tools/utils';
+import { TOOLS } from './tools/tools.js';
+import { toolNotFound } from './tools/utils.js';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import {
   AngularMcpServerOptionsSchema,
   AngularMcpServerOptions,
-} from './validation/angular-mcp-server-options.schema';
-import { validateAngularMcpServerFilesExist } from './validation/file-existence';
-import { validateDeprecatedCssClassesFile } from './validation/ds-components-file.validation';
+} from './validation/angular-mcp-server-options.schema.js';
+import { validateAngularMcpServerFilesExist } from './validation/file-existence.js';
+import { validateDeprecatedCssClassesFile } from './validation/ds-components-file.validation.js';
 
 export class AngularMcpServerWrapper {
   private readonly mcpServer: McpServer;

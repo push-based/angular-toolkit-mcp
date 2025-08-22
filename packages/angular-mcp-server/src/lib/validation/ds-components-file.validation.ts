@@ -1,7 +1,7 @@
 import * as path from 'path';
 import { pathToFileURL } from 'url';
-import { AngularMcpServerOptions } from './angular-mcp-server-options.schema';
-import { DsComponentsArraySchema } from './ds-components.schema';
+import { AngularMcpServerOptions } from './angular-mcp-server-options.schema.js';
+import { DsComponentsArraySchema } from './ds-components.schema.js';
 
 export async function validateDeprecatedCssClassesFile(
   config: AngularMcpServerOptions,
@@ -16,8 +16,8 @@ export async function validateDeprecatedCssClassesFile(
     const fileUrl = pathToFileURL(deprecatedCssClassesAbsPath).toString();
     const module = await import(fileUrl);
 
-    // Handle both ES modules (export default) and CommonJS (module.exports)
-    dsComponents = module.default || module.dsComponents || module;
+    // Pure ESM: use export default
+    dsComponents = module.default;
   } catch (ctx) {
     throw new Error(
       `Failed to load deprecated CSS classes configuration file: ${deprecatedCssClassesAbsPath}\n\n` +

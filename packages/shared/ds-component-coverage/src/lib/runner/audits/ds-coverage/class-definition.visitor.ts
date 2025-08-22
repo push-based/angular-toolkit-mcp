@@ -9,8 +9,8 @@ import {
   EXTERNAL_ASSET_ICON,
   INLINE_ASSET_ICON,
   STYLES_ASSET_ICON,
-} from './constants';
-import { ComponentReplacement } from './schema';
+} from './constants.js';
+import { ComponentReplacement } from './schema.js';
 
 export type ClassDefinitionVisitor = CssAstVisitor & DiagnosticsAware;
 

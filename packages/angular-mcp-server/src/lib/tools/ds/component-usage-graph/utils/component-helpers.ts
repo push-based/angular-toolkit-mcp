@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { toUnixPath } from '@push-based/utils';
-import { buildText } from '../../shared/utils/output.utils';
+import { buildText } from '../../shared/utils/output.utils.js';
 import { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 import {
   DependencyGraphResult,

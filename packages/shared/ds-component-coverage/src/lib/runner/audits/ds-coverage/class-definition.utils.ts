@@ -1,9 +1,9 @@
 import { Issue } from '@push-based/models';
 import { Asset } from '@push-based/angular-ast-utils';
 import { type Root } from 'postcss';
-import { ComponentReplacement } from './schema';
+import { ComponentReplacement } from './schema.js';
 import { visitEachStyleNode } from '@push-based/styles-ast-utils';
-import { createClassDefinitionVisitor } from './class-definition.visitor';
+import { createClassDefinitionVisitor } from './class-definition.visitor.js';
 
 export async function getClassDefinitionIssues(
   componentReplacement: ComponentReplacement,

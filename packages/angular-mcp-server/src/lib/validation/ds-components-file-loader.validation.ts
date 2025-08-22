@@ -4,7 +4,7 @@ import { pathToFileURL } from 'node:url';
 import {
   DsComponentsArraySchema,
   DsComponentSchema,
-} from './ds-components.schema';
+} from './ds-components.schema.js';
 import { z } from 'zod';
 
 export type DsComponent = z.infer<typeof DsComponentSchema>;
@@ -71,8 +71,8 @@ export async function loadAndValidateDsComponentsFile(
     const fileUrl = pathToFileURL(absPath).toString();
     const module = await import(fileUrl);
 
-    // Handle both ES modules (export default) and CommonJS (module.exports)
-    const rawData = module.default || module.dsComponents || module;
+    // Pure ESM: use export default
+    const rawData = module.default;
 
     // Use the granular validation functions
     return validateDsComponentsArray(rawData);

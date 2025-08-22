@@ -10,7 +10,7 @@ swcJestConfig.swcrc = false;
 
 export default {
   displayName: '@push-based/angular-cli-utils',
-  preset: '../../../jest.preset.js',
+  preset: '../../../jest.preset.mjs',
   testEnvironment: 'node',
   transform: {
     '^.+\\.[tj]s$': ['@swc/jest', swcJestConfig],

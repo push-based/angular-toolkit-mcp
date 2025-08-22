@@ -1,6 +1,6 @@
 import { JsonObject } from '@angular-devkit/core';
 import { ToolSchemaOptions } from '@push-based/models';
-import schemaJson from '@angular/cli/lib/config/schema.json';
+import schemaJson from '@angular/cli/lib/config/schema.json' with { type: 'json' };
 
 export interface SchemaProperty {
   type: string;
