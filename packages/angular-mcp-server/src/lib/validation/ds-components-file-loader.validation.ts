@@ -4,7 +4,7 @@ import { pathToFileURL } from 'node:url';
 import {
   DsComponentsArraySchema,
   DsComponentSchema,
-} from './ds-components.schema';
+} from './ds-components.schema.js';
 import { z } from 'zod';
 
 export type DsComponent = z.infer<typeof DsComponentSchema>;

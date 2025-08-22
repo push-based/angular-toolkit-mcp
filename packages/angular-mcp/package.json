@@ -2,9 +2,10 @@
   "name": "@push-based/angular-mcp",
   "version": "0.0.1",
   "private": true,
-  "bin": "main.js",
+  "type": "module",
+  "bin": "./dist/main.js",
   "files": [
-    "main.js",
+    "dist",
     "README.md"
   ],
   "nx": {
@@ -12,6 +13,17 @@
       "angular-mcp-server"
     ],
     "targets": {
+      "build": {
+        "executor": "@nx/js:tsc",
+        "options": {
+          "outputPath": "packages/angular-mcp/dist",
+          "tsConfig": "packages/angular-mcp/tsconfig.app.json",
+          "main": "packages/angular-mcp/src/main.ts",
+          "assets": [
+            "packages/angular-mcp/src/assets"
+          ]
+        }
+      },
       "serve": {
         "executor": "@nx/js:node",
         "defaultConfiguration": "development",

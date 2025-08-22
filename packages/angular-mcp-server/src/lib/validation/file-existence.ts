@@ -1,6 +1,6 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { AngularMcpServerOptions } from './angular-mcp-server-options.schema';
+import { AngularMcpServerOptions } from './angular-mcp-server-options.schema.js';
 
 export function validateAngularMcpServerFilesExist(
   config: AngularMcpServerOptions,

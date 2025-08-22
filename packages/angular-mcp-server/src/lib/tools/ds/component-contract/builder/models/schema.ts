@@ -2,7 +2,10 @@ import { ToolSchemaOptions } from '@push-based/models';
 import {
   COMMON_ANNOTATIONS,
   createProjectAnalysisSchema,
-} from '../../../shared';
+} from '../../../shared/index.js';
+
+// Fix NodeNext ESM resolution: ensure explicit extension on barrel import
+export * from '../../../shared/index.js';
 
 /**
  * Schema for building component contracts

@@ -18,6 +18,11 @@ const STYLE_EXT = new Set(['.css', '.scss', '.sass', '.less']);
 const isStyleFile = (f: string) => STYLE_EXT.has(path.extname(f).toLowerCase());
 const escapeRegex = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
+const { parseStylesheet: _noop1, visitEachChild: _noop2 } = {
+  parseStylesheet,
+  visitEachChild,
+};
+
 export async function findStyleFiles(dir: string): Promise<string[]> {
   const files: string[] = [];
   for await (const file of findAllFiles(dir, isStyleFile)) {

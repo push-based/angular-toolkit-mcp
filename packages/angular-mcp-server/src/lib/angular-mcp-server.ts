@@ -11,16 +11,17 @@ import {
   ListResourcesResult,
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
-import { TOOLS } from './tools/tools';
-import { toolNotFound } from './tools/utils';
+import { TOOLS } from './tools/tools.js';
+import { toolNotFound } from './tools/utils.js';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import {
   AngularMcpServerOptionsSchema,
   AngularMcpServerOptions,
-} from './validation/angular-mcp-server-options.schema';
-import { validateAngularMcpServerFilesExist } from './validation/file-existence';
-import { validateDeprecatedCssClassesFile } from './validation/ds-components-file.validation';
+} from './validation/angular-mcp-server-options.schema.js';
+import { validateAngularMcpServerFilesExist } from './validation/file-existence.js';
+import { validateDeprecatedCssClassesFile } from './validation/ds-components-file.validation.js';
 
 export class AngularMcpServerWrapper {
   private readonly mcpServer: McpServer;
@@ -89,6 +90,9 @@ export class AngularMcpServerWrapper {
       ListResourcesRequestSchema,
       async (): Promise<ListResourcesResult> => {
         try {
+          // ESM-safe __dirname replacement
+          const __filename = fileURLToPath(import.meta.url);
+          const __dirname = path.dirname(__filename);
           // Read the llms.txt file from the package root
           const filePath = path.resolve(__dirname, '../../llms.txt');
           console.log('Attempting to read file from:', filePath);
@@ -254,7 +258,7 @@ export class AngularMcpServerWrapper {
       ListToolsRequestSchema,
       async () => {
         return {
-          tools: TOOLS.map(({ schema }) => schema),
+          tools: TOOLS.map((tool) => tool.schema),
         };
       },
     );
@@ -263,7 +267,7 @@ export class AngularMcpServerWrapper {
       CallToolRequestSchema,
       async (request: CallToolRequest) => {
         const tool = TOOLS.find(
-          ({ schema }) => request.params.name === schema.name,
+          (tool) => request.params.name === tool.schema.name,
         );
 
         if (tool?.schema && tool.schema.name === request.params.name) {
