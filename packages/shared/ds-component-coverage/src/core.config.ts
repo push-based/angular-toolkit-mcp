@@ -1,4 +1,4 @@
-import { CategoryConfig, CoreConfig } from '@push-based/models';
+import { CategoryConfig, CoreConfig } from '@code-pushup/models';
 import angularDsUsagePlugin, {
   DsComponentUsagePluginConfig,
 } from './lib/ds-component-coverage.plugin.js';

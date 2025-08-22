@@ -26,7 +26,9 @@ import type {
   TmplAstVariable,
   TmplAstVisitor,
 } from '@angular/compiler' with { 'resolution-mode': 'import' };
-import { Issue, DiagnosticsAware } from '@push-based/models';
+import { Issue } from '@code-pushup/models';
+import { DiagnosticsAware } from '@push-based/models';
+
 import {
   tmplAstElementToSource,
   parseClassNames,

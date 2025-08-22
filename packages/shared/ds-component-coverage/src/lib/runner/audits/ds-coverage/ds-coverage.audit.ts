@@ -1,5 +1,5 @@
 import { getCompCoverageAuditOutput } from './utils.js';
-import { AuditOutputs, Issue } from '@push-based/models';
+import { AuditOutputs, Issue } from '@code-pushup/models';
 import {
   ParsedComponent,
   visitComponentStyles,

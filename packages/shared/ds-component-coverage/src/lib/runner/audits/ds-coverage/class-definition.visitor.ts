@@ -1,5 +1,6 @@
 import { Rule } from 'postcss';
-import { Issue, DiagnosticsAware } from '@push-based/models';
+import { Issue } from '@code-pushup/models';
+import { DiagnosticsAware } from '@push-based/models';
 import {
   CssAstVisitor,
   styleAstRuleToSource,

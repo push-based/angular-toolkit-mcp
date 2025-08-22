@@ -1,4 +1,4 @@
-import { PluginConfig } from '@push-based/models';
+import { PluginConfig } from '@code-pushup/models';
 import { CreateRunnerConfig, runnerFunction } from './runner/create-runner.js';
 import { getAudits } from './utils.js';
 import { ANGULAR_DS_USAGE_PLUGIN_SLUG } from './constants.js';

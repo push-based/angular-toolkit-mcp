@@ -1,4 +1,4 @@
-import { Audit, AuditOutput, Issue } from '@push-based/models';
+import { Audit, AuditOutput, Issue } from '@code-pushup/models';
 import { pluralize, slugify } from '@push-based/utils';
 import { ComponentReplacement } from './schema.js';
 

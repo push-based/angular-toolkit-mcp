@@ -5,7 +5,7 @@ import type {
   ParseSourceSpan,
 } from '@angular/compiler' with { 'resolution-mode': 'import' };
 
-import { Issue } from '@push-based/models';
+import { Issue } from '@code-pushup/models';
 import { Asset, ParsedComponent } from '../types.js';
 
 /**

@@ -1,4 +1,4 @@
-import { Audit, CategoryRef } from '@push-based/models';
+import { Audit, CategoryRef } from '@code-pushup/models';
 import { ANGULAR_DS_USAGE_PLUGIN_SLUG } from './constants.js';
 import { getCompUsageAudits } from './runner/audits/ds-coverage/utils.js';
 import { ComponentReplacement } from './runner/audits/ds-coverage/schema.js';

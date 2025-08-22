@@ -1,4 +1,4 @@
-import { SourceFileLocation } from '@push-based/models';
+import { SourceFileLocation } from '@code-pushup/models';
 
 export interface DependencyInfo {
   path: string;

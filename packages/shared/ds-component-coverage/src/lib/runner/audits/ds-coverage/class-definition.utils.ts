@@ -1,4 +1,4 @@
-import { Issue } from '@push-based/models';
+import { Issue } from '@code-pushup/models';
 import { Asset } from '@push-based/angular-ast-utils';
 import { type Root } from 'postcss';
 import { ComponentReplacement } from './schema.js';

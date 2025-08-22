@@ -1,4 +1,4 @@
-import { AuditOutputs } from '@push-based/models';
+import { AuditOutputs } from '@code-pushup/models';
 import { parseAngularUnit } from '@push-based/angular-ast-utils';
 import { dsCompCoverageAuditOutputs } from './audits/ds-coverage/ds-coverage.audit.js';
 import { ComponentCoverageRunnerOptions } from './schema.js';
