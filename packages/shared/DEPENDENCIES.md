@@ -125,7 +125,7 @@ Based on dependencies, the correct build order is:
 
 ```typescript
 // Foundation types
-import { Issue, AuditOutput } from '@push-based/models';
+import { Issue, AuditOutput } from '@code-pushup/models';
 
 // File operations
 import { resolveFile, findFilesWithPattern } from '@push-based/utils';
