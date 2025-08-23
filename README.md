@@ -96,8 +96,7 @@ const dsComponents = [
   }
 ];
 
-// Note: Use CommonJS export for configuration files
-module.exports = dsComponents;
+export default dsComponents;
 ```
 
 ### Example Project Structure
