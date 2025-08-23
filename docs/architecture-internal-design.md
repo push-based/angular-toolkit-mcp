@@ -83,7 +83,7 @@ packages/angular-mcp-server/
 | **Prompt** | `prompts/prompt-registry.ts` | 1. Append schema to `PROMPTS`. <br>2. Provide implementation in `PROMPTS_IMPL`. |
 | **Resource Provider** | `registerResources()` | Extend logic to aggregate custom docs or design-system assets. |
 
-All tools share the `ToolsConfig` interface (`@code-pushup/models`) that bundles:
+All tools share the `ToolsConfig` interface (`@push-based/models`) that bundles:
 - `schema` (name, description, arguments, return type)
 - `handler(request)` async function.
 

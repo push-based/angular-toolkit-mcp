@@ -6,10 +6,10 @@ This document provides an AI-friendly overview of the shared libraries in the `/
 
 ### Foundation Layer (No Internal Dependencies)
 
-#### `@code-pushup/models`
+#### `@push-based/models`
 
-- **Purpose**: Core types, interfaces, and Zod schemas for the entire ecosystem
-- **Key Exports**: Issue, AuditOutput, PluginConfig, CategoryConfig, ToolSchemaOptions
+- **Purpose**: Core types and interfaces for CLI and MCP tooling
+- **Key Exports**: CliArgsObject, ArgumentValue, ToolSchemaOptions, ToolsConfig, ToolHandlerContentResult, DiagnosticsAware
 - **Dependencies**: None (foundation library)
 - **Used By**: All other shared libraries
 
@@ -22,7 +22,7 @@ This document provides an AI-friendly overview of the shared libraries in the `/
 
 ### Intermediate Layer (Single Foundation Dependency)
 
-#### `@code-pushup/utils`
+#### `@push-based/utils`
 
 - **Purpose**: General utility functions and file system operations
 - **Key Exports**: findFilesWithPattern, resolveFile
@@ -114,7 +114,7 @@ Based on dependencies, the correct build order is:
 
 ### When to Use Each Library
 
-- **models**: When you need type definitions, schemas, or interfaces
+- **models**: When you need CLI argument types or MCP tooling interfaces
 - **utils**: For file operations, string manipulation, or general utilities
 - **typescript-ast-utils**: For TypeScript code analysis and manipulation
 - **styles-ast-utils**: For CSS/SCSS parsing and analysis
@@ -125,7 +125,7 @@ Based on dependencies, the correct build order is:
 
 ```typescript
 // Foundation types
-import { Issue, AuditOutput } from '@code-pushup/models';
+import { CliArgsObject, ToolSchemaOptions, DiagnosticsAware } from '@push-based/models';
 
 // File operations
 import { resolveFile, findFilesWithPattern } from '@code-pushup/utils';
@@ -148,7 +148,7 @@ import {
 
 ### Integration Points
 
-- All libraries use `models` for consistent type definitions
+- All libraries use `models` for CLI and MCP tooling type definitions
 - File operations flow through `utils`
 - AST operations are specialized by language (TS, CSS, Angular)
 - Complex analysis combines multiple AST utilities through `angular-ast-utils`

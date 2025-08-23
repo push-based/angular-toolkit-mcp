@@ -9,9 +9,10 @@ import {
   executeProcess,
   findFilesWithPattern,
   resolveFileCached,
-  slugify,
   objectToCliArgs,
-} from '@code-pushup/utils';
+} from '@push-based/utils';
+
+import { slugify } from '@code-pushup/utils';
 
 // Execute a process with observer
 const result = await executeProcess({

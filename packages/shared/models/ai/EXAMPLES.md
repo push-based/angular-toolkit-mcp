@@ -5,7 +5,7 @@
 > Type-safe handling of command line arguments.
 
 ```ts
-import { type CliArgsObject, type ArgumentValue } from '@code-pushup/models';
+import { type CliArgsObject, type ArgumentValue } from '@push-based/models';
 
 // Basic CLI arguments
 const args: CliArgsObject = {
@@ -45,7 +45,7 @@ console.log(`Analyzing ${typedArgs.componentName} in ${typedArgs.directory}`);
 > Build Model Context Protocol tools with proper typing.
 
 ```ts
-import { type ToolsConfig, type ToolSchemaOptions } from '@code-pushup/models';
+import { type ToolsConfig, type ToolSchemaOptions } from '@push-based/models';
 
 // Define a simple MCP tool
 const reportViolationsTool: ToolsConfig = {
@@ -106,7 +106,7 @@ console.log(`Tool: ${reportViolationsTool.schema.name}`);
 > Create objects that can report issues and diagnostics.
 
 ```ts
-import { type DiagnosticsAware } from '@code-pushup/models';
+import { type DiagnosticsAware } from '@push-based/models';
 
 class ComponentAnalyzer implements DiagnosticsAware {
   private issues: Array<{ code?: number; message: string; severity: string }> = [];
@@ -166,7 +166,7 @@ console.log(`Issues after clear: ${analyzer.getIssues().length}`); // → 0
 import {
   type ToolsConfig,
   type ToolHandlerContentResult,
-} from '@code-pushup/models';
+} from '@push-based/models';
 
 const buildComponentContractTool: ToolsConfig = {
   schema: {
@@ -224,4 +224,4 @@ async function generateContract(params: any) {
 }
 ```
 
-These examples demonstrate the practical usage patterns of the `@code-pushup/models` library for building type-safe CLI tools, MCP integrations, and diagnostic utilities in the Angular MCP toolkit.
+These examples demonstrate the practical usage patterns of the `@push-based/models` library for building type-safe CLI tools, MCP integrations, and diagnostic utilities in the Angular MCP toolkit.

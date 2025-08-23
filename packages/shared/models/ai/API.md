@@ -5,7 +5,7 @@ Simple **TypeScript types** for Angular MCP toolkit shared interfaces and utilit
 ## Minimal usage
 
 ```ts
-import { type CliArgsObject, type ToolsConfig } from '@code-pushup/models';
+import { type CliArgsObject, type ToolsConfig } from '@push-based/models';
 
 // CLI argument types
 const args: CliArgsObject = {
