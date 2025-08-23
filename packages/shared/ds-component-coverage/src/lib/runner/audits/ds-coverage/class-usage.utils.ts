@@ -1,6 +1,6 @@
 import { Asset, visitEachTmplChild } from '@push-based/angular-ast-utils';
-import { ComponentReplacement } from './schema';
-import { ClassUsageVisitor } from './class-usage.visitor';
+import { ComponentReplacement } from './schema.js';
+import { ClassUsageVisitor } from './class-usage.visitor.js';
 import type {
   ParsedTemplate,
   TmplAstNode,

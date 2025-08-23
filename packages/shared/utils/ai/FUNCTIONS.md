@@ -20,12 +20,10 @@
 | `getLineHits`          | function | Get all pattern matches within a text line                     |
 | `isExcludedDirectory`  | function | Check if a directory should be excluded from searches          |
 | `isVerbose`            | function | Check if verbose logging is enabled via environment variable   |
+| `loadDefaultExport`    | function | Dynamically import ES modules and extract default export       |
 | `objectToCliArgs`      | function | Convert object properties to command-line arguments            |
-| `pluralize`            | function | Convert singular words to plural form                          |
 | `resolveFile`          | function | Read file content directly without caching                     |
 | `resolveFileCached`    | function | Read file content with caching for performance                 |
-| `slugify`              | function | Convert text to URL-friendly slug format                       |
-| `toUnixPath`           | function | Convert Windows paths to Unix-style paths                      |
 
 ## Types
 
@@ -205,37 +203,6 @@ Converts an object with different value types into command-line arguments array.
 
 **Returns:** Array of formatted CLI arguments
 
-### `toUnixPath(path: string): string`
-
-Converts Windows-style paths to Unix-style paths.
-
-**Parameters:**
-
-- `path` - Path string to convert
-
-**Returns:** Unix-style path string
-
-### `slugify(text: string): string`
-
-Converts text to URL-friendly slug format.
-
-**Parameters:**
-
-- `text` - Text to slugify
-
-**Returns:** Slugified string
-
-### `pluralize(text: string, amount?: number): string`
-
-Converts singular words to plural form with smart rules.
-
-**Parameters:**
-
-- `text` - Word to pluralize
-- `amount` - Optional count to determine if pluralization is needed
-
-**Returns:** Pluralized or original word
-
 ### `calcDuration(start: number, stop?: number): number`
 
 Calculates duration between performance timestamps.
@@ -284,6 +251,25 @@ Checks if a directory should be excluded from file searches.
 Checks if verbose logging is enabled via the `NG_MCP_VERBOSE` environment variable.
 
 **Returns:** `true` if verbose logging is enabled
+
+### `loadDefaultExport<T = unknown>(filePath: string): Promise<T>`
+
+Dynamically imports an ES Module and extracts the default export. Uses proper file URL conversion for cross-platform compatibility.
+
+**Parameters:**
+
+- `filePath` - Absolute path to the ES module file to import
+
+**Returns:** Promise resolving to the default export from the module
+
+**Throws:** Error if the module cannot be loaded or has no default export
+
+**Example:**
+
+```typescript
+const config = await loadDefaultExport('/path/to/config.js');
+const data = await loadDefaultExport<MyDataType>('/path/to/data.mjs');
+```
 
 ## Constants
 

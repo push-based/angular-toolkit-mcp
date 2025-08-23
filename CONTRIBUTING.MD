@@ -73,7 +73,6 @@ This is an Nx monorepo with the following structure:
 │   ├── minimal-repo/          # Test fixtures and examples
 │   └── shared/                # Shared libraries
 │       ├── angular-ast-utils/     # Angular AST parsing
-│       ├── angular-cli-utils/     # Angular CLI utilities
 │       ├── ds-component-coverage/ # Design system analysis
 │       ├── models/               # Core types and schemas
 │       ├── styles-ast-utils/     # CSS/SCSS AST parsing

@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import { toUnixPath } from '@push-based/utils';
+import { toUnixPath } from '@code-pushup/utils';
 
 /**
  * Enhanced path resolution with workspace root context for better debugging

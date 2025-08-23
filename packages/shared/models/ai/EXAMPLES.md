@@ -1,349 +1,227 @@
 # Examples
 
-## 1 — Validating audit data
+## 1 — Working with CLI arguments
 
-> Validate audit configuration and output using Zod schemas.
-
-```ts
-import { auditSchema, auditOutputSchema } from '@push-based/models';
-
-// Validate audit configuration
-const auditConfig = {
-  slug: 'performance-budget',
-  title: 'Performance Budget Check',
-  description: 'Ensures performance metrics stay within budget',
-  docsUrl: 'https://web.dev/performance-budgets/',
-};
-
-const validatedAudit = auditSchema.parse(auditConfig);
-console.log(validatedAudit.slug); // → 'performance-budget'
-
-// Validate audit output
-const auditResult = {
-  slug: 'performance-budget',
-  score: 0.85,
-  value: 1200,
-  displayValue: '1.2s',
-};
-
-const validatedOutput = auditOutputSchema.parse(auditResult);
-console.log(validatedOutput.score); // → 0.85
-```
-
----
-
-## 2 — Creating plugin configurations
-
-> Build and validate plugin configurations with audits and groups.
+> Type-safe handling of command line arguments.
 
 ```ts
-import { pluginConfigSchema, type PluginConfig } from '@push-based/models';
+import { type CliArgsObject, type ArgumentValue } from '@push-based/models';
 
-const eslintPlugin: PluginConfig = {
-  slug: 'eslint',
-  title: 'ESLint',
-  icon: 'eslint',
-  runner: {
-    command: 'npx eslint',
-    args: ['src/**/*.ts', '--format', 'json'],
-    outputFile: 'eslint-results.json',
-  },
-  audits: [
-    {
-      slug: 'no-unused-vars',
-      title: 'No unused variables',
-      description: 'Disallow unused variables',
-    },
-    {
-      slug: 'prefer-const',
-      title: 'Prefer const',
-      description:
-        'Require const declarations for variables that are never reassigned',
-    },
-  ],
-  groups: [
-    {
-      slug: 'best-practices',
-      title: 'Best Practices',
-      refs: [
-        { slug: 'no-unused-vars', weight: 1 },
-        { slug: 'prefer-const', weight: 1 },
-      ],
-    },
-  ],
+// Basic CLI arguments
+const args: CliArgsObject = {
+  directory: './src/components',
+  componentName: 'DsButton',
+  groupBy: 'file',
+  _: ['report-violations'],
 };
 
-const validatedPlugin = pluginConfigSchema.parse(eslintPlugin);
-console.log(`Plugin: ${validatedPlugin.title}`); // → 'Plugin: ESLint'
-```
+console.log(args.directory); // → './src/components'
+console.log(args._); // → ['report-violations']
 
----
-
-## 3 — Building core configuration
-
-> Create a complete Code PushUp configuration with plugins and categories.
-
-```ts
-import { coreConfigSchema, type CoreConfig } from '@push-based/models';
-
-const config: CoreConfig = {
-  plugins: [
-    {
-      slug: 'lighthouse',
-      title: 'Lighthouse',
-      icon: 'lighthouse',
-      runner: {
-        command: 'lighthouse',
-        args: ['https://example.com', '--output=json'],
-        outputFile: 'lighthouse-report.json',
-      },
-      audits: [
-        { slug: 'first-contentful-paint', title: 'First Contentful Paint' },
-        { slug: 'largest-contentful-paint', title: 'Largest Contentful Paint' },
-      ],
-      groups: [
-        {
-          slug: 'performance',
-          title: 'Performance',
-          refs: [
-            { slug: 'first-contentful-paint', weight: 1 },
-            { slug: 'largest-contentful-paint', weight: 2 },
-          ],
-        },
-      ],
-    },
-  ],
-  categories: [
-    {
-      slug: 'performance',
-      title: 'Performance',
-      refs: [
-        {
-          plugin: 'lighthouse',
-          slug: 'performance',
-          type: 'group',
-          weight: 1,
-        },
-      ],
-    },
-  ],
-  persist: {
-    outputDir: '.code-pushup',
-    filename: 'report',
-    format: ['json', 'md'],
-  },
-};
-
-const validatedConfig = coreConfigSchema.parse(config);
-console.log(`Categories: ${validatedConfig.categories?.length}`); // → 'Categories: 1'
-```
-
----
-
-## 4 — Working with reports
-
-> Parse and validate Code PushUp reports.
-
-```ts
-import { reportSchema, type Report } from '@push-based/models';
-
-const report: Report = {
-  packageName: '@push-based/cli',
-  version: '1.0.0',
-  date: new Date().toISOString(),
-  duration: 45000,
-  commit: {
-    hash: 'abcdef0123456789abcdef0123456789abcdef01',
-    message: 'Add performance optimizations',
-    author: 'Developer',
-    date: new Date(),
-  },
-  plugins: [
-    {
-      slug: 'lighthouse',
-      title: 'Lighthouse',
-      icon: 'lighthouse',
-      date: new Date().toISOString(),
-      duration: 30000,
-      audits: [
-        {
-          slug: 'performance-score',
-          title: 'Performance Score',
-          score: 0.92,
-          value: 92,
-          displayValue: '92',
-        },
-      ],
-    },
-  ],
-};
-
-const validatedReport = reportSchema.parse(report);
-console.log(`Report duration: ${validatedReport.duration}ms`); // → 'Report duration: 45000ms'
-```
-
----
-
-## 5 — Creating table data
-
-> Build structured table data for reports.
-
-```ts
-import { tableSchema, type Table } from '@push-based/models';
-
-const performanceTable: Table = {
-  title: 'Performance Metrics',
-  columns: [
-    { key: 'metric', label: 'Metric', align: 'left' },
-    { key: 'value', label: 'Value', align: 'right' },
-    { key: 'threshold', label: 'Threshold', align: 'right' },
-  ],
-  rows: [
-    {
-      metric: 'First Contentful Paint',
-      value: '1.2s',
-      threshold: '1.8s',
-    },
-    {
-      metric: 'Largest Contentful Paint',
-      value: '2.1s',
-      threshold: '2.5s',
-    },
-    {
-      metric: 'Cumulative Layout Shift',
-      value: '0.05',
-      threshold: '0.1',
-    },
-  ],
-};
-
-const validatedTable = tableSchema().parse(performanceTable);
-console.log(`Table has ${validatedTable.rows.length} rows`); // → 'Table has 3 rows'
-```
-
----
-
-## 6 — Comparing reports
-
-> Create report comparisons and diffs.
-
-```ts
-import { reportsDiffSchema, type ReportsDiff } from '@push-based/models';
-
-const reportsDiff: ReportsDiff = {
-  packageName: '@push-based/cli',
-  version: '1.0.0',
-  date: new Date().toISOString(),
-  duration: 5000,
-  commits: {
-    before: {
-      hash: 'abc123def456abc123def456abc123def456abc1',
-      message: 'Previous commit',
-      author: 'Developer',
-      date: new Date('2024-01-01'),
-    },
-    after: {
-      hash: 'def456abc123def456abc123def456abc123def4',
-      message: 'Current commit',
-      author: 'Developer',
-      date: new Date('2024-01-02'),
-    },
-  },
-  categories: {
-    changed: [
-      {
-        slug: 'performance',
-        title: 'Performance',
-        scores: {
-          before: 0.85,
-          after: 0.92,
-          diff: 0.07,
-        },
-      },
-    ],
-    unchanged: [],
-    added: [],
-    removed: [],
-  },
-  groups: {
-    changed: [],
-    unchanged: [],
-    added: [],
-    removed: [],
-  },
-  audits: {
-    changed: [
-      {
-        slug: 'lcp',
-        title: 'Largest Contentful Paint',
-        plugin: {
-          slug: 'lighthouse',
-          title: 'Lighthouse',
-        },
-        scores: {
-          before: 0.8,
-          after: 0.9,
-          diff: 0.1,
-        },
-        values: {
-          before: 2500,
-          after: 2100,
-          diff: -400,
-        },
-        displayValues: {
-          before: '2.5s',
-          after: '2.1s',
-        },
-      },
-    ],
-    unchanged: [],
-    added: [],
-    removed: [],
-  },
-};
-
-const validatedDiff = reportsDiffSchema.parse(reportsDiff);
-console.log(
-  `Performance improved by ${validatedDiff.categories.changed[0]?.scores.diff}`
-);
-// → 'Performance improved by 0.07'
-```
-
----
-
-## 7 — Safe parsing with error handling
-
-> Use safe parsing to handle validation errors gracefully.
-
-```ts
-import { auditSchema, coreConfigSchema } from '@push-based/models';
-
-// Safe parsing with error handling
-const invalidAudit = {
-  slug: 'Invalid Slug!', // Invalid: contains spaces and special characters
-  title: 'Test Audit',
-};
-
-const auditResult = auditSchema.safeParse(invalidAudit);
-if (!auditResult.success) {
-  console.log('Validation failed:', auditResult.error.issues[0]?.message);
-  // → 'Validation failed: The slug has to follow the pattern...'
-} else {
-  console.log('Valid audit:', auditResult.data);
+// Typed CLI arguments with specific structure
+interface MyToolArgs {
+  directory: string;
+  componentName: string;
+  groupBy?: 'file' | 'folder';
+  verbose?: boolean;
 }
 
-// Batch validation
-const configs = [
-  { plugins: [] }, // Invalid: empty plugins array
-  { plugins: [{ slug: 'test', title: 'Test' }] }, // Invalid: missing required fields
-];
+const typedArgs: CliArgsObject<MyToolArgs> = {
+  directory: './packages/shared/models',
+  componentName: 'DsCard',
+  groupBy: 'folder',
+  verbose: true,
+  _: ['analyze'],
+};
 
-const validConfigs = configs
-  .map((config) => coreConfigSchema.safeParse(config))
-  .filter((result) => result.success)
-  .map((result) => result.data);
-
-console.log(`${validConfigs.length} valid configurations found`);
+console.log(`Analyzing ${typedArgs.componentName} in ${typedArgs.directory}`);
+// → 'Analyzing DsCard in ./packages/shared/models'
 ```
 
-These examples demonstrate the comprehensive validation capabilities and practical usage patterns of the `@push-based/models` library for various Code PushUp data structures and workflows.
+---
+
+## 2 — Creating MCP tools
+
+> Build Model Context Protocol tools with proper typing.
+
+```ts
+import { type ToolsConfig, type ToolSchemaOptions } from '@push-based/models';
+
+// Define a simple MCP tool
+const reportViolationsTool: ToolsConfig = {
+  schema: {
+    name: 'report-violations',
+    description: 'Report deprecated DS CSS usage in a directory',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        directory: {
+          type: 'string',
+          description: 'The relative path to the directory to scan',
+        },
+        componentName: {
+          type: 'string',
+          description: 'The class name of the component (e.g., DsButton)',
+        },
+        groupBy: {
+          type: 'string',
+          enum: ['file', 'folder'],
+          default: 'file',
+          description: 'How to group the results',
+        },
+      },
+      required: ['directory', 'componentName'],
+    },
+  },
+  handler: async (request) => {
+    const { directory, componentName, groupBy = 'file' } = request.params.arguments as {
+      directory: string;
+      componentName: string;
+      groupBy?: 'file' | 'folder';
+    };
+
+    // Tool implementation logic here
+    const violations = await analyzeViolations(directory, componentName, groupBy);
+
+    return {
+      content: [
+        {
+          type: 'text',
+          text: `Found ${violations.length} violations in ${directory}`,
+        },
+      ],
+    };
+  },
+};
+
+// Use the tool configuration
+console.log(`Tool: ${reportViolationsTool.schema.name}`);
+// → 'Tool: report-violations'
+```
+
+---
+
+## 3 — Implementing diagnostics
+
+> Create objects that can report issues and diagnostics.
+
+```ts
+import { type DiagnosticsAware } from '@push-based/models';
+
+class ComponentAnalyzer implements DiagnosticsAware {
+  private issues: Array<{ code?: number; message: string; severity: string }> = [];
+
+  analyze(componentPath: string): void {
+    // Simulate analysis
+    if (!componentPath.endsWith('.ts')) {
+      this.issues.push({
+        code: 1001,
+        message: 'Component file should have .ts extension',
+        severity: 'error',
+      });
+    }
+
+    if (componentPath.includes('deprecated')) {
+      this.issues.push({
+        code: 2001,
+        message: 'Component uses deprecated patterns',
+        severity: 'warning',
+      });
+    }
+  }
+
+  getIssues() {
+    return this.issues;
+  }
+
+  clear(): void {
+    this.issues = [];
+  }
+}
+
+// Usage
+const analyzer = new ComponentAnalyzer();
+analyzer.analyze('src/components/deprecated-button.js');
+
+const issues = analyzer.getIssues();
+console.log(`Found ${issues.length} issues:`);
+issues.forEach((issue) => {
+  console.log(`  ${issue.severity}: ${issue.message} (code: ${issue.code})`);
+});
+// → Found 2 issues:
+// →   error: Component file should have .ts extension (code: 1001)
+// →   warning: Component uses deprecated patterns (code: 2001)
+
+analyzer.clear();
+console.log(`Issues after clear: ${analyzer.getIssues().length}`); // → 0
+```
+
+---
+
+## 4 — Advanced MCP tool with content results
+
+> Create sophisticated MCP tools that return structured content.
+
+```ts
+import {
+  type ToolsConfig,
+  type ToolHandlerContentResult,
+} from '@push-based/models';
+
+const buildComponentContractTool: ToolsConfig = {
+  schema: {
+    name: 'build-component-contract',
+    description: 'Generate a static surface contract for a component',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        directory: { type: 'string' },
+        templateFile: { type: 'string' },
+        styleFile: { type: 'string' },
+        typescriptFile: { type: 'string' },
+        dsComponentName: { type: 'string' },
+      },
+      required: ['directory', 'templateFile', 'styleFile', 'typescriptFile', 'dsComponentName'],
+    },
+  },
+  handler: async (request) => {
+    const params = request.params.arguments as {
+      directory: string;
+      templateFile: string;
+      styleFile: string;
+      typescriptFile: string;
+      dsComponentName: string;
+    };
+
+    // Generate contract
+    const contract = await generateContract(params);
+
+    const content: ToolHandlerContentResult[] = [
+      {
+        type: 'text',
+        text: `Generated contract for ${params.dsComponentName}`,
+      },
+      {
+        type: 'text',
+        text: `Template inputs: ${contract.templateInputs.length}`,
+      },
+      {
+        type: 'text',
+        text: `Style classes: ${contract.styleClasses.length}`,
+      },
+    ];
+
+    return { content };
+  },
+};
+
+// Mock contract generation function
+async function generateContract(params: any) {
+  return {
+    templateInputs: ['@Input() label: string', '@Input() disabled: boolean'],
+    styleClasses: ['.ds-button', '.ds-button--primary'],
+  };
+}
+```
+
+These examples demonstrate the practical usage patterns of the `@push-based/models` library for building type-safe CLI tools, MCP integrations, and diagnostic utilities in the Angular MCP toolkit.

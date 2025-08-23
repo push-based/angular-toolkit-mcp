@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ComponentReplacementSchema } from './audits/ds-coverage/schema';
+import { ComponentReplacementSchema } from './audits/ds-coverage/schema.js';
 
 export const baseToolsSchema = {
   inputSchema: {

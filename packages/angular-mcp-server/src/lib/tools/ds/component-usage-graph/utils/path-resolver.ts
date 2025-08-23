@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { toUnixPath } from '@push-based/utils';
+import { toUnixPath } from '@code-pushup/utils';
 import { DEPENDENCY_ANALYSIS_CONFIG } from '../models/config.js';
 
 const { resolveExtensions, indexFiles } = DEPENDENCY_ANALYSIS_CONFIG;

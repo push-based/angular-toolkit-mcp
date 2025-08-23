@@ -68,4 +68,4 @@ const dsComponents = [
   },
 ];
 
-module.exports = dsComponents;
+export default dsComponents;

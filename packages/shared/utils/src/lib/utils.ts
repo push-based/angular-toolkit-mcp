@@ -1,31 +1,5 @@
 import { CliArgsObject, ArgumentValue } from '@push-based/models';
 
-export function toUnixPath(path: string): string {
-  return path.replace(/\\/g, '/');
-}
-
-export function slugify(text: string): string {
-  return text
-    .trim()
-    .toLowerCase()
-    .replace(/\s+|\//g, '-')
-    .replace(/[^a-z\d-]/g, '');
-}
-
-export function pluralize(text: string, amount?: number): string {
-  if (amount != null && Math.abs(amount) === 1) {
-    return text;
-  }
-
-  if (text.endsWith('y')) {
-    return `${text.slice(0, -1)}ies`;
-  }
-  if (text.endsWith('s')) {
-    return `${text}es`;
-  }
-  return `${text}s`;
-}
-
 /**
  * Converts an object with different types of values into an array of command-line arguments.
  *

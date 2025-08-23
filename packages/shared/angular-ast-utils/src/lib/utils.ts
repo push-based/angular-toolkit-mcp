@@ -47,7 +47,7 @@ export function assetFromPropertyArrayInitializer<T>(
 }
 
 import { findFilesWithPattern } from '@push-based/utils';
-import { parseComponents } from './parse-component';
+import { parseComponents } from './parse-component.js';
 
 const unitToSearchPattern = {
   component: '@Component',

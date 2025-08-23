@@ -29,7 +29,7 @@ export async function analyzeViolationsBase<T extends BaseViolationResult>(
 
   process.chdir(cwd);
 
-  const deprecatedCssClasses = getDeprecatedCssClasses(
+  const deprecatedCssClasses = await getDeprecatedCssClasses(
     componentName,
     deprecatedCssClassesPath || '',
     cwd,

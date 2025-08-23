@@ -8,8 +8,8 @@ This document provides an AI-friendly overview of the shared libraries in the `/
 
 #### `@push-based/models`
 
-- **Purpose**: Core types, interfaces, and Zod schemas for the entire ecosystem
-- **Key Exports**: Issue, AuditOutput, PluginConfig, CategoryConfig, ToolSchemaOptions
+- **Purpose**: Core types and interfaces for CLI and MCP tooling
+- **Key Exports**: CliArgsObject, ArgumentValue, ToolSchemaOptions, ToolsConfig, ToolHandlerContentResult, DiagnosticsAware
 - **Dependencies**: None (foundation library)
 - **Used By**: All other shared libraries
 
@@ -25,7 +25,7 @@ This document provides an AI-friendly overview of the shared libraries in the `/
 #### `@push-based/utils`
 
 - **Purpose**: General utility functions and file system operations
-- **Key Exports**: toUnixPath, slugify, pluralize, findFilesWithPattern, resolveFile
+- **Key Exports**: findFilesWithPattern, resolveFile
 - **Dependencies**: models
 - **Used By**: angular-ast-utils, ds-component-coverage
 
@@ -35,13 +35,6 @@ This document provides an AI-friendly overview of the shared libraries in the `/
 - **Key Exports**: parseStylesheet, CssAstVisitor, visitStyleSheet, styleAstRuleToSource
 - **Dependencies**: models
 - **Used By**: angular-ast-utils, ds-component-coverage
-
-#### `@push-based/angular-cli-utils`
-
-- **Purpose**: Angular CLI schema transformation for MCP tools
-- **Key Exports**: transformSchemaToMCPParameters, generateMcpSchemaForEachSchematic
-- **Dependencies**: models
-- **Used By**: None (standalone utility)
 
 ### Advanced Layer (Multiple Dependencies)
 
@@ -70,19 +63,18 @@ This document provides an AI-friendly overview of the shared libraries in the `/
 ## Dependency Graph
 
 ```
-models (foundation)
-├── utils
+@code-pushup/models (foundation)
+├── @code-pushup/utils
 ├── styles-ast-utils
-├── angular-cli-utils
 └── angular-ast-utils
-    ├── models
-    ├── utils
+    ├── @code-pushup/models
+    ├── @code-pushup/utils
     ├── typescript-ast-utils
     └── styles-ast-utils
 
 ds-component-coverage (most complex)
-├── models
-├── utils
+├── @code-pushup/models
+├── @code-pushup/utils
 ├── styles-ast-utils
 └── angular-ast-utils
 ```
@@ -92,7 +84,7 @@ ds-component-coverage (most complex)
 Based on dependencies, the correct build order is:
 
 1. **Foundation**: `models`, `typescript-ast-utils`
-2. **Intermediate**: `utils`, `styles-ast-utils`, `angular-cli-utils`
+2. **Intermediate**: `utils`, `styles-ast-utils`
 3. **Advanced**: `angular-ast-utils`
 4. **Top-level**: `ds-component-coverage`
 
@@ -122,22 +114,21 @@ Based on dependencies, the correct build order is:
 
 ### When to Use Each Library
 
-- **models**: When you need type definitions, schemas, or interfaces
+- **models**: When you need CLI argument types or MCP tooling interfaces
 - **utils**: For file operations, string manipulation, or general utilities
 - **typescript-ast-utils**: For TypeScript code analysis and manipulation
 - **styles-ast-utils**: For CSS/SCSS parsing and analysis
 - **angular-ast-utils**: For Angular component analysis and template/style processing
-- **angular-cli-utils**: For Angular CLI schema transformations
 - **ds-component-coverage**: For Design System migration analysis and reporting
 
 ### Common Import Patterns
 
 ```typescript
 // Foundation types
-import { Issue, AuditOutput } from '@push-based/models';
+import { CliArgsObject, ToolSchemaOptions, DiagnosticsAware } from '@push-based/models';
 
 // File operations
-import { resolveFile, findFilesWithPattern } from '@push-based/utils';
+import { resolveFile, findFilesWithPattern } from '@code-pushup/utils';
 
 // Angular component parsing
 import {
@@ -157,7 +148,7 @@ import {
 
 ### Integration Points
 
-- All libraries use `models` for consistent type definitions
+- All libraries use `models` for CLI and MCP tooling type definitions
 - File operations flow through `utils`
 - AST operations are specialized by language (TS, CSS, Angular)
 - Complex analysis combines multiple AST utilities through `angular-ast-utils`
