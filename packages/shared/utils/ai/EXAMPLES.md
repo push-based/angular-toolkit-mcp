@@ -433,6 +433,48 @@ if (largeFiles.length > 0) {
 
 ---
 
+## 7 — ES Module loading and dynamic imports
+
+> Load ES modules dynamically and extract default exports safely.
+
+```ts
+import { loadDefaultExport } from '@push-based/utils';
+
+// Load configuration from ES module
+const config = await loadDefaultExport('./config/app.config.mjs');
+console.log(`API Port: ${config.port}`);
+
+// Load with type safety
+interface AppData {
+  version: string;
+  features: string[];
+}
+
+const appData = await loadDefaultExport<AppData>('./data/app.mjs');
+console.log(`App version: ${appData.version}`);
+console.log(`Features: ${appData.features.join(', ')}`);
+
+// Handle loading errors gracefully
+try {
+  const plugin = await loadDefaultExport('./plugins/optional.mjs');
+  console.log('✅ Plugin loaded');
+} catch (error) {
+  if (error.message.includes('No default export found')) {
+    console.warn('⚠️  Module missing default export');
+  } else {
+    console.warn('⚠️  Plugin not found, continuing without it');
+  }
+}
+
+// Output:
+// → API Port: 3000
+// → App version: 1.2.0  
+// → Features: auth, logging, metrics
+// → ⚠️  Plugin not found, continuing without it
+```
+
+---
+
 
 
 These examples demonstrate the comprehensive capabilities of the `@push-based/utils` library for process execution, file operations, string manipulation, and development tooling in Node.js applications.

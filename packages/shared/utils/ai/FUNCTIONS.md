@@ -20,6 +20,7 @@
 | `getLineHits`          | function | Get all pattern matches within a text line                     |
 | `isExcludedDirectory`  | function | Check if a directory should be excluded from searches          |
 | `isVerbose`            | function | Check if verbose logging is enabled via environment variable   |
+| `loadDefaultExport`    | function | Dynamically import ES modules and extract default export       |
 | `objectToCliArgs`      | function | Convert object properties to command-line arguments            |
 | `resolveFile`          | function | Read file content directly without caching                     |
 | `resolveFileCached`    | function | Read file content with caching for performance                 |
@@ -250,6 +251,25 @@ Checks if a directory should be excluded from file searches.
 Checks if verbose logging is enabled via the `NG_MCP_VERBOSE` environment variable.
 
 **Returns:** `true` if verbose logging is enabled
+
+### `loadDefaultExport<T = unknown>(filePath: string): Promise<T>`
+
+Dynamically imports an ES Module and extracts the default export. Uses proper file URL conversion for cross-platform compatibility.
+
+**Parameters:**
+
+- `filePath` - Absolute path to the ES module file to import
+
+**Returns:** Promise resolving to the default export from the module
+
+**Throws:** Error if the module cannot be loaded or has no default export
+
+**Example:**
+
+```typescript
+const config = await loadDefaultExport('/path/to/config.js');
+const data = await loadDefaultExport<MyDataType>('/path/to/data.mjs');
+```
 
 ## Constants
 
