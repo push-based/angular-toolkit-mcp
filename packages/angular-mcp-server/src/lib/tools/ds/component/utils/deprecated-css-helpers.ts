@@ -33,7 +33,6 @@ export async function getDeprecatedCssClasses(
 
   const module = await import(absPath);
 
-  // Pure ESM: use export default
   const dsComponents = module.default;
 
   if (!Array.isArray(dsComponents)) {

@@ -16,7 +16,6 @@ export async function validateDeprecatedCssClassesFile(
     const fileUrl = pathToFileURL(deprecatedCssClassesAbsPath).toString();
     const module = await import(fileUrl);
 
-    // Pure ESM: use export default
     dsComponents = module.default;
   } catch (ctx) {
     throw new Error(
@@ -29,7 +28,6 @@ export async function validateDeprecatedCssClassesFile(
     );
   }
 
-  // Validate the schema
   const validation = DsComponentsArraySchema.safeParse(dsComponents);
   if (!validation.success) {
     const actualType = Array.isArray(dsComponents)
