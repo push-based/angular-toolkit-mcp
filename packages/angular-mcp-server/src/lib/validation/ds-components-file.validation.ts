@@ -1,7 +1,7 @@
 import * as path from 'path';
-import { pathToFileURL } from 'url';
 import { AngularMcpServerOptions } from './angular-mcp-server-options.schema.js';
 import { DsComponentsArraySchema } from './ds-components.schema.js';
+import { loadDefaultExport } from '@push-based/utils';
 
 export async function validateDeprecatedCssClassesFile(
   config: AngularMcpServerOptions,
@@ -11,22 +11,7 @@ export async function validateDeprecatedCssClassesFile(
     config.ds.deprecatedCssClassesPath,
   );
 
-  let dsComponents;
-  try {
-    const fileUrl = pathToFileURL(deprecatedCssClassesAbsPath).toString();
-    const module = await import(fileUrl);
-
-    dsComponents = module.default;
-  } catch (ctx) {
-    throw new Error(
-      `Failed to load deprecated CSS classes configuration file: ${deprecatedCssClassesAbsPath}\n\n` +
-        `Possible causes:\n` +
-        `- File does not exist\n` +
-        `- Invalid JavaScript syntax\n` +
-        `- File permission issues\n\n` +
-        `Original error: ${ctx}`,
-    );
-  }
+  const dsComponents = await loadDefaultExport(deprecatedCssClassesAbsPath);
 
   const validation = DsComponentsArraySchema.safeParse(dsComponents);
   if (!validation.success) {

@@ -1,11 +1,11 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { pathToFileURL } from 'node:url';
 import {
   DsComponentsArraySchema,
   DsComponentSchema,
 } from './ds-components.schema.js';
 import { z } from 'zod';
+import { loadDefaultExport } from '@push-based/utils';
 
 export type DsComponent = z.infer<typeof DsComponentSchema>;
 export type DsComponentsArray = z.infer<typeof DsComponentsArraySchema>;
@@ -65,10 +65,7 @@ export async function loadAndValidateDsComponentsFile(
   }
 
   try {
-    const fileUrl = pathToFileURL(absPath).toString();
-    const module = await import(fileUrl);
-
-    const rawData = module.default;
+    const rawData = await loadDefaultExport(absPath);
 
     return validateDsComponentsArray(rawData);
   } catch (ctx) {

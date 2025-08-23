@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import { resolveCrossPlatformPath } from '../../shared/utils/cross-platform-path.js';
+import { loadDefaultExport } from '@push-based/utils';
 
 export interface DeprecatedCssComponent {
   componentName: string;
@@ -31,9 +32,8 @@ export async function getDeprecatedCssClasses(
     throw new Error(`File not found at deprecatedCssClassesPath: ${absPath}`);
   }
 
-  const module = await import(absPath);
-
-  const dsComponents = module.default;
+  const dsComponents =
+    await loadDefaultExport<DeprecatedCssComponent[]>(absPath);
 
   if (!Array.isArray(dsComponents)) {
     throw new Error('Invalid export: expected dsComponents to be an array');

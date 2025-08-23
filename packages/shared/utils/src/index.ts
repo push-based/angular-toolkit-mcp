@@ -3,3 +3,4 @@ export * from './lib/execute-process.js';
 export * from './lib/logging.js';
 export * from './lib/file/find-in-file.js';
 export * from './lib/file/file.resolver.js';
+export * from './lib/file/default-export-loader.js';
