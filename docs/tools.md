@@ -16,6 +16,15 @@ This document provides comprehensive guidance for AI agents working with Angular
 **Output**: Structured violation reports grouped by file or folder
 **Best Practice**: Always run this before other migration tools to establish baseline
 
+#### `report-all-violations`
+**Purpose**: Reports all deprecated DS CSS usage for every DS component within a directory
+**AI Usage**: Use for a fast, global inventory of violations across the codebase before narrowing to specific components
+**Key Parameters**:
+- `directory`: Target analysis directory (use relative paths like `./src/app`)
+- `groupBy`: `"file"` or `"folder"` for result organization (default: `"file"`)
+**Output**: Structured violation reports grouped by file or folder covering all DS components
+**Best Practice**: Use to discover all violations and establish the baseline for subsequent refactoring.
+
 #### `get-project-dependencies`
 **Purpose**: Analyzes project structure, dependencies, and buildability
 **AI Usage**: Validate project architecture before suggesting refactoring strategies
