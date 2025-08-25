@@ -1,5 +1,5 @@
 export { reportViolationsTools } from './report-violations.tool';
-export { reportAllViolationsTools } from './report-violations-all.tool';
+export { reportAllViolationsTools } from './report-all-violations.tool';
 
 export type {
   ReportViolationsOptions,

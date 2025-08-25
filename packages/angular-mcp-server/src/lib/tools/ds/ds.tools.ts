@@ -6,7 +6,10 @@ import { ToolSchemaOptions } from '@push-based/models';
 import { dsComponentCoveragePlugin } from '@push-based/ds-component-coverage';
 import { baseToolsSchema } from '../schema';
 import { join } from 'node:path';
-import { reportViolationsTools, reportAllViolationsTools } from './report-violations/index.js';
+import {
+  reportViolationsTools,
+  reportAllViolationsTools,
+} from './report-violations/index.js';
 
 export const componentCoverageToolsSchema: ToolSchemaOptions = {
   name: 'ds_component-coverage',

@@ -1,5 +1,8 @@
 import { ToolsConfig } from '@push-based/models';
-import { reportViolationsTools, reportAllViolationsTools } from './report-violations';
+import {
+  reportViolationsTools,
+  reportAllViolationsTools,
+} from './report-violations';
 import { getProjectDependenciesTools } from './project/get-project-dependencies.tool';
 import { reportDeprecatedCssTools } from './project/report-deprecated-css.tool';
 import { buildComponentUsageGraphTools } from './component-usage-graph';

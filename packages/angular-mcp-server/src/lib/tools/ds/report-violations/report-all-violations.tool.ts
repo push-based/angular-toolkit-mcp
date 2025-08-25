@@ -1,11 +1,12 @@
-import { createHandler, BaseHandlerOptions } from '../shared/utils/handler-helpers.js';
 import {
-  createProjectAnalysisSchema,
+  BaseHandlerOptions,
+  createHandler,
+} from '../shared/utils/handler-helpers.js';
+import {
   COMMON_ANNOTATIONS,
+  createProjectAnalysisSchema,
 } from '../shared/models/schema-helpers.js';
-import {
-  analyzeProjectCoverage,
-} from '../shared/violation-analysis/coverage-analyzer.js';
+import { analyzeProjectCoverage } from '../shared/violation-analysis/coverage-analyzer.js';
 import { formatViolations } from '../shared/violation-analysis/formatters.js';
 import { loadAndValidateDsComponentsFile } from '../../../validation/ds-components-file-loader.validation.js';
 
@@ -17,7 +18,7 @@ interface ReportAllViolationsOptions extends BaseHandlerOptions {
 export const reportAllViolationsSchema = {
   name: 'report-all-violations',
   description:
-    'Report all deprecated DS CSS usage for every component defined in the config file within a directory.',
+    'Scan a directory for deprecated design system CSS classes defined in the config at `deprecatedCssClassesPath`, and output a usage report',
   inputSchema: createProjectAnalysisSchema({
     groupBy: {
       type: 'string',
@@ -31,9 +32,6 @@ export const reportAllViolationsSchema = {
     ...COMMON_ANNOTATIONS.readOnly,
   },
 };
-
-
-// Reuse centralized loader+validator for DS components config
 
 export const reportAllViolationsHandler = createHandler<
   ReportAllViolationsOptions,
@@ -57,20 +55,17 @@ export const reportAllViolationsHandler = createHandler<
     const raw = coverageResult.rawData?.rawPluginResult;
     if (!raw) return [];
 
-    // Reuse the existing minimal formatter so output format matches report-violations
-    // and respect groupBy option.
     const formattedContent = formatViolations(raw, params.directory, {
       groupBy: groupBy === 'file' ? 'file' : 'folder',
     });
 
-    // Extract text items to string[]
-    const lines = formattedContent.map((item: { type?: string; text?: string } | string) => {
-      if (typeof item === 'string') return item;
-      if (item && typeof item.text === 'string') return item.text;
-      return String(item);
-    });
-
-    return lines;
+    return formattedContent.map(
+      (item: { type?: string; text?: string } | string) => {
+        if (typeof item === 'string') return item;
+        if (item && typeof item.text === 'string') return item.text;
+        return String(item);
+      },
+    );
   },
   (result) => result,
 );
