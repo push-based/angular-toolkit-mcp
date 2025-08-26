@@ -1,0 +1,89 @@
+<!-- Multi-violation test component using deprecated CSS classes from 4 DS components -->
+
+<div class="test-container">
+  <h2>Multi-Violation Test Component</h2>
+  
+  <!-- ❌ BAD: DsButton violations - using deprecated 'btn', 'btn-primary', 'legacy-button' -->
+  <div class="button-section">
+    <h3>Button Violations (DsButton)</h3>
+    <button class="btn btn-primary" (click)="handleButtonClick()">
+      Primary Legacy Button
+    </button>
+    <button class="btn">
+      Basic Legacy Button  
+    </button>
+    <button class="legacy-button">
+      Legacy Button Style
+    </button>
+  </div>
+
+  <!-- ❌ BAD: DsBadge violations - using deprecated 'offer-badge' -->
+  <div class="badge-section">
+    <h3>Badge Violations (DsBadge)</h3>
+    <span class="offer-badge">50% OFF</span>
+    <div class="product-item">
+      <span>Special Product</span>
+      <span class="offer-badge">NEW</span>
+    </div>
+  </div>
+
+  <!-- ❌ BAD: DsTabsModule violations - using deprecated 'tab-nav', 'nav-tabs', 'tab-nav-item' -->
+  <div class="tabs-section">
+    <h3>Tabs Violations (DsTabsModule)</h3>
+    <ul class="nav-tabs tab-nav">
+      <li class="tab-nav-item" 
+          [class.active]="activeTab === 0"
+          (click)="switchTab(0)">
+        Tab 1
+      </li>
+      <li class="tab-nav-item" 
+          [class.active]="activeTab === 1"
+          (click)="switchTab(1)">
+        Tab 2
+      </li>
+      <li class="tab-nav-item" 
+          [class.active]="activeTab === 2"
+          (click)="switchTab(2)">
+        Tab 3
+      </li>
+    </ul>
+    <div class="tab-content">
+      <div *ngIf="activeTab === 0">Content for Tab 1</div>
+      <div *ngIf="activeTab === 1">Content for Tab 2</div>
+      <div *ngIf="activeTab === 2">Content for Tab 3</div>
+    </div>
+  </div>
+
+  <!-- ❌ BAD: DsCard violations - using deprecated 'card' -->
+  <div class="card-section">
+    <h3>Card Violations (DsCard)</h3>
+    <div class="card" *ngIf="showCard">
+      <div class="card-header">
+        <h4>Legacy Card Header</h4>
+        <button class="btn" (click)="toggleCard()">×</button>
+      </div>
+      <div class="card-body">
+        <p>This is a legacy card implementation using deprecated CSS classes.</p>
+        <span class="offer-badge">FEATURED</span>
+      </div>
+      <div class="card-footer">
+        <button class="legacy-button">Action</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mixed violations in a single section -->
+  <div class="mixed-section">
+    <h3>Mixed Violations</h3>
+    <div class="card">
+      <nav class="tab-nav">
+        <span class="tab-nav-item">Settings</span>
+        <span class="offer-badge">{{notifications}}</span>
+      </nav>
+      <div class="card-body">
+        <button class="btn btn-primary">Save Settings</button>
+        <button class="legacy-button">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
