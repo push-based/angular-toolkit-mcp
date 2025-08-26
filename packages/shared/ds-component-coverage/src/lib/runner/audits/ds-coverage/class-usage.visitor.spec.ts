@@ -18,7 +18,7 @@ describe('ClassCollectorVisitor', () => {
   beforeEach(() => {
     visitor = new ClassUsageVisitor({
       componentName: 'CounterComponent',
-      deprecatedCssClasses: ['count'],
+      deprecatedCssClasses: ['count', 'count-badge', 'count-item'],
       docsUrl: 'my.doc#CounterComponent',
     });
   });
@@ -448,5 +448,114 @@ describe('ClassCollectorVisitor', () => {
         }),
       }),
     ]);
+  });
+
+  // Deduplication tests
+  describe('deduplication', () => {
+    it('should deduplicate multiple deprecated classes in same class attribute', () => {
+      const template = `<div class="count count-badge other-class">Content</div>`;
+
+      const ast = parseTemplate(template, 'template.html');
+      ast.nodes.forEach((node) => node.visit(visitor));
+
+      expect(visitor.getIssues()).toHaveLength(1);
+      const message = visitor.getIssues()[0].message;
+      expect(message).toContain('count, count-badge');
+      expect(message).toContain('CounterComponent');
+      expect(visitor.getIssues()[0]).toEqual(
+        expect.objectContaining({
+          severity: 'error',
+          source: expect.objectContaining({
+            file: 'template.html',
+            position: expect.any(Object),
+          }),
+        })
+      );
+    });
+
+    it('should deduplicate multiple deprecated classes in ngClass array', () => {
+      const template = `<div [ngClass]="['count', 'count-badge', 'other-class']">Content</div>`;
+
+      const ast = parseTemplate(template, 'template.html');
+      ast.nodes.forEach((node) => node.visit(visitor));
+
+      expect(visitor.getIssues()).toHaveLength(1);
+      const message = visitor.getIssues()[0].message;
+      expect(message).toContain('count, count-badge');
+      expect(message).toContain('CounterComponent');
+      expect(visitor.getIssues()[0]).toEqual(
+        expect.objectContaining({
+          severity: 'error',
+          source: expect.objectContaining({
+            file: 'template.html',
+            position: expect.any(Object),
+          }),
+        })
+      );
+    });
+
+    it('should deduplicate multiple deprecated classes in ngClass object', () => {
+      const template = `<div [ngClass]="{ count: true, 'count-badge': true, other: false }">Content</div>`;
+
+      const ast = parseTemplate(template, 'template.html');
+      ast.nodes.forEach((node) => node.visit(visitor));
+
+      expect(visitor.getIssues()).toHaveLength(1);
+      const message = visitor.getIssues()[0].message;
+      expect(message).toContain('count, count-badge');
+      expect(message).toContain('CounterComponent');
+      expect(visitor.getIssues()[0]).toEqual(
+        expect.objectContaining({
+          severity: 'error',
+          source: expect.objectContaining({
+            file: 'template.html',
+            position: expect.any(Object),
+          }),
+        })
+      );
+    });
+
+    it('should still create single issue for single deprecated class', () => {
+      const template = `<div class="count other-class">Content</div>`;
+
+      const ast = parseTemplate(template, 'template.html');
+      ast.nodes.forEach((node) => node.visit(visitor));
+
+      expect(visitor.getIssues()).toHaveLength(1);
+      const message = visitor.getIssues()[0].message;
+      expect(message).toContain('count');
+      expect(message).not.toContain(',');
+      expect(message).toContain('CounterComponent');
+      expect(visitor.getIssues()[0]).toEqual(
+        expect.objectContaining({
+          severity: 'error',
+          source: expect.objectContaining({
+            file: 'template.html',
+            position: expect.any(Object),
+          }),
+        })
+      );
+    });
+
+    it('should deduplicate three deprecated classes in same class attribute', () => {
+      const template = `<div class="count count-badge count-item other-class">Content</div>`;
+
+      const ast = parseTemplate(template, 'template.html');
+      ast.nodes.forEach((node) => node.visit(visitor));
+
+      expect(visitor.getIssues()).toHaveLength(1);
+      const message = visitor.getIssues()[0].message;
+      expect(message).toContain('count, count-badge, count-item');
+      expect(message).toContain('CounterComponent');
+      expect(visitor.getIssues()[0]).toEqual(
+        expect.objectContaining({
+          severity: 'error',
+          source: expect.objectContaining({
+            file: 'template.html',
+            position: expect.any(Object),
+          }),
+        })
+      );
+    });
   });
 });

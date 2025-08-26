@@ -54,12 +54,14 @@ export const createClassDefinitionVisitor = (
     },
 
     visitRule(rule: Rule) {
-      getMatchingClassNames(
+      const matchingClassNames = getMatchingClassNames(
         { selector: rule.selector },
         deprecatedCssClasses,
-      ).forEach((className) => {
+      );
+      
+      if (matchingClassNames.length > 0) {
         const message = classUsageMessage({
-          className,
+          className: matchingClassNames.join(', '),
           rule,
           componentName: componentReplacement.componentName,
           docsUrl: componentReplacement.docsUrl,
@@ -70,7 +72,7 @@ export const createClassDefinitionVisitor = (
           severity: 'error',
           source: styleAstRuleToSource(rule, isInline ? startLine : 0),
         });
-      });
+      }
     },
   };
 };
