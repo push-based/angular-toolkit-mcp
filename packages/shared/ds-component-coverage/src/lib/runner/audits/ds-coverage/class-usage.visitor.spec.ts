@@ -469,7 +469,7 @@ describe('ClassCollectorVisitor', () => {
             file: 'template.html',
             position: expect.any(Object),
           }),
-        })
+        }),
       );
     });
 
@@ -490,7 +490,7 @@ describe('ClassCollectorVisitor', () => {
             file: 'template.html',
             position: expect.any(Object),
           }),
-        })
+        }),
       );
     });
 
@@ -511,7 +511,7 @@ describe('ClassCollectorVisitor', () => {
             file: 'template.html',
             position: expect.any(Object),
           }),
-        })
+        }),
       );
     });
 
@@ -533,7 +533,7 @@ describe('ClassCollectorVisitor', () => {
             file: 'template.html',
             position: expect.any(Object),
           }),
-        })
+        }),
       );
     });
 
@@ -554,7 +554,7 @@ describe('ClassCollectorVisitor', () => {
             file: 'template.html',
             position: expect.any(Object),
           }),
-        })
+        }),
       );
     });
   });

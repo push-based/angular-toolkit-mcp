@@ -6,8 +6,15 @@ import {
   COMMON_ANNOTATIONS,
   createProjectAnalysisSchema,
 } from '../shared/models/schema-helpers.js';
-import { analyzeProjectCoverage, extractComponentName } from '../shared/violation-analysis/coverage-analyzer.js';
-import { formatViolations, filterFailedAudits, groupIssuesByFile } from '../shared/violation-analysis/formatters.js';
+import {
+  analyzeProjectCoverage,
+  extractComponentName,
+} from '../shared/violation-analysis/coverage-analyzer.js';
+import {
+  formatViolations,
+  filterFailedAudits,
+  groupIssuesByFile,
+} from '../shared/violation-analysis/formatters.js';
 import { loadAndValidateDsComponentsFile } from '../../../validation/ds-components-file-loader.validation.js';
 import { RESULT_FORMATTERS } from '../shared/utils/handler-helpers.js';
 
@@ -63,19 +70,33 @@ export const reportAllViolationsHandler = createHandler<
       const lines: string[] = [];
       for (const audit of failedAudits) {
         extractComponentName(audit.title);
-        const fileGroups = groupIssuesByFile(audit.details?.issues ?? [], params.directory);
-        for (const [fileName, { lines: fileLines, message }] of Object.entries(fileGroups)) {
-          const sorted = fileLines.length > 1 ? [...fileLines].sort((a, b) => a - b) : fileLines;
-          const lineInfo = sorted.length > 1 ? `lines ${sorted.join(', ')}` : `line ${sorted[0]}`;
+        const fileGroups = groupIssuesByFile(
+          audit.details?.issues ?? [],
+          params.directory,
+        );
+        for (const [fileName, { lines: fileLines, message }] of Object.entries(
+          fileGroups,
+        )) {
+          const sorted =
+            fileLines.length > 1
+              ? [...fileLines].sort((a, b) => a - b)
+              : fileLines;
+          const lineInfo =
+            sorted.length > 1
+              ? `lines ${sorted.join(', ')}`
+              : `line ${sorted[0]}`;
           lines.push(`${fileName} (${lineInfo}): ${message}`);
         }
       }
       return lines;
     }
 
-    const formattedContent = formatViolations(raw, params.directory, { groupBy: 'folder' });
-    return formattedContent.map((item: { type?: string; text?: string } | string) =>
-      typeof item === 'string' ? item : item?.text ?? String(item),
+    const formattedContent = formatViolations(raw, params.directory, {
+      groupBy: 'folder',
+    });
+    return formattedContent.map(
+      (item: { type?: string; text?: string } | string) =>
+        typeof item === 'string' ? item : (item?.text ?? String(item)),
     );
   },
   (result) => RESULT_FORMATTERS.list(result, 'Design System Violations:'),

@@ -97,12 +97,15 @@ export class ClassUsageVisitor
     const { deprecatedCssClasses, ...compRepl } = this.componentReplacement;
     if (attribute.name === 'class' && this.currentElement) {
       const classNames = parseClassNames(attribute.value);
-      const deprecatedClassesFound = classNames.filter(cn => deprecatedCssClasses.includes(cn));
-      
+      const deprecatedClassesFound = classNames.filter((cn) =>
+        deprecatedCssClasses.includes(cn),
+      );
+
       if (deprecatedClassesFound.length > 0) {
-        const isInline = attribute.sourceSpan.start.file.url.match(/\.ts$/) != null;
+        const isInline =
+          attribute.sourceSpan.start.file.url.match(/\.ts$/) != null;
         const startLine = isInline ? this.startLine : 0;
-        
+
         this.issues.push({
           severity: 'error',
           message: generateClassUsageMessage({

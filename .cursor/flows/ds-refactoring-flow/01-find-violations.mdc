@@ -6,28 +6,32 @@ alwaysApply: false
 You are an AI assistant tasked with helping a developer identify and plan refactoring for legacy component usage. Follow these instructions carefully to complete the task in two main steps.
 
 First, I will provide you with the following information:
-<component_name>{{COMPONENT_NAME}}</component_name>
 <directory>{{DIRECTORY}}</directory>
 
 Step 1: Find violations
 
-1. Run a scan using the report-violations function with the following parameters:
-   - component: {{COMPONENT_NAME}}
+1. Run a scan using the report-all-violations function with the following parameters:
    - directory: {{DIRECTORY}}
    - groupBy: "folder"
    
    Store the result in a variable called scanResult.
 
-2. Perform first-level error handling:
+2. Deduplicate violations by file and line:
+   - Process scanResult to remove duplicate entries that have the same file path and line number
+   - When combining duplicates, merge the component/class information (e.g., "btn, btn-primary violations on line 10")
+   - Keep the deduplicated count for accurate violation totals
+   - Store the deduplicated result and use it for all subsequent processing
+
+3. Perform first-level error handling:
    - If the function call returns an error, respond with:
      <commentary>🚨 *Tool execution failed* – [error message]</commentary>
      Then stop execution.
-   - If scanResult.totalViolations is 0, respond with:
-     "✅ No legacy usage of {{COMPONENT_NAME}} found."
+   - If no violations are found, respond with:
+     "✅ No legacy usage found."
      Then stop execution.
    - Otherwise, continue to the next step.
 
-3. Output the results for the user:
+4. Output the results for the user:
    - Print the ranked list of folders inside <folders> tags, like this:
      <folders>
      1. [path/to/folder-A] – [X] violations in [Y] files
@@ -50,13 +54,18 @@ Once the user provides a subfolder choice, proceed as follows:
      Then stop execution.
 
 2. Run a file-level scan:
-   - Use the report-violations function with these parameters:
-     - component: {{COMPONENT_NAME}}
+   - Use the report-all-violations function with these parameters:
      - directory: {{SUBFOLDER}}
      - groupBy: "file"
    - Store the result in a variable called fileScan.
 
-3. Perform error handling and validation:
+3. Deduplicate violations by file and line:
+   - Process fileScan to remove duplicate entries that have the same file path and line number
+   - When combining duplicates, merge the component/class information
+   - Keep the deduplicated count for accurate violation totals
+   - Store the deduplicated result and use it for all subsequent processing
+
+4. Perform error handling and validation:
    - If the function call returns an error, respond with:
      <commentary>🚨 *Tool execution failed* – [error message]</commentary>
      Then stop execution.
@@ -65,7 +74,7 @@ Once the user provides a subfolder choice, proceed as follows:
      Then stop execution.
    - Sort the files by number of violations (descending) and then alphabetically.
 
-4. Output the results for the plan phase:
+5. Output the results for the plan phase:
    - Print the sorted list of files inside <violations> tags, like this:
      <violations>
      1. [path/to/file-A.tsx] – [X] violations
@@ -74,11 +83,3 @@ Once the user provides a subfolder choice, proceed as follows:
      </violations>
    - After the </violations> tag, prompt the user with:
      ❓ **Please attach the "Plan Phase" rules now so I can start refactoring planning.**
-
-As in Step 1, any side remarks should go in an optional <commentary>...</commentary> tag.
-
-Final instructions:
-- Always use the exact format and wording provided for outputs and prompts.
-- Do not add any explanations or additional text unless explicitly instructed.
-- If you encounter any situations not covered by these instructions, respond with:
-  <commentary>⚠️ Unexpected situation encountered. Please provide further guidance.</commentary>

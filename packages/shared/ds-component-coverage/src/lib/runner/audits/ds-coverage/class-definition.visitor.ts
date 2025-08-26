@@ -58,7 +58,7 @@ export const createClassDefinitionVisitor = (
         { selector: rule.selector },
         deprecatedCssClasses,
       );
-      
+
       if (matchingClassNames.length > 0) {
         const message = classUsageMessage({
           className: matchingClassNames.join(', '),

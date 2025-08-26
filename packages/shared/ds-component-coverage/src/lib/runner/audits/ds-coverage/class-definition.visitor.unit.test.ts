@@ -34,7 +34,7 @@ describe('ClassDefinitionVisitor', () => {
           file: 'styles.css',
           position: expect.any(Object),
         }),
-      })
+      }),
     );
   });
 
@@ -90,7 +90,7 @@ describe('ClassDefinitionVisitor', () => {
           file: 'styles.css',
           position: expect.any(Object),
         }),
-      })
+      }),
     );
   });
 
@@ -122,7 +122,7 @@ describe('ClassDefinitionVisitor', () => {
             file: 'styles.css',
             position: expect.any(Object),
           }),
-        })
+        }),
       );
     });
 
@@ -153,7 +153,7 @@ describe('ClassDefinitionVisitor', () => {
             file: 'styles.css',
             position: expect.any(Object),
           }),
-        })
+        }),
       );
     });
 
@@ -184,7 +184,7 @@ describe('ClassDefinitionVisitor', () => {
             file: 'styles.css',
             position: expect.any(Object),
           }),
-        })
+        }),
       );
     });
 
@@ -216,7 +216,7 @@ describe('ClassDefinitionVisitor', () => {
             file: 'styles.css',
             position: expect.any(Object),
           }),
-        })
+        }),
       );
     });
 
@@ -248,7 +248,7 @@ describe('ClassDefinitionVisitor', () => {
             file: 'styles.css',
             position: expect.any(Object),
           }),
-        })
+        }),
       );
     });
   });
