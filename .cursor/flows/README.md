@@ -27,21 +27,34 @@ Flows are collections of rule files (.mdc) that guide the AI through multi-step 
 **Location:** `ds-refactoring-flow/`
 **Purpose:** Migrate components from deprecated design system patterns to modern alternatives
 
-**Files:**
-- `01-find-violations.mdc` - Identify deprecated component usage
-- `02-plan-refactoring.mdc` - Create detailed migration strategy
+**Flow Options:**
+
+**Option A: Targeted Approach** (recommended for focused, incremental migrations)
+- `01-find-violations.mdc` - Identify specific deprecated component usage
+- `02-plan-refactoring.mdc` - Create detailed migration strategy for specific cases
+
+**Option B: Comprehensive Approach** (recommended for large-scale migrations)
+- `01a-find-all-violations.mdc` - Scan entire codebase, group by folders, select subfolder for detailed analysis
+- `02a-plan-refactoring-for-all-violations.mdc` - Create comprehensive migration plan for all violations in scope
+
+**Continuation Steps** (used with both approaches):
 - `03-non-viable-cases.mdc` - Handle non-migratable components by marking them for exclusion
 - `03-fix-violations.mdc` - Execute code changes
 - `04-validate-changes.mdc` - Verify improvements through contract comparison
 - `05-prepare-report.mdc` - Generate testing checklists and documentation
 - `clean-global-styles.mdc` - Independent analysis of deprecated CSS usage
 
+**Choosing Your Approach:**
+- **Targeted (01 → 02)**: Use when working on specific components or small sets of violations. Provides focused analysis and incremental progress.
+- **Comprehensive (01a → 02a)**: Use when planning large-scale migrations across multiple folders. Provides broad overview first, then detailed planning for selected scope.
+
 **Special Handling:**
 - **Non-Viable Cases**: When components are identified as non-viable during the planning step, use `03-non-viable-cases.mdc` instead of proceeding with the normal fix violations step. This marks components with special prefixes (`after-migration-[ORIGINAL_CLASS]`) to exclude them from future violation reports.
 
 **Use Cases:** 
-- **Primary Flow**: Migrating components to modern design system patterns
-- **Non-Viable Handling**: Alternative handling within the main flow for legacy components that cannot be migrated
+- **Targeted Flow**: Incremental migration of specific components or small violation sets
+- **Comprehensive Flow**: Large-scale migration planning across multiple directories
+- **Non-Viable Handling**: Alternative handling within either flow for legacy components that cannot be migrated
 
 ## How to Use Flows
 
