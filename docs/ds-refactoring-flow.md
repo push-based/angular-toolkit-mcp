@@ -14,8 +14,8 @@ The refactoring process offers two alternative approaches for the initial phases
 2. **Plan Refactoring** (`02-plan-refactoring.mdc`) → Create detailed migration strategy for specific cases
 
 **Option B: Comprehensive Approach** (recommended for large-scale migrations)
-1. **Find All Violations** (`01a-find-all-violations.mdc`) → Scan entire codebase, group by folders, select subfolder for detailed analysis
-2. **Plan Refactoring for All Violations** (`02a-plan-refactoring-for-all-violations.mdc`) → Create comprehensive migration plan for all violations in scope
+1. **Find All Violations** (`01b-find-all-violations.mdc`) → Scan entire codebase, group by folders, select subfolder for detailed analysis
+2. **Plan Refactoring for All Violations** (`02b-plan-refactoring-for-all-violations.mdc`) → Create comprehensive migration plan for all violations in scope
 
 **Continuation Steps** (used with both approaches):
 3. **Fix Violations** → Execute code changes
@@ -88,7 +88,7 @@ The rule enforces strict output formatting with `<folders>` and `<violations>` t
 
 Claude-4-Sonnet
 
-## 01a-find-all-violations.mdc (Alternative Comprehensive Approach)
+## 01b-find-all-violations.mdc (Alternative Comprehensive Approach)
 
 ### Goal
 
@@ -96,10 +96,10 @@ Perform comprehensive analysis of an entire codebase to identify all deprecated 
 
 ### Process
 
-To start this process, drag file `01a-find-all-violations.mdc` to the cursor chat and provide the `directory` parameter, your chat message will look like this:
+To start this process, drag file `01b-find-all-violations.mdc` to the cursor chat and provide the `directory` parameter, your chat message will look like this:
 
 ```
-@01a-find-all-violations.mdc directory=path/to/directory
+@01b-find-all-violations.mdc directory=path/to/directory
 ```
 
 This rule follows a comprehensive two-step process to find all violations:
@@ -145,7 +145,7 @@ The rule enforces structured output with `<folders>` and `<violations>` tags, an
 
 Claude-4-Sonnet
 
-## 02a-plan-refactoring-for-all-violations.mdc (Alternative Comprehensive Approach)
+## 02b-plan-refactoring-for-all-violations.mdc (Alternative Comprehensive Approach)
 
 ### Goal
 
@@ -153,7 +153,7 @@ Create a comprehensive migration strategy for large-scale refactoring of legacy 
 
 ### Process
 
-To start this process, drag file `02a-plan-refactoring-for-all-violations.mdc` to the cursor chat after completing the comprehensive violations analysis.
+To start this process, drag file `02b-plan-refactoring-for-all-violations.mdc` to the cursor chat after completing the comprehensive violations analysis.
 
 The rule implements an enhanced three-phase comprehensive planning process:
 

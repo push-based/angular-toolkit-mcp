@@ -34,8 +34,8 @@ Flows are collections of rule files (.mdc) that guide the AI through multi-step 
 - `02-plan-refactoring.mdc` - Create detailed migration strategy for specific cases
 
 **Option B: Comprehensive Approach** (recommended for large-scale migrations)
-- `01a-find-all-violations.mdc` - Scan entire codebase, group by folders, select subfolder for detailed analysis
-- `02a-plan-refactoring-for-all-violations.mdc` - Create comprehensive migration plan for all violations in scope
+- `01b-find-all-violations.mdc` - Scan entire codebase, group by folders, select subfolder for detailed analysis
+- `02b-plan-refactoring-for-all-violations.mdc` - Create comprehensive migration plan for all violations in scope
 
 **Continuation Steps** (used with both approaches):
 - `03-non-viable-cases.mdc` - Handle non-migratable components by marking them for exclusion
@@ -46,7 +46,7 @@ Flows are collections of rule files (.mdc) that guide the AI through multi-step 
 
 **Choosing Your Approach:**
 - **Targeted (01 → 02)**: Use when working on specific components or small sets of violations. Provides focused analysis and incremental progress.
-- **Comprehensive (01a → 02a)**: Use when planning large-scale migrations across multiple folders. Provides broad overview first, then detailed planning for selected scope.
+- **Comprehensive (01b → 02b)**: Use when planning large-scale migrations across multiple folders. Provides broad overview first, then detailed planning for selected scope.
 
 **Special Handling:**
 - **Non-Viable Cases**: When components are identified as non-viable during the planning step, use `03-non-viable-cases.mdc` instead of proceeding with the normal fix violations step. This marks components with special prefixes (`after-migration-[ORIGINAL_CLASS]`) to exclude them from future violation reports.
