@@ -97,22 +97,25 @@ export class ClassUsageVisitor
     const { deprecatedCssClasses, ...compRepl } = this.componentReplacement;
     if (attribute.name === 'class' && this.currentElement) {
       const classNames = parseClassNames(attribute.value);
-      for (const className of classNames) {
-        if (deprecatedCssClasses.includes(className)) {
-          const isInline =
-            attribute.sourceSpan.start.file.url.match(/\.ts$/) != null;
-          const startLine = isInline ? this.startLine : 0;
-          this.issues.push({
-            severity: 'error', // @TODO if we consider transformations this needs to be dynamic
-            message: generateClassUsageMessage({
-              ...compRepl,
-              element: this.currentElement,
-              className,
-              attribute: `${attribute.name}`,
-            }),
-            source: tmplAstElementToSource(this.currentElement, startLine),
-          });
-        }
+      const deprecatedClassesFound = classNames.filter((cn) =>
+        deprecatedCssClasses.includes(cn),
+      );
+
+      if (deprecatedClassesFound.length > 0) {
+        const isInline =
+          attribute.sourceSpan.start.file.url.match(/\.ts$/) != null;
+        const startLine = isInline ? this.startLine : 0;
+
+        this.issues.push({
+          severity: 'error',
+          message: generateClassUsageMessage({
+            ...compRepl,
+            element: this.currentElement,
+            className: deprecatedClassesFound.join(', '),
+            attribute: `${attribute.name}`,
+          }),
+          source: tmplAstElementToSource(this.currentElement, startLine),
+        });
       }
     }
   }
@@ -149,22 +152,22 @@ export class ClassUsageVisitor
         deprecatedCssClasses,
       );
 
-      // Create issues for found deprecated classes
-      foundClassNames.forEach((className) => {
+      // Create single issue for all found deprecated classes
+      if (foundClassNames.length > 0 && this.currentElement) {
         this.issues.push({
           severity: 'error', // @TODO if we consider transformations this needs to be dynamic
           message: generateClassUsageMessage({
             ...compRepl,
-            element: this.currentElement!,
-            className,
+            element: this.currentElement,
+            className: foundClassNames.join(', '),
             attribute:
               attribute.name === 'ngClass'
                 ? `[${attribute.name}]`
                 : attribute.name,
           }),
-          source: tmplAstElementToSource(this.currentElement!, this.startLine),
+          source: tmplAstElementToSource(this.currentElement, this.startLine),
         });
-      });
+      }
     }
   }
 

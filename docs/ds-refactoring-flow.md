@@ -5,12 +5,22 @@
 
 This document describes a 5-step AI-assisted refactoring process for migrating legacy components to the design system. Each step uses a specific rule file (.mdc) that guides the Cursor agent through automated analysis and code changes.
 
-**Process Summary:**
-1. **Find Violations** → Identify deprecated component usage
-2. **Plan Refactoring** → Create detailed migration strategy  
-   - **If viable:** Proceed to step 3 with normal checklist
-   - **If non-viable:** Use alternative handling (see Non-Viable Cases section below)
+**Flow Approaches:**
+
+The refactoring process offers two alternative approaches for the initial phases:
+
+**Option A: Targeted Approach** (recommended for focused, incremental migrations)
+1. **Find Violations** (`01-find-violations.mdc`) → Identify specific deprecated component usage
+2. **Plan Refactoring** (`02-plan-refactoring.mdc`) → Create detailed migration strategy for specific cases
+
+**Option B: Comprehensive Approach** (recommended for large-scale migrations)
+1. **Find All Violations** (`01b-find-all-violations.mdc`) → Scan entire codebase, group by folders, select subfolder for detailed analysis
+2. **Plan Refactoring for All Violations** (`02b-plan-refactoring-for-all-violations.mdc`) → Create comprehensive migration plan for all violations in scope
+
+**Continuation Steps** (used with both approaches):
 3. **Fix Violations** → Execute code changes
+   - **If viable:** Proceed with normal checklist (`03-fix-violations.mdc`)
+   - **If non-viable:** Use alternative handling (`03-non-viable-cases.mdc`)
 4. **Validate Changes** → Verify refactoring safety
 5. **Prepare Report** → Generate testing checklists and documentation
 
@@ -77,6 +87,153 @@ The rule enforces strict output formatting with `<folders>` and `<violations>` t
 ### Preferred model
 
 Claude-4-Sonnet
+
+## 01b-find-all-violations.mdc (Alternative Comprehensive Approach)
+
+### Goal
+
+Perform comprehensive analysis of an entire codebase to identify all deprecated component usage patterns across multiple directories and components. This rule provides a broader scope alternative to the targeted approach, allowing teams to understand the full migration scope before focusing on specific areas for detailed planning.
+
+### Process
+
+To start this process, drag file `01b-find-all-violations.mdc` to the cursor chat and provide the `directory` parameter, your chat message will look like this:
+
+```
+@01b-find-all-violations.mdc directory=path/to/directory
+```
+
+This rule follows a comprehensive two-step process to find all violations:
+
+**Step 1: Global folder-level scan**
+- Scans the entire specified directory tree for all deprecated component violations
+- Groups results by folder to provide overview of violation distribution
+- Provides a ranked list of folders with violation counts and file counts
+- Allows user to understand migration scope across the entire codebase
+- Enables selection of specific subfolder for focused analysis
+
+**Step 2: Targeted file-level scan**
+- Performs detailed scanning of the selected subfolder from step 1
+- Groups violations by individual files within the selected scope
+- Outputs a sorted list of files with violation counts for precise targeting
+- Prepares comprehensive data for the planning phase
+
+> After the second scan, AI will explicitly ask you to attach the comprehensive planning rule.
+
+### Tools used
+
+- `report-all-violations` - Comprehensive MCP tool that analyzes all deprecated design system CSS usage across the codebase
+  - Parameters: `directory`, `groupBy` (folder/file)
+  - Returns: Complete violation data with counts and locations across all components
+  - Supports both folder-level overview and file-level detailed analysis
+
+### Flow
+
+> You don't need to manually perform any of the listed actions except providing the `directory=path/to/folder` in the initial message.
+
+1. **Initial Setup**: User provides `{{DIRECTORY}}` parameter for comprehensive analysis
+2. **Global Scan**: Execute `report-all-violations` with `groupBy: "folder"` for complete overview
+3. **Error Handling**: Check for tool errors or zero violations across entire codebase
+4. **Folder Results**: Display ranked folder list with comprehensive violation and file counts
+5. **User Selection**: Prompt user to choose a subfolder from the comprehensive results for detailed focus
+6. **Targeted Scan**: Execute `report-all-violations` with `groupBy: "file"` on selected subfolder
+7. **File Results**: Display sorted file list with precise violation counts for planning
+8. **Transition**: Prompt user to attach comprehensive planning rules for next step
+
+The rule enforces structured output with `<folders>` and `<violations>` tags, and uses `<commentary>` blocks for error messages and progress updates.
+
+### Preferred model
+
+Claude-4-Sonnet
+
+## 02b-plan-refactoring-for-all-violations.mdc (Alternative Comprehensive Approach)
+
+### Goal
+
+Create a comprehensive migration strategy for large-scale refactoring of legacy components across multiple files and violation types. This rule provides a thorough analysis approach for complex migration scenarios involving extensive deprecated component usage, focusing on creating detailed implementation plans for comprehensive scope migrations.
+
+### Process
+
+To start this process, drag file `02b-plan-refactoring-for-all-violations.mdc` to the cursor chat after completing the comprehensive violations analysis.
+
+The rule implements an enhanced three-phase comprehensive planning process:
+
+**Phase 1: Comprehensive Analysis**
+- Reviews extensive component documentation, implementation code, and usage patterns across all violation files
+- Analyzes complete scope of affected files (templates, TypeScript, styles, specs, NgModules) 
+- Assesses migration complexity across the entire selected scope and identifies potential non-viable migrations
+- Evaluates library dependencies and their comprehensive impact on large-scale migration
+- Considers cross-component dependencies and interaction patterns
+
+**Phase 2: Detailed Plan Creation for Complete Scope**
+- Compares deprecated usage patterns against design system exemplars across all files
+- Classifies each migration comprehensively as: Simple swap, Requires restructure, or Non-viable
+- Assigns complexity scores (1-10) with comprehensive penalties for animations/breakpoints/variants across scope
+- Creates comprehensive actionable plans ordered by effort with concrete edits needed for all files
+- Provides extensive verification notes for static file-based checks across the migration scope
+- Considers migration dependencies and optimal sequencing for large-scale changes
+
+---
+**🚦 Quality Gate 1 (Comprehensive Review)**
+
+Before proceeding to Phase 3, you must review the comprehensive migration plan.
+
+**Required Actions:**
+- Review the complete migration strategy for all identified violations
+- **If all components are viable for migration:** Approve or request modifications, then proceed with comprehensive checklist creation
+- **If some components are non-viable:** Developer must thoroughly review and confirm non-viability decisions, then use `@03-non-viable-cases.mdc` for non-viable cases
+- **If mixed viability:** Proceed with checklist for viable cases and handle non-viable cases separately
+- Clarify any uncertainties regarding the comprehensive approach
+
+**Next Step:** 
+- **All viable migrations:** When satisfied with the plan, the agent will create a comprehensive checklist
+- **Mixed or non-viable migrations:** Use appropriate handling rules for different component categories
+---
+
+**Phase 3: Comprehensive Checklist Creation**
+- Generates extensive checklist covering all viable migrations with detailed checkbox items
+- Creates comprehensive verification phase with static checks across all affected files
+- Includes dependency management and sequencing considerations for large-scale migrations
+- Saves comprehensive checklist to `.cursor/tmp/refactoring-checklist-{{FOLDER_PATH}}.md`
+
+> After the comprehensive checklist is generated and you see it in the chat, it is time to attach the fix violations rule.
+
+### Tools used
+
+- `get-ds-component-data` - Retrieves comprehensive component information for all involved components
+  - Returns: Complete implementation files, documentation files, import paths for multiple components
+  - Provides: Component source code, API documentation, usage examples across scope
+
+- `build-component-usage-graph` - Maps comprehensive component dependencies and usage patterns
+  - Parameters: `directory`, `violationFiles` (from comprehensive scan, automatically picked up)
+  - Returns: Complete graph showing where all components are imported and used across scope
+  - Analyzes: modules, specs, templates, styles, reverse dependencies for large-scale impact
+
+- `get-project-dependencies` - Analyzes project structure and dependencies for comprehensive scope
+  - Parameters: `directory`, optional `componentName`
+  - Returns: library type (buildable/publishable), peer dependencies for scope assessment
+  - Validates: import paths, workspace configuration for large-scale migration compatibility
+
+### Flow
+
+> You don't need to manually perform any of the listed actions.
+
+1. **Comprehensive Input Gathering**: Collect all component data, folder path, documentation, code, usage graphs, and library data for complete scope
+2. **Extensive Analysis**: Review all inputs and analyze comprehensive codebase impact across all violation files
+3. **Large-Scale Complexity Assessment**: Evaluate migration difficulty and identify non-viable cases across complete scope
+4. **Comprehensive File Classification**: Categorize each file's migration requirements within the broader context
+5. **Detailed Plan Creation**: Generate comprehensive migration steps with complexity scores for all files
+6. **Extensive Verification Design**: Create static checks for comprehensive plan validation across scope
+7. **Large-Scale Ambiguity Resolution**: Identify and request clarification for unclear aspects across scope
+8. **Comprehensive Approval Process**: Present complete plan with "🛠️ Approve this comprehensive plan or specify adjustments?"
+9. **Extensive Checklist Generation**: Create detailed actionable checklist after approval covering all scope
+10. **Comprehensive File Persistence**: Save complete checklist to temporary file for large-scale reference
+
+The rule enforces structured output with `<comprehensive_analysis>`, `<migration_plan>`, and `<checklist>` tags, and includes enhanced ambiguity safeguards for complex large-scale scenarios.
+
+### Preferred model
+
+- Non-complex cases: Claude-4-Sonnet
+- Complex large-scale cases: Claude-4-Sonnet (thinking)
 
 ## 02-plan-refactoring.mdc
 

@@ -1,0 +1,37 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+You are an AI assistant tasked with helping a development team migrate legacy components to a new design system. Your goal is to analyze the current codebase, identify areas that need updating, and provide a detailed plan for the migration process. This task will be completed in three phases: a comprehensive analysis, a detailed plan creation, and a checklist creation.
+
+You will be working with the following inputs:
+<folder_path>{{FOLDER_PATH}}</folder_path>: The path to the folder containing the legacy components
+<component_docs>{{COMPONENT_DOCS}}</component_docs>: The official documentation for the target design-system components
+<component_code>{{COMPONENT_CODE}}</component_code>: The source files of the target design-system components
+<usage_graph>{{USAGE_GRAPH}}</usage_graph>: A graph showing the usage of the legacy components in the specified folder
+<library_data>{{LIBRARY_DATA}}</library_data>: Information about library type
+
+# Phase 1: Comprehensive Analysis
+
+1. Review all provided inputs: COMPONENT_DOCS, COMPONENT_CODE, USAGE_GRAPH, and LIBRARY_DATA.
+
+2. Analyze the current codebase, focusing on:
+   a. The approved markup and API for the target components
+   b. The actual implementation of the design-system components
+   c. All files (templates, TS, styles, specs, NgModules) that reference the legacy components
+   d. Dependencies and library information
+
+3. Create a comprehensive summary of the analysis, including:
+   a. Total number of files affected
+   b. Assessment of migration complexity (Low, Medium, High)
+   c. Any potential non-viable migrations that may require manual rethinking
+   d. Key decisions or assumptions made during the analysis
+   e. Insights gained from examining the component files
+   f. Implications of the LIBRARY_DATA on the migration process
+
+Write your comprehensive analysis in <comprehensive_analysis> tags.
+
+# Phase 2: Detailed Plan Creation
+
+Please think about this problem thoroughly
