@@ -1,4 +1,4 @@
-import { toUnixPath } from '@push-based/utils';
+import { toUnixPath } from '@code-pushup/utils';
 import * as ts from 'typescript';
 
 import { classDecoratorVisitor } from './decorator-config.visitor.js';

@@ -4,7 +4,7 @@ import {
 } from './shared/utils/handler-helpers.js';
 import { ToolSchemaOptions } from '@push-based/models';
 import { dsComponentCoveragePlugin } from '@push-based/ds-component-coverage';
-import { baseToolsSchema } from '../schema';
+import { baseToolsSchema } from '../schema.js';
 import { join } from 'node:path';
 import {
   reportViolationsTools,
@@ -88,7 +88,10 @@ export const componentCoverageHandler = createHandler<
     });
 
     const { executePlugin } = await import('@code-pushup/core');
-    const result = await executePlugin(pluginConfig as any);
+    const result = await executePlugin(pluginConfig as any, {
+      cache: { read: false, write: false },
+      persist: { outputDir: '' },
+    });
     const reducedResult = {
       ...result,
       audits: result.audits.filter(({ score }) => score < 1),

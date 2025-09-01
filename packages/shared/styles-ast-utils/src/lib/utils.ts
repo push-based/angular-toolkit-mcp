@@ -1,4 +1,4 @@
-import { Issue } from '@push-based/models';
+import { Issue } from '@code-pushup/models';
 import { Rule } from 'postcss';
 
 /**

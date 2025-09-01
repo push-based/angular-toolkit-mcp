@@ -1,30 +1,41 @@
 # Models
 
-Comprehensive **Zod schemas and TypeScript types** for Code PushUp configuration, reports, and data validation.
+Simple **TypeScript types** for Angular MCP toolkit shared interfaces and utilities.
 
 ## Minimal usage
 
 ```ts
-import { auditSchema, reportSchema } from '@push-based/models';
+import { type CliArgsObject, type ToolsConfig } from '@push-based/models';
 
-const audit = auditSchema.parse({
-  slug: 'performance-audit',
-  title: 'Performance Audit',
-});
+// CLI argument types
+const args: CliArgsObject = {
+  directory: './src',
+  componentName: 'DsButton',
+  _: ['command'],
+};
 
-const isValidReport = reportSchema.safeParse(reportData).success;
+// MCP tool configuration
+const toolConfig: ToolsConfig = {
+  schema: {
+    name: 'my-tool',
+    description: 'A custom tool',
+    inputSchema: {
+      type: 'object',
+      properties: {},
+    },
+  },
+  handler: async (request) => {
+    return { content: [{ type: 'text', text: 'Result' }] };
+  },
+};
 ```
 
 ## Key Features
 
-- **Zod Schema Validation**: Comprehensive validation schemas for all Code PushUp data structures
-- **TypeScript Types**: Full type safety with proper TypeScript definitions
-- **Configuration Models**: Schemas for core config, plugins, categories, and groups
-- **Report Models**: Complete report structure validation and types
-- **Audit Models**: Detailed audit output and metadata schemas
-- **MCP Integration**: Model Context Protocol tool schema definitions
-- **Table Models**: Flexible table data structures for reports
-- **Diff Models**: Report comparison and difference tracking
+- **CLI Types**: Type-safe command line argument handling
+- **MCP Integration**: Model Context Protocol tool schema definitions and handlers
+- **Diagnostics**: Interface for objects that can report issues and diagnostics
+- **Lightweight**: Minimal dependencies, focused on essential shared types
 
 ## Documentation map
 

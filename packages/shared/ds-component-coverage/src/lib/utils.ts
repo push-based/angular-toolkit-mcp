@@ -1,7 +1,7 @@
-import { Audit, CategoryRef } from '@push-based/models';
-import { ANGULAR_DS_USAGE_PLUGIN_SLUG } from './constants';
-import { getCompUsageAudits } from './runner/audits/ds-coverage/utils';
-import { ComponentReplacement } from './runner/audits/ds-coverage/schema';
+import { Audit, CategoryRef } from '@code-pushup/models';
+import { ANGULAR_DS_USAGE_PLUGIN_SLUG } from './constants.js';
+import { getCompUsageAudits } from './runner/audits/ds-coverage/utils.js';
+import { ComponentReplacement } from './runner/audits/ds-coverage/schema.js';
 
 export function getAudits(
   componentReplacements: ComponentReplacement[],

@@ -26,7 +26,9 @@ import type {
   TmplAstVariable,
   TmplAstVisitor,
 } from '@angular/compiler' with { 'resolution-mode': 'import' };
-import { Issue, DiagnosticsAware } from '@push-based/models';
+import { Issue } from '@code-pushup/models';
+import { DiagnosticsAware } from '@push-based/models';
+
 import {
   tmplAstElementToSource,
   parseClassNames,
@@ -37,9 +39,9 @@ import {
   EXTERNAL_ASSET_ICON,
   INLINE_ASSET_ICON,
   TEMPLATE_ASSET_ICON,
-} from './constants';
+} from './constants.js';
 
-import { ComponentReplacement } from './schema';
+import { ComponentReplacement } from './schema.js';
 
 function generateClassUsageMessage({
   element,

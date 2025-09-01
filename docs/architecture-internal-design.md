@@ -110,7 +110,6 @@ Validation is handled via **Zod** in `angular-mcp-server-options.schema.ts`.
 models  (types & schemas)
 ├─ utils
 ├─ styles-ast-utils
-├─ angular-cli-utils
 └─ angular-ast-utils
     └─ ds-component-coverage  (top-level plugin)
 ```

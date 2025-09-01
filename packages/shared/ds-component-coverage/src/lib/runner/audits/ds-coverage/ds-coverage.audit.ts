@@ -1,5 +1,5 @@
-import { getCompCoverageAuditOutput } from './utils';
-import { AuditOutputs, Issue } from '@push-based/models';
+import { getCompCoverageAuditOutput } from './utils.js';
+import { AuditOutputs, Issue } from '@code-pushup/models';
 import {
   ParsedComponent,
   visitComponentStyles,
@@ -7,9 +7,9 @@ import {
   Asset,
 } from '@push-based/angular-ast-utils';
 import type { ParsedTemplate } from '@angular/compiler' with { 'resolution-mode': 'import' };
-import { ComponentReplacement } from './schema';
-import { getClassUsageIssues } from './class-usage.utils';
-import { getClassDefinitionIssues } from './class-definition.utils';
+import { ComponentReplacement } from './schema.js';
+import { getClassUsageIssues } from './class-usage.utils.js';
+import { getClassDefinitionIssues } from './class-definition.utils.js';
 
 export function dsCompCoverageAuditOutputs(
   dsComponents: ComponentReplacement[],

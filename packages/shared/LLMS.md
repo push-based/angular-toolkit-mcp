@@ -24,7 +24,7 @@ Each library provides three types of AI documentation:
 
 ## 🏗️ Foundation Layer <a id="foundation-layer"></a>
 
-### @push-based/models <a id="models"></a>
+### @code-pushup/models <a id="models"></a>
 
 Core types, interfaces, and Zod schemas for the entire ecosystem.
 
@@ -42,7 +42,7 @@ TypeScript AST parsing and manipulation utilities.
 
 ## 🔧 Intermediate Layer <a id="intermediate-layer"></a>
 
-### @push-based/utils <a id="utils"></a>
+### @code-pushup/utils <a id="utils"></a>
 
 General utility functions and file system operations.
 
@@ -57,14 +57,6 @@ CSS/SCSS AST parsing and manipulation utilities.
 - [🔍 Functions Reference](./styles-ast-utils/ai/FUNCTIONS.md)
 - [📖 API Overview](./styles-ast-utils/ai/API.md)
 - [💡 Examples](./styles-ast-utils/ai/EXAMPLES.md)
-
-### @push-based/angular-cli-utils <a id="angular-cli-utils"></a>
-
-Angular CLI schema transformation for MCP tools.
-
-- [🔍 Functions Reference](./angular-cli-utils/ai/FUNCTIONS.md)
-- [📖 API Overview](./angular-cli-utils/ai/API.md)
-- [💡 Examples](./angular-cli-utils/ai/EXAMPLES.md)
 
 ## 🚀 Advanced Layer <a id="advanced-layer"></a>
 
@@ -106,7 +98,6 @@ Design System component usage analysis and coverage reporting.
 ### Angular Development
 
 - [angular-ast-utils/EXAMPLES.md](./angular-ast-utils/ai/EXAMPLES.md) - Component parsing and analysis
-- [angular-cli-utils/EXAMPLES.md](./angular-cli-utils/ai/EXAMPLES.md) - CLI schema transformations
 
 ### Design System Analysis
 
@@ -137,7 +128,6 @@ All shared libraries have complete AI documentation:
 | typescript-ast-utils  | ✅        | ✅  | ✅       | Complete |
 | utils                 | ✅        | ✅  | ✅       | Complete |
 | styles-ast-utils      | ✅        | ✅  | ✅       | Complete |
-| angular-cli-utils     | ✅        | ✅  | ✅       | Complete |
 | angular-ast-utils     | ✅        | ✅  | ✅       | Complete |
 | ds-component-coverage | ✅        | ✅  | ✅       | Complete |
 

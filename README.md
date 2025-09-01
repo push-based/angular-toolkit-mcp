@@ -24,7 +24,7 @@ A Model Context Protocol (MCP) server that provides Angular project analysis and
 
 ### Prerequisites
 
-- Node.js (version 18 or higher)
+- Node.js (version 18 or higher) with ESM support
 
 ### Installation & Setup
 
@@ -96,7 +96,7 @@ const dsComponents = [
   }
 ];
 
-module.exports = dsComponents;
+export default dsComponents;
 ```
 
 ### Example Project Structure

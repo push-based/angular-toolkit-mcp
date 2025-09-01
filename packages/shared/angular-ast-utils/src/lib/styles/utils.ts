@@ -1,5 +1,5 @@
 import type { Root } from 'postcss';
-import { Issue } from '@push-based/models';
+import { Issue } from '@code-pushup/models';
 import { Asset, ParsedComponent } from '../types.js';
 
 export async function visitComponentStyles<T>(

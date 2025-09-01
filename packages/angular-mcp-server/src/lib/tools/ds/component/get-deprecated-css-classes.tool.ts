@@ -28,7 +28,7 @@ export const getDeprecatedCssClassesHandler = createHandler<
 >(
   getDeprecatedCssClassesSchema.name,
   async ({ componentName }, { cwd, deprecatedCssClassesPath }) => {
-    return getDeprecatedCssClasses(
+    return await getDeprecatedCssClasses(
       componentName,
       deprecatedCssClassesPath,
       cwd,

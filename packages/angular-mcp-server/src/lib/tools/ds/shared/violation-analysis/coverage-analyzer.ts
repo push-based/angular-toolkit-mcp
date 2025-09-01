@@ -42,7 +42,10 @@ export async function executeCoveragePlugin(
   });
 
   const { executePlugin } = await import('@code-pushup/core');
-  return (await executePlugin(pluginConfig as any)) as BaseViolationResult;
+  return (await executePlugin(pluginConfig as any, {
+    cache: { read: false, write: false },
+    persist: { outputDir: '' },
+  })) as BaseViolationResult;
 }
 
 /**

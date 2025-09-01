@@ -1,11 +1,11 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { pathToFileURL } from 'node:url';
 import {
   DsComponentsArraySchema,
   DsComponentSchema,
-} from './ds-components.schema';
+} from './ds-components.schema.js';
 import { z } from 'zod';
+import { loadDefaultExport } from '@push-based/utils';
 
 export type DsComponent = z.infer<typeof DsComponentSchema>;
 export type DsComponentsArray = z.infer<typeof DsComponentsArraySchema>;
@@ -21,12 +21,10 @@ export function validateDsComponent(rawComponent: unknown): DsComponent {
 }
 
 export function validateDsComponentsArray(rawData: unknown): DsComponentsArray {
-  // First check if it's an array
   if (!Array.isArray(rawData)) {
     throw new Error(`Expected array of components, received ${typeof rawData}`);
   }
 
-  // Validate each component individually for better error messages
   const validatedComponents: DsComponent[] = [];
   for (let i = 0; i < rawData.length; i++) {
     try {
@@ -37,7 +35,6 @@ export function validateDsComponentsArray(rawData: unknown): DsComponentsArray {
     }
   }
 
-  // Final validation with the array schema for completeness
   const arrayValidation =
     DsComponentsArraySchema.safeParse(validatedComponents);
   if (!arrayValidation.success) {
@@ -68,13 +65,8 @@ export async function loadAndValidateDsComponentsFile(
   }
 
   try {
-    const fileUrl = pathToFileURL(absPath).toString();
-    const module = await import(fileUrl);
+    const rawData = await loadDefaultExport(absPath);
 
-    // Handle both ES modules (export default) and CommonJS (module.exports)
-    const rawData = module.default || module.dsComponents || module;
-
-    // Use the granular validation functions
     return validateDsComponentsArray(rawData);
   } catch (ctx) {
     if (
@@ -83,7 +75,7 @@ export async function loadAndValidateDsComponentsFile(
         ctx.message.includes('Expected array of components') ||
         ctx.message.includes('Component at index'))
     ) {
-      throw ctx; // Re-throw validation errors as-is
+      throw ctx;
     }
     throw new Error(
       `Failed to load configuration file: ${(ctx as Error).message}`,

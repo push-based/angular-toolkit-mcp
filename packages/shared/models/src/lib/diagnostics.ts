@@ -1,4 +1,4 @@
-import { Issue } from './issue.js';
+import { Issue } from '@code-pushup/models';
 
 export interface DiagnosticsAware {
   // @TODO use Set<Issue & { code: number }>
