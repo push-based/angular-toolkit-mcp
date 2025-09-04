@@ -10,8 +10,15 @@ import {
 export const listComponentContractsSchema: ToolSchemaOptions = {
   name: 'list_component_contracts',
   description:
-    'List all available component contracts in the .cursor/tmp/contracts directory.',
-  inputSchema: createProjectAnalysisSchema(),
+    'List all available component contracts in the specified directory or .cursor/tmp/contracts by default.',
+  inputSchema: {
+    ...createProjectAnalysisSchema({
+      contractsLocation: {
+        type: 'string',
+        description: 'Optional custom directory path to search for contract files. If not provided, defaults to .cursor/tmp/contracts',
+      },
+    }),
+  },
   annotations: {
     title: 'List Component Contracts',
     ...COMMON_ANNOTATIONS.readOnly,

@@ -30,10 +30,10 @@ export async function saveContract(
   scssPath: string,
   cwd: string,
   dsComponentName?: string,
+  customSaveLocation?: string,
 ): Promise<{ contractFilePath: string; hash: string }> {
   const componentName = basename(templatePath, extname(templatePath));
 
-  // Stringify early so we can compute a deterministic hash before naming the file
   const contractString = JSON.stringify(contract, null, 2);
 
   const hash = createHash('sha256').update(contractString).digest('hex');
@@ -45,18 +45,23 @@ export async function saveContract(
 
   const contractFileName = `${componentName}-${timestamp}.contract.json`;
 
-  // Determine final directory: .cursor/tmp/contracts/<kebab-scope>
-  let contractDir = resolveCrossPlatformPath(
-    workspaceRoot,
-    '.cursor/tmp/contracts',
-  );
+  let contractDir: string;
 
-  if (dsComponentName) {
-    const folderSlug = componentNameToKebabCase(dsComponentName);
+  if (customSaveLocation) {
+    contractDir = resolve(workspaceRoot, customSaveLocation);
+  } else {
     contractDir = resolveCrossPlatformPath(
       workspaceRoot,
-      `.cursor/tmp/contracts/${folderSlug}`,
+      '.cursor/tmp/contracts',
     );
+
+    if (dsComponentName) {
+      const folderSlug = componentNameToKebabCase(dsComponentName);
+      contractDir = resolveCrossPlatformPath(
+        workspaceRoot,
+        `.cursor/tmp/contracts/${folderSlug}`,
+      );
+    }
   }
 
   await mkdir(contractDir, { recursive: true });

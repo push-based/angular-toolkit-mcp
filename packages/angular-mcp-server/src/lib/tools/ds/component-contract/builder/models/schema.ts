@@ -31,6 +31,10 @@ export const buildComponentContractSchema: ToolSchemaOptions = {
         type: 'string',
         description: 'The name of the design system component being used',
       },
+      saveLocation: {
+        type: 'string',
+        description: 'Optional custom directory path to save the contract file. If not provided, defaults to .cursor/tmp/contracts',
+      },
     }),
     required: [
       'directory',

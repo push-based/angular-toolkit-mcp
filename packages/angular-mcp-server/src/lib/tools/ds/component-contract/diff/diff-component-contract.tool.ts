@@ -10,7 +10,7 @@ import { diffComponentContractSchema } from './models/schema.js';
 import type { DomPathDictionary } from '../shared/models/types.js';
 import { loadContract } from '../shared/utils/contract-file-ops.js';
 import { componentNameToKebabCase } from '../../shared/utils/component-validation.js';
-import { basename } from 'node:path';
+import { basename, resolve } from 'node:path';
 import {
   consolidateAndPruneRemoveOperationsWithDeduplication,
   groupChangesByDomainAndType,
@@ -24,6 +24,7 @@ interface DiffComponentContractOptions extends BaseHandlerOptions {
   contractBeforePath: string;
   contractAfterPath: string;
   dsComponentName: string;
+  saveLocation?: string;
 }
 
 export const diffComponentContractHandler = createHandler<
@@ -64,22 +65,26 @@ export const diffComponentContractHandler = createHandler<
       summary: generateDiffSummary(processedResult, groupedChanges),
     };
 
-    // Normalize absolute paths to relative paths for portability
     const normalizedDiffData = normalizePathsInObject(diffData, workspaceRoot);
 
-    // Create component-specific diffs directory
-    const componentKebab = componentNameToKebabCase(params.dsComponentName);
-    const diffDir = resolveCrossPlatformPath(
-      workspaceRoot,
-      `.cursor/tmp/contracts/${componentKebab}/diffs`,
-    );
+    let diffDir: string;
+
+    if (params.saveLocation) {
+      diffDir = resolve(workspaceRoot, params.saveLocation);
+    } else {
+      const componentKebab = componentNameToKebabCase(params.dsComponentName);
+      diffDir = resolveCrossPlatformPath(
+        workspaceRoot,
+        `.cursor/tmp/contracts/${componentKebab}/diffs`,
+      );
+    }
+
     await mkdir(diffDir, { recursive: true });
 
-    // Generate simplified diff filename: diff-{componentName}-{timestamp}.json
     const componentBaseName = basename(
       effectiveBeforePath,
       '.contract.json',
-    ).split('-')[0]; // Extract component name before timestamp
+    ).split('-')[0];
     const timestamp = new Date()
       .toISOString()
       .replace(/[-:]/g, '')

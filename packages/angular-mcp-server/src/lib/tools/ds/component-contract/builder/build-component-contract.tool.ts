@@ -17,6 +17,7 @@ interface BuildComponentContractOptions extends BaseHandlerOptions {
   styleFile: string;
   typescriptFile: string;
   dsComponentName: string;
+  saveLocation?: string;
 }
 
 export const buildComponentContractHandler = createHandler<
@@ -31,6 +32,7 @@ export const buildComponentContractHandler = createHandler<
       styleFile,
       typescriptFile,
       dsComponentName,
+      saveLocation,
     } = params;
 
     const effectiveTemplatePath = resolveCrossPlatformPath(
@@ -57,6 +59,7 @@ export const buildComponentContractHandler = createHandler<
       effectiveScssPath,
       cwd,
       dsComponentName,
+      saveLocation,
     );
 
     return {

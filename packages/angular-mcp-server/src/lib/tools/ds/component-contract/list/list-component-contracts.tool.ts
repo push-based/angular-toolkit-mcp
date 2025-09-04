@@ -1,5 +1,5 @@
 import { readdir, stat, readFile } from 'node:fs/promises';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import {
   createHandler,
   BaseHandlerOptions,
@@ -15,6 +15,7 @@ import {
 
 interface ListComponentContractsOptions extends BaseHandlerOptions {
   directory: string;
+  contractsLocation?: string;
 }
 
 /**
@@ -31,10 +32,8 @@ async function scanContractsRecursively(
       const fullPath = join(dirPath, entry.name);
 
       if (entry.isDirectory()) {
-        // Recursively scan subdirectories
         await scanContractsRecursively(fullPath, contracts);
       } else if (entry.isFile() && entry.name.endsWith('.contract.json')) {
-        // Process contract file
         const stats = await stat(fullPath);
 
         try {
@@ -59,7 +58,6 @@ async function scanContractsRecursively(
       }
     }
   } catch (ctx) {
-    // Silently skip directories that can't be read
     if ((ctx as NodeJS.ErrnoException).code !== 'ENOENT') {
       console.warn(`Error scanning directory ${dirPath}:`, ctx);
     }
@@ -71,16 +69,22 @@ export const listComponentContractsHandler = createHandler<
   ContractFileInfo[]
 >(
   listComponentContractsSchema.name,
-  async (_, { cwd: _cwd, workspaceRoot }) => {
-    const contractDir = resolveCrossPlatformPath(
-      workspaceRoot,
-      '.cursor/tmp/contracts',
-    );
+  async (params, { cwd: _cwd, workspaceRoot }) => {
+    let contractDir: string;
+
+    if (params.contractsLocation) {
+      contractDir = resolve(workspaceRoot, params.contractsLocation);
+    } else {
+      contractDir = resolveCrossPlatformPath(
+        workspaceRoot,
+        '.cursor/tmp/contracts',
+      );
+    }
+
     const contracts: ContractFileInfo[] = [];
 
     await scanContractsRecursively(contractDir, contracts);
 
-    // Sort by timestamp (newest first)
     contracts.sort(
       (a, b) =>
         new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
