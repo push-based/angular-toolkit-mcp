@@ -35,3 +35,4 @@ export {
 export { buildComponentContractTools } from './builder/build-component-contract.tool.js';
 export { diffComponentContractTools } from './diff/diff-component-contract.tool.js';
 export { listComponentContractsTools } from './list/list-component-contracts.tool.js';
+export { queryComponentContractTools } from './query/query-component-contract.tool.js';

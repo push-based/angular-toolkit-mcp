@@ -12,6 +12,7 @@ import {
   buildComponentContractTools,
   diffComponentContractTools,
   listComponentContractsTools,
+  queryComponentContractTools,
 } from './component-contract';
 
 export const dsTools: ToolsConfig[] = [
@@ -25,6 +26,7 @@ export const dsTools: ToolsConfig[] = [
   ...buildComponentContractTools,
   ...diffComponentContractTools,
   ...listComponentContractsTools,
+  ...queryComponentContractTools,
   // Component tools
   ...getDsComponentDataTools,
   ...getDeprecatedCssClassesTools,
