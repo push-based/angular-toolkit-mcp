@@ -11,10 +11,8 @@ import { formatQueryResult } from './utils/format-results.js';
 interface QueryComponentContractOptions extends BaseHandlerOptions {
   directory: string;
   contractPath: string;
-  queryType: string;
-  query?: string;
-  filter?: string;
-  format?: string;
+  query: string;
+  sections?: string[];
 }
 
 export const queryComponentContractHandler = createHandler<
@@ -23,15 +21,13 @@ export const queryComponentContractHandler = createHandler<
 >(
   queryComponentContractSchema.name,
   async (params) => {
-    const { directory, contractPath, queryType, query, filter, format = 'json' } = params;
+    const { directory, contractPath, query, sections } = params;
     
     const fullContractPath = resolveCrossPlatformPath(directory, contractPath);
     
     const queryObj: ContractQuery = {
-      type: queryType as ContractQuery['type'],
       query,
-      filter,
-      format: format as ContractQuery['format'],
+      sections: sections as ContractQuery['sections'],
     };
     
     return await executeContractQuery(fullContractPath, queryObj);

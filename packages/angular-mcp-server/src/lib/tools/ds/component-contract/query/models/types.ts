@@ -1,24 +1,23 @@
 export interface ContractQuery {
-  type: 'overview' | 'inputs' | 'outputs' | 'methods' | 'events' | 'dom' | 'styles' | 'imports' | 'search' | 'custom';
-  query?: string;
-  filter?: string;
-  format?: 'json' | 'table' | 'list' | 'tree';
+  query: string;
+  sections?: ContractSection[];
 }
+
+export type ContractSection = 'meta' | 'publicApi' | 'dom' | 'styles';
 
 export interface QueryResult {
   query: ContractQuery;
   results: unknown;
   count?: number;
   summary?: string;
+  sectionsSearched: ContractSection[];
 }
 
 export interface QueryOptions {
   directory: string;
   contractPath: string;
-  queryType: string;
-  query?: string;
-  filter?: string;
-  format?: string;
+  query: string;
+  sections?: ContractSection[];
 }
 
 export interface ComponentOverview {
@@ -99,4 +98,5 @@ export interface SearchResult {
   path: string;
   value: unknown;
   type: string;
+  section?: string;
 }

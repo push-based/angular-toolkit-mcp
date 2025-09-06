@@ -29,6 +29,7 @@ export const getDsComponentDataToolSchema: ToolSchemaOptions = {
 
 function getAllFilesInDirectory(dirPath: string): string[] {
   const files: string[] = [];
+  const allowedExtensions = ['.html', '.ts', '.scss', '.sass', '.less', '.css'];
 
   function walkDirectory(currentPath: string) {
     try {
@@ -41,11 +42,13 @@ function getAllFilesInDirectory(dirPath: string): string[] {
         if (stat.isDirectory()) {
           walkDirectory(fullPath);
         } else {
-          files.push(fullPath);
+          const ext = path.extname(fullPath).toLowerCase();
+          if (allowedExtensions.includes(ext)) {
+            files.push(fullPath);
+          }
         }
       }
     } catch {
-      // Ignore directories that can't be read
     }
   }
 
@@ -65,14 +68,11 @@ export const getDsComponentDataHandler = createHandler<
     try {
       validateComponentName(componentName);
 
-      // Get component paths info
       const pathsInfo = getComponentPathsInfo(componentName, uiRoot, cwd);
 
-      // Get all implementation files in src directory
       const srcFiles = getAllFilesInDirectory(pathsInfo.srcPath);
       const implementationFiles = srcFiles.map((file) => `file://${file}`);
 
-      // Get documentation paths
       const docsBasePath = resolveCrossPlatformPath(cwd, storybookDocsRoot);
       const docPaths = getComponentDocPathsForName(docsBasePath, componentName);
 
@@ -99,7 +99,6 @@ export const getDsComponentDataHandler = createHandler<
   (result) => {
     const messages: string[] = [];
 
-    // Implementation section
     if (result.implementation && result.implementation.length > 0) {
       messages.push('Implementation');
       messages.push('');
@@ -109,7 +108,6 @@ export const getDsComponentDataHandler = createHandler<
       messages.push('');
     }
 
-    // Documentation section
     if (result.documentation && result.documentation.length > 0) {
       messages.push('Documentation');
       messages.push('');
@@ -119,7 +117,6 @@ export const getDsComponentDataHandler = createHandler<
       messages.push('');
     }
 
-    // Import path section
     if (result.importPath) {
       messages.push('Import path');
       messages.push('');

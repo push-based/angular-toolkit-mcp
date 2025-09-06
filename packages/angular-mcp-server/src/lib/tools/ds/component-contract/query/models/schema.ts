@@ -5,54 +5,43 @@ import {
 } from '../../../shared';
 
 /**
- * Schema for querying component contracts
+ * Schema for querying component contracts with section filtering
  */
 export const queryComponentContractSchema: ToolSchemaOptions = {
   name: 'query-component-contract',
-  description: `Query and explore component contracts with flexible search capabilities.
+  description: `Query and explore component contracts with flexible search and section filtering.
   
-Supports various query types:
-- overview: Component metadata and summary
-- inputs: Input properties with types and requirements  
-- outputs: Output events with types
-- methods: Public methods with signatures
-- events: All event handlers in the template
-- dom: DOM elements (supports CSS-like selectors)
-- styles: CSS rules and their element mappings
-- imports: All imported dependencies
-- search: Text search across the entire contract
-- custom: JSONPath-style queries for advanced use cases`,
+Search across contract sections with optional filtering:
+- Search any text/pattern across the entire contract
+- Filter results to specific sections: meta, publicApi, dom, styles
+- Combine multiple sections for cross-cutting analysis
+- Use CSS-like selectors for DOM elements
+- Support JSONPath expressions for advanced queries`,
   inputSchema: {
     ...createProjectAnalysisSchema({
       contractPath: {
         type: 'string',
         description: 'Path to the contract JSON file (relative to directory)',
       },
-      queryType: {
-        type: 'string',
-        enum: ['overview', 'inputs', 'outputs', 'methods', 'events', 'dom', 'styles', 'imports', 'search', 'custom'],
-        description: 'Type of query to execute',
-      },
       query: {
         type: 'string',
-        description: `Query string (usage depends on queryType):
-        - dom: CSS-like selector (e.g., ".casino-onboarding-container", "[click]", "div.btn")
-        - styles: CSS property name or selector (e.g., "background-color", ".casino-onboarding-*")
-        - search: Text to search for across the contract
-        - custom: JSONPath expression (e.g., "$.dom.*.children", "$.publicApi.methods[*].name")`,
+        description: `Search query - can be:
+        - Text/pattern to search for (e.g., "casino-onboarding-container")
+        - CSS-like selector for DOM (e.g., ".container", "[click]", "div.btn")
+        - JSONPath expression (e.g., "$.dom.*.children", "$.publicApi.methods[*].name")
+        - Property/method names, class names, or any contract content`,
       },
-      filter: {
-        type: 'string',
-        description: 'Additional filter criteria (e.g., "required", "public", "has-events")',
-      },
-      format: {
-        type: 'string',
-        enum: ['json', 'table', 'list', 'tree'],
-        default: 'json',
-        description: 'Output format for the results',
+      sections: {
+        type: 'array',
+        items: {
+          type: 'string',
+          enum: ['meta', 'publicApi', 'dom', 'styles']
+        },
+        description: 'Contract sections to search in. If empty, searches all sections. Options: meta (component metadata), publicApi (inputs/outputs/methods/imports), dom (template elements), styles (CSS rules)',
+        default: []
       },
     }),
-    required: ['directory', 'contractPath', 'queryType'],
+    required: ['directory', 'contractPath', 'query'],
   },
   annotations: {
     title: 'Query Component Contract',
