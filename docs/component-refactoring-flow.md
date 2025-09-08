@@ -9,7 +9,7 @@ This document describes a 3-step AI-assisted component refactoring process for i
 2. **Refactor Component** → Execute approved checklist items and implement changes
 3. **Validate Component** → Verify improvements through contract comparison and scoring
 
-The process includes two quality gates where human review and approval are required.
+The process includes two quality gates where human review and approval are required. When refactoring involves Design System components, the process can leverage selective data retrieval to access only the specific component information needed (implementation, documentation, or stories).
 
 ## Prerequisites
 
@@ -158,6 +158,11 @@ At this point, all checklist items have been processed. You must review the refa
   - Parameters: `componentFile`, `dsComponentName` (set to "AUTO")
   - Returns: contract path with component's public API, DOM structure, and styles
   - Purpose: Establish baseline for validation comparison
+
+- `get-ds-component-data` - Retrieves Design System component information when needed
+  - Parameters: `componentName`, `sections` (optional) - Array of sections to include: "implementation", "documentation", "stories", "all"
+  - Returns: Selective component data based on refactoring needs
+  - Purpose: Access DS component documentation and examples for proper implementation patterns
 
 ### Flow
 

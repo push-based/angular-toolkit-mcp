@@ -7,6 +7,7 @@ import { getProjectDependenciesTools } from './project/get-project-dependencies.
 import { reportDeprecatedCssTools } from './project/report-deprecated-css.tool';
 import { buildComponentUsageGraphTools } from './component-usage-graph';
 import { getDsComponentDataTools } from './component/get-ds-component-data.tool';
+import { listDsComponentsTools } from './component/list-ds-components.tool';
 import { getDeprecatedCssClassesTools } from './component/get-deprecated-css-classes.tool';
 import {
   buildComponentContractTools,
@@ -27,5 +28,6 @@ export const dsTools: ToolsConfig[] = [
   ...listComponentContractsTools,
   // Component tools
   ...getDsComponentDataTools,
+  ...listDsComponentsTools,
   ...getDeprecatedCssClassesTools,
 ];

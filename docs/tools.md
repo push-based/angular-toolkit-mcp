@@ -45,6 +45,23 @@ This document provides comprehensive guidance for AI agents working with Angular
 
 ### 📚 Component Information Tools
 
+#### `list-ds-components`
+**Purpose**: Lists all available Design System components in the project with their file paths and metadata
+**AI Usage**: Discover available DS components before starting migration or analysis workflows
+**Key Parameters**:
+- `sections`: Array of sections to include - `"implementation"`, `"documentation"`, `"stories"`, or `"all"` (default: `["all"]`)
+**Output**: Complete inventory of DS components with their implementation files, documentation files, stories files, and import paths
+**Best Practice**: Use as the first step to understand the DS component landscape before targeted analysis
+
+#### `get-ds-component-data`
+**Purpose**: Returns comprehensive data for a specific DS component including implementation files, documentation files, stories files, and import path
+**AI Usage**: Get detailed information about a specific component for analysis or migration planning
+**Key Parameters**:
+- `componentName`: DS component class name (e.g., `DsBadge`)
+- `sections`: Array of sections to include - `"implementation"`, `"documentation"`, `"stories"`, or `"all"` (default: `["all"]`)
+**Output**: Structured data with file paths for implementation, documentation, stories, and import information
+**Best Practice**: Use selective sections to optimize performance when you only need specific types of files
+
 #### `get-component-docs`
 **Purpose**: Retrieves MDX documentation for DS components
 **AI Usage**: Access official component documentation to understand proper usage patterns
@@ -127,16 +144,18 @@ This document provides comprehensive guidance for AI agents working with Angular
 
 ### 1. Discovery & Analysis Workflow
 ```
-1. report-violations → Identify all violations
-2. get-project-dependencies → Analyze project structure
+1. list-ds-components → Discover available DS components
+2. report-violations → Identify all violations
+3. get-project-dependencies → Analyze project structure
 ```
 
 ### 2. Planning & Preparation Workflow
 ```
-1. build-component-usage-graph → Map component relationships
-2. get-component-docs → Review proper usage patterns
-3. get-component-paths → Verify import paths
-4. build_component_contract → Create baseline contracts
+1. get-ds-component-data → Get comprehensive component information
+2. build-component-usage-graph → Map component relationships
+3. get-component-docs → Review proper usage patterns
+4. get-component-paths → Verify import paths
+5. build_component_contract → Create baseline contracts
 ```
 
 ### 3. Refactoring & Validation Workflow
@@ -173,6 +192,7 @@ This document provides comprehensive guidance for AI agents working with Angular
 
 - Use `groupBy: "folder"` for large codebases to reduce output size
 - Limit `violationFiles` arrays to relevant files only
+- Use selective `sections` parameter in `get-ds-component-data` and `list-ds-components` to retrieve only needed data types
 - Cache component documentation between related operations
 - Run validation tools in parallel when possible
 
