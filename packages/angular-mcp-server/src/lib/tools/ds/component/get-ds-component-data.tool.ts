@@ -69,7 +69,7 @@ function getAllFilesInDirectory(dirPath: string): string[] {
         }
       }
     } catch {
-      // Ignore directories that can't be read
+      return;
     }
   }
 
@@ -91,14 +91,13 @@ function findStoriesFiles(componentPath: string): string[] {
         const fullPath = path.join(componentPath, item);
         const stat = fs.statSync(fullPath);
         
-        // Only look for .stories.ts files directly in the component folder, not in subdirectories
         if (stat.isFile() && item.endsWith('.stories.ts')) {
           storiesFiles.push(fullPath);
         }
       }
     }
   } catch {
-    // Ignore directories that can't be read
+    return storiesFiles;
   }
   
   return storiesFiles;
@@ -113,23 +112,19 @@ export const getDsComponentDataHandler = createHandler<
     try {
       validateComponentName(componentName);
 
-      // Determine which sections to include
       const includeAll = sections.includes('all');
       const includeImplementation = includeAll || sections.includes('implementation');
       const includeDocumentation = includeAll || sections.includes('documentation');
       const includeStories = includeAll || sections.includes('stories');
 
-      // Get component paths info
       const pathsInfo = getComponentPathsInfo(componentName, uiRoot, cwd);
 
-      // Get all implementation files in src directory (if requested)
       let implementationFiles: string[] = [];
       if (includeImplementation) {
         const srcFiles = getAllFilesInDirectory(pathsInfo.srcPath);
         implementationFiles = srcFiles.map((file) => `file://${file}`);
       }
 
-      // Get documentation paths (if requested)
       const documentationFiles: string[] = [];
       if (includeDocumentation) {
         const docsBasePath = resolveCrossPlatformPath(cwd, storybookDocsRoot);
@@ -143,7 +138,6 @@ export const getDsComponentDataHandler = createHandler<
         }
       }
 
-      // Get stories files (if requested)
       let storiesFilePaths: string[] = [];
       if (includeStories) {
         const docsBasePath = resolveCrossPlatformPath(cwd, storybookDocsRoot);
@@ -169,7 +163,6 @@ export const getDsComponentDataHandler = createHandler<
   (result) => {
     const messages: string[] = [];
 
-    // Implementation section (only show if it has content or was explicitly requested)
     if (result.implementation && result.implementation.length > 0) {
       messages.push('Implementation');
       messages.push('');
@@ -179,7 +172,6 @@ export const getDsComponentDataHandler = createHandler<
       messages.push('');
     }
 
-    // Documentation section (only show if it has content or was explicitly requested)
     if (result.documentation && result.documentation.length > 0) {
       messages.push('Documentation');
       messages.push('');
@@ -189,7 +181,6 @@ export const getDsComponentDataHandler = createHandler<
       messages.push('');
     }
 
-    // Stories section (only show if it has content or was explicitly requested)
     if (result.stories && result.stories.length > 0) {
       messages.push('Stories');
       messages.push('');
@@ -199,7 +190,6 @@ export const getDsComponentDataHandler = createHandler<
       messages.push('');
     }
 
-    // Import path section (always show if available)
     if (result.importPath) {
       messages.push('Import path');
       messages.push('');

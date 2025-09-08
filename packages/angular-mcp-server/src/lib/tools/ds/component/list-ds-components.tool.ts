@@ -62,7 +62,7 @@ function getAllFilesInDirectory(dirPath: string): string[] {
         }
       }
     } catch {
-      // Ignore directories that can't be read
+      return;
     }
   }
 
@@ -98,14 +98,13 @@ function findStoriesFiles(componentPath: string): string[] {
         const fullPath = path.join(componentPath, item);
         const stat = fs.statSync(fullPath);
         
-        // Only look for .stories.ts files directly in the component folder, not in subdirectories
         if (stat.isFile() && item.endsWith('.stories.ts')) {
           storiesFiles.push(fullPath);
         }
       }
     }
   } catch {
-    // Ignore directories that can't be read
+    return storiesFiles;
   }
   
   return storiesFiles;
@@ -128,7 +127,6 @@ export const listDsComponentsHandler = createHandler<
         throw new Error(`Components directory not found: ${uiRoot}`);
       }
 
-      // Scan for component folders
       const entries = fs.readdirSync(componentsBasePath, { withFileTypes: true });
       const componentFolders = entries
         .filter((entry) => entry.isDirectory())
@@ -141,7 +139,6 @@ export const listDsComponentsHandler = createHandler<
       const components: DsComponentInfo[] = [];
       const docsBasePath = resolveCrossPlatformPath(cwd, storybookDocsRoot);
 
-      // Determine which sections to include
       const includeAll = sections.includes('all');
       const includeImplementation = includeAll || sections.includes('implementation');
       const includeDocumentation = includeAll || sections.includes('documentation');
@@ -149,20 +146,16 @@ export const listDsComponentsHandler = createHandler<
 
       for (const folderName of componentFolders) {
         try {
-          // Convert folder name to component name (e.g., 'badge' -> 'DsBadge')
           const componentName = kebabCaseToPascalCase(folderName);
           
-          // Get component paths info
           const pathsInfo = getComponentPathsInfo(componentName, uiRoot, cwd);
 
-          // Get all implementation files in src directory (if requested)
           let implementationFiles: string[] = [];
           if (includeImplementation) {
             const srcFiles = getAllFilesInDirectory(pathsInfo.srcPath);
             implementationFiles = srcFiles.map((file) => `file://${file}`);
           }
 
-          // Get documentation paths (if requested)
           const documentationFiles: string[] = [];
           if (includeDocumentation) {
             const docPaths = getComponentDocPathsForName(docsBasePath, componentName);
@@ -175,7 +168,6 @@ export const listDsComponentsHandler = createHandler<
             }
           }
 
-          // Get stories files (if requested)
           let storiesFilePaths: string[] = [];
           if (includeStories) {
             const storiesComponentFolderPath = path.join(docsBasePath, folderName);
@@ -192,7 +184,6 @@ export const listDsComponentsHandler = createHandler<
             importPath: pathsInfo.importPath,
           });
         } catch (ctx) {
-          // Skip components that have issues but continue with others
           console.warn(`Warning: Skipped component '${folderName}': ${(ctx as Error).message}`);
         }
       }
