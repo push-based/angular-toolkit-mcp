@@ -1,5 +1,8 @@
 import { ToolSchemaOptions } from '@push-based/models';
-import { createHandler, BaseHandlerOptions } from '../shared/utils/handler-helpers.js';
+import {
+  createHandler,
+  BaseHandlerOptions,
+} from '../shared/utils/handler-helpers.js';
 import { COMMON_ANNOTATIONS } from '../shared/models/schema-helpers.js';
 import { getComponentPathsInfo } from './utils/paths-helpers.js';
 import { getComponentDocPathsForName } from './utils/doc-helpers.js';
@@ -32,7 +35,8 @@ export const listDsComponentsToolSchema: ToolSchemaOptions = {
           type: 'string',
           enum: ['implementation', 'documentation', 'stories', 'all'],
         },
-        description: 'Sections to include in the response. Options: "implementation", "documentation", "stories", "all". Defaults to ["all"] if not specified.',
+        description:
+          'Sections to include in the response. Options: "implementation", "documentation", "stories", "all". Defaults to ["all"] if not specified.',
         default: ['all'],
       },
     },
@@ -74,30 +78,37 @@ function getAllFilesInDirectory(dirPath: string): string[] {
 }
 
 function kebabCaseToPascalCase(kebabCase: string): string {
-  return 'Ds' + kebabCase
-    .split('-')
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join('');
+  return (
+    'Ds' +
+    kebabCase
+      .split('-')
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join('')
+  );
 }
 
 function isValidComponentFolder(folderPath: string): boolean {
   const packageJsonPath = path.join(folderPath, 'package.json');
   const srcPath = path.join(folderPath, 'src');
-  
-  return fs.existsSync(packageJsonPath) && fs.existsSync(srcPath) && fs.statSync(srcPath).isDirectory();
+
+  return (
+    fs.existsSync(packageJsonPath) &&
+    fs.existsSync(srcPath) &&
+    fs.statSync(srcPath).isDirectory()
+  );
 }
 
 function findStoriesFiles(componentPath: string): string[] {
   const storiesFiles: string[] = [];
-  
+
   try {
     if (fs.existsSync(componentPath)) {
       const items = fs.readdirSync(componentPath);
-      
+
       for (const item of items) {
         const fullPath = path.join(componentPath, item);
         const stat = fs.statSync(fullPath);
-        
+
         if (stat.isFile() && item.endsWith('.stories.ts')) {
           storiesFiles.push(fullPath);
         }
@@ -106,7 +117,7 @@ function findStoriesFiles(componentPath: string): string[] {
   } catch {
     return storiesFiles;
   }
-  
+
   return storiesFiles;
 }
 
@@ -122,12 +133,14 @@ export const listDsComponentsHandler = createHandler<
       }
 
       const componentsBasePath = resolveCrossPlatformPath(cwd, uiRoot);
-      
+
       if (!fs.existsSync(componentsBasePath)) {
         throw new Error(`Components directory not found: ${uiRoot}`);
       }
 
-      const entries = fs.readdirSync(componentsBasePath, { withFileTypes: true });
+      const entries = fs.readdirSync(componentsBasePath, {
+        withFileTypes: true,
+      });
       const componentFolders = entries
         .filter((entry) => entry.isDirectory())
         .map((entry) => entry.name)
@@ -140,14 +153,16 @@ export const listDsComponentsHandler = createHandler<
       const docsBasePath = resolveCrossPlatformPath(cwd, storybookDocsRoot);
 
       const includeAll = sections.includes('all');
-      const includeImplementation = includeAll || sections.includes('implementation');
-      const includeDocumentation = includeAll || sections.includes('documentation');
+      const includeImplementation =
+        includeAll || sections.includes('implementation');
+      const includeDocumentation =
+        includeAll || sections.includes('documentation');
       const includeStories = includeAll || sections.includes('stories');
 
       for (const folderName of componentFolders) {
         try {
           const componentName = kebabCaseToPascalCase(folderName);
-          
+
           const pathsInfo = getComponentPathsInfo(componentName, uiRoot, cwd);
 
           let implementationFiles: string[] = [];
@@ -158,8 +173,11 @@ export const listDsComponentsHandler = createHandler<
 
           const documentationFiles: string[] = [];
           if (includeDocumentation) {
-            const docPaths = getComponentDocPathsForName(docsBasePath, componentName);
-            
+            const docPaths = getComponentDocPathsForName(
+              docsBasePath,
+              componentName,
+            );
+
             if (fs.existsSync(docPaths.paths.api)) {
               documentationFiles.push(`file://${docPaths.paths.api}`);
             }
@@ -170,7 +188,10 @@ export const listDsComponentsHandler = createHandler<
 
           let storiesFilePaths: string[] = [];
           if (includeStories) {
-            const storiesComponentFolderPath = path.join(docsBasePath, folderName);
+            const storiesComponentFolderPath = path.join(
+              docsBasePath,
+              folderName,
+            );
             const storiesFiles = findStoriesFiles(storiesComponentFolderPath);
             storiesFilePaths = storiesFiles.map((file) => `file://${file}`);
           }
@@ -184,21 +205,21 @@ export const listDsComponentsHandler = createHandler<
             importPath: pathsInfo.importPath,
           });
         } catch (ctx) {
-          console.warn(`Warning: Skipped component '${folderName}': ${(ctx as Error).message}`);
+          console.warn(
+            `Warning: Skipped component '${folderName}': ${(ctx as Error).message}`,
+          );
         }
       }
 
       return components;
     } catch (ctx) {
-      throw new Error(
-        `Error listing DS components: ${(ctx as Error).message}`,
-      );
+      throw new Error(`Error listing DS components: ${(ctx as Error).message}`);
     }
   },
   (components) => {
     const response = {
       totalComponents: components?.length || 0,
-      components: components || []
+      components: components || [],
     };
 
     return [JSON.stringify(response, null, 2)];

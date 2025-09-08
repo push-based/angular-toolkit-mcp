@@ -1,11 +1,15 @@
 import { ToolSchemaOptions } from '@push-based/models';
-import { createHandler, BaseHandlerOptions } from '../shared/utils/handler-helpers.js';
 import {
-  COMMON_ANNOTATIONS,
-} from '../shared/models/schema-helpers.js';
+  createHandler,
+  BaseHandlerOptions,
+} from '../shared/utils/handler-helpers.js';
+import { COMMON_ANNOTATIONS } from '../shared/models/schema-helpers.js';
 import { getComponentPathsInfo } from './utils/paths-helpers.js';
 import { getComponentDocPathsForName } from './utils/doc-helpers.js';
-import { validateComponentName, componentNameToKebabCase } from '../shared/utils/component-validation.js';
+import {
+  validateComponentName,
+  componentNameToKebabCase,
+} from '../shared/utils/component-validation.js';
 import { resolveCrossPlatformPath } from '../shared/utils/cross-platform-path.js';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -31,7 +35,8 @@ export const getDsComponentDataToolSchema: ToolSchemaOptions = {
     properties: {
       componentName: {
         type: 'string',
-        description: 'The class name of the component to get data for (e.g., DsBadge)',
+        description:
+          'The class name of the component to get data for (e.g., DsBadge)',
       },
       sections: {
         type: 'array',
@@ -39,7 +44,8 @@ export const getDsComponentDataToolSchema: ToolSchemaOptions = {
           type: 'string',
           enum: ['implementation', 'documentation', 'stories', 'all'],
         },
-        description: 'Sections to include in the response. Options: "implementation", "documentation", "stories", "all". Defaults to ["all"] if not specified.',
+        description:
+          'Sections to include in the response. Options: "implementation", "documentation", "stories", "all". Defaults to ["all"] if not specified.',
         default: ['all'],
       },
     },
@@ -82,15 +88,15 @@ function getAllFilesInDirectory(dirPath: string): string[] {
 
 function findStoriesFiles(componentPath: string): string[] {
   const storiesFiles: string[] = [];
-  
+
   try {
     if (fs.existsSync(componentPath)) {
       const items = fs.readdirSync(componentPath);
-      
+
       for (const item of items) {
         const fullPath = path.join(componentPath, item);
         const stat = fs.statSync(fullPath);
-        
+
         if (stat.isFile() && item.endsWith('.stories.ts')) {
           storiesFiles.push(fullPath);
         }
@@ -99,7 +105,7 @@ function findStoriesFiles(componentPath: string): string[] {
   } catch {
     return storiesFiles;
   }
-  
+
   return storiesFiles;
 }
 
@@ -108,13 +114,18 @@ export const getDsComponentDataHandler = createHandler<
   DsComponentData
 >(
   getDsComponentDataToolSchema.name,
-  async ({ componentName, sections = ['all'] }, { cwd, uiRoot, storybookDocsRoot }) => {
+  async (
+    { componentName, sections = ['all'] },
+    { cwd, uiRoot, storybookDocsRoot },
+  ) => {
     try {
       validateComponentName(componentName);
 
       const includeAll = sections.includes('all');
-      const includeImplementation = includeAll || sections.includes('implementation');
-      const includeDocumentation = includeAll || sections.includes('documentation');
+      const includeImplementation =
+        includeAll || sections.includes('implementation');
+      const includeDocumentation =
+        includeAll || sections.includes('documentation');
       const includeStories = includeAll || sections.includes('stories');
 
       const pathsInfo = getComponentPathsInfo(componentName, uiRoot, cwd);
@@ -128,7 +139,10 @@ export const getDsComponentDataHandler = createHandler<
       const documentationFiles: string[] = [];
       if (includeDocumentation) {
         const docsBasePath = resolveCrossPlatformPath(cwd, storybookDocsRoot);
-        const docPaths = getComponentDocPathsForName(docsBasePath, componentName);
+        const docPaths = getComponentDocPathsForName(
+          docsBasePath,
+          componentName,
+        );
 
         if (fs.existsSync(docPaths.paths.api)) {
           documentationFiles.push(`file://${docPaths.paths.api}`);
@@ -142,7 +156,10 @@ export const getDsComponentDataHandler = createHandler<
       if (includeStories) {
         const docsBasePath = resolveCrossPlatformPath(cwd, storybookDocsRoot);
         const componentFolderName = componentNameToKebabCase(componentName);
-        const storiesComponentFolderPath = path.join(docsBasePath, componentFolderName);
+        const storiesComponentFolderPath = path.join(
+          docsBasePath,
+          componentFolderName,
+        );
         const storiesFiles = findStoriesFiles(storiesComponentFolderPath);
         storiesFilePaths = storiesFiles.map((file) => `file://${file}`);
       }
