@@ -9,7 +9,7 @@ A Model Context Protocol (MCP) server that provides Angular project analysis and
 - **Dependency Mapping**: Map component dependencies across modules, templates, and styles
 - **ESLint Integration**: Lint Angular files with automatic ESLint configuration discovery
 - **Project Analysis**: Analyze buildable/publishable libraries and validate import paths
-- **Component Documentation**: Retrieve component data and documentation
+- **Component Documentation**: Retrieve component data and documentation, list available components
 
 ## Use Cases
 
@@ -134,6 +134,8 @@ my-angular-workspace/
 - **`get-deprecated-css-classes`**: List deprecated CSS classes for a component
 
 ### Component Analysis
+
+- **`list-ds-components`**: List all available Design System components in the project with their file paths and metadata
 
 - **`get-ds-component-data`**: Return data for a component including implementation files, documentation files, and import path
 

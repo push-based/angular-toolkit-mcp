@@ -199,7 +199,13 @@ Before proceeding to Phase 3, you must review the comprehensive migration plan.
 
 ### Tools used
 
+- `list-ds-components` - Lists all available Design System components in the project
+  - Parameters: `sections` (optional) - Array of sections to include: "implementation", "documentation", "stories", "all"
+  - Returns: Complete inventory of DS components with their file paths and metadata
+  - Provides: Overview of available components for comprehensive migration planning
+
 - `get-ds-component-data` - Retrieves comprehensive component information for all involved components
+  - Parameters: `componentName`, `sections` (optional) - Array of sections to include: "implementation", "documentation", "stories", "all"
   - Returns: Complete implementation files, documentation files, import paths for multiple components
   - Provides: Component source code, API documentation, usage examples across scope
 
@@ -285,7 +291,13 @@ Before proceeding to Phase 3, you must review the migration plan.
 
 ### Tools used
 
+- `list-ds-components` - Lists all available Design System components in the project
+  - Parameters: `sections` (optional) - Array of sections to include: "implementation", "documentation", "stories", "all"
+  - Returns: Complete inventory of DS components with their file paths and metadata
+  - Provides: Overview of available components for migration planning
+
 - `get-ds-component-data` - Retrieves comprehensive component information
+  - Parameters: `componentName`, `sections` (optional) - Array of sections to include: "implementation", "documentation", "stories", "all"
   - Returns: implementation files, documentation files, import paths
   - Provides: component source code, API documentation, usage examples
 
