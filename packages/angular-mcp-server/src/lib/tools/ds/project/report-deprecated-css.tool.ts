@@ -42,6 +42,12 @@ export const reportDeprecatedCssHandler = createHandler<
   async (params, { cwd, deprecatedCssClassesPath }) => {
     const { directory, componentName } = params;
 
+    if (!deprecatedCssClassesPath) {
+      throw new Error(
+        'Missing ds.deprecatedCssClassesPath. Provide it when starting the server to use this tool.',
+      );
+    }
+
     const deprecated = getDeprecatedCssClasses(
       componentName,
       deprecatedCssClassesPath,

@@ -47,6 +47,11 @@ export const reportAllViolationsHandler = createHandler<
 >(
   reportAllViolationsSchema.name,
   async (params, { cwd, deprecatedCssClassesPath }) => {
+    if (!deprecatedCssClassesPath) {
+      throw new Error(
+        'Missing ds.deprecatedCssClassesPath. Provide it when starting the server to use this tool.',
+      );
+    }
     const groupBy = params.groupBy || 'file';
     const dsComponents = await loadAndValidateDsComponentsFile(
       cwd,

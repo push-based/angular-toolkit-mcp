@@ -150,7 +150,6 @@ export const listDsComponentsHandler = createHandler<
         });
 
       const components: DsComponentInfo[] = [];
-      const docsBasePath = resolveCrossPlatformPath(cwd, storybookDocsRoot);
 
       const includeAll = sections.includes('all');
       const includeImplementation =
@@ -172,7 +171,8 @@ export const listDsComponentsHandler = createHandler<
           }
 
           const documentationFiles: string[] = [];
-          if (includeDocumentation) {
+          if (includeDocumentation && storybookDocsRoot) {
+            const docsBasePath = resolveCrossPlatformPath(cwd, storybookDocsRoot);
             const docPaths = getComponentDocPathsForName(
               docsBasePath,
               componentName,
@@ -187,7 +187,8 @@ export const listDsComponentsHandler = createHandler<
           }
 
           let storiesFilePaths: string[] = [];
-          if (includeStories) {
+          if (includeStories && storybookDocsRoot) {
+            const docsBasePath = resolveCrossPlatformPath(cwd, storybookDocsRoot);
             const storiesComponentFolderPath = path.join(
               docsBasePath,
               folderName,

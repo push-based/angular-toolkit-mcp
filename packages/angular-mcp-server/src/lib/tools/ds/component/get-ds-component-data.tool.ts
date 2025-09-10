@@ -137,7 +137,7 @@ export const getDsComponentDataHandler = createHandler<
       }
 
       const documentationFiles: string[] = [];
-      if (includeDocumentation) {
+      if (includeDocumentation && storybookDocsRoot) {
         const docsBasePath = resolveCrossPlatformPath(cwd, storybookDocsRoot);
         const docPaths = getComponentDocPathsForName(
           docsBasePath,
@@ -153,7 +153,7 @@ export const getDsComponentDataHandler = createHandler<
       }
 
       let storiesFilePaths: string[] = [];
-      if (includeStories) {
+      if (includeStories && storybookDocsRoot) {
         const docsBasePath = resolveCrossPlatformPath(cwd, storybookDocsRoot);
         const componentFolderName = componentNameToKebabCase(componentName);
         const storiesComponentFolderPath = path.join(
