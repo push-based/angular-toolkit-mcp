@@ -10,6 +10,7 @@ import {
 } from '../shared/utils/contract-file-ops.js';
 import { ContractResult } from './models/types.js';
 import { resolveCrossPlatformPath } from '../../shared/utils/cross-platform-path.js';
+import { validateAndNormalizeComponentName } from '../../shared/utils/component-validation.js';
 
 interface BuildComponentContractOptions extends BaseHandlerOptions {
   directory: string;
@@ -25,13 +26,12 @@ export const buildComponentContractHandler = createHandler<
 >(
   buildComponentContractSchema.name,
   async (params, { cwd, workspaceRoot }) => {
-    const {
-      directory,
-      templateFile,
-      styleFile,
-      typescriptFile,
-      dsComponentName,
-    } = params;
+    const { directory, templateFile, styleFile, typescriptFile } = params;
+
+    // Normalize component name at handler entry point
+    const dsComponentName = validateAndNormalizeComponentName(
+      params.dsComponentName,
+    );
 
     const effectiveTemplatePath = resolveCrossPlatformPath(
       directory,

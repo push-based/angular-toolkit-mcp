@@ -5,6 +5,7 @@ import {
   BaseHandlerOptions,
   RESULT_FORMATTERS,
 } from '../shared/utils/handler-helpers.js';
+import { validateAndNormalizeComponentName } from '../shared/utils/component-validation.js';
 import {
   createDirectoryComponentSchema,
   COMMON_ANNOTATIONS,
@@ -40,7 +41,12 @@ export const reportDeprecatedCssHandler = createHandler<
 >(
   reportDeprecatedCssSchema.name,
   async (params, { cwd, deprecatedCssClassesPath }) => {
-    const { directory, componentName } = params;
+    const { directory } = params;
+
+    // Normalize component name at handler entry point
+    const componentName = validateAndNormalizeComponentName(
+      params.componentName,
+    );
 
     const deprecated = getDeprecatedCssClasses(
       componentName,

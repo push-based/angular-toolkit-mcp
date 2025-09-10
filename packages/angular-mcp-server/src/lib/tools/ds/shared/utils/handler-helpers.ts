@@ -2,7 +2,10 @@ import {
   CallToolRequest,
   CallToolResult,
 } from '@modelcontextprotocol/sdk/types.js';
-import { validateComponentName } from './component-validation.js';
+import {
+  validateComponentName,
+  validateAndNormalizeComponentName,
+} from './component-validation.js';
 import { buildTextResponse, throwError } from './output.utils.js';
 import * as process from 'node:process';
 
@@ -42,6 +45,25 @@ export function validateCommonInputs(params: BaseHandlerOptions): void {
   if (params.directory && typeof params.directory !== 'string') {
     throw new Error('Directory parameter is required and must be a string');
   }
+}
+
+/**
+ * Validates and normalizes common input parameters, returning normalized params
+ */
+export function validateAndNormalizeCommonInputs<T extends BaseHandlerOptions>(
+  params: T,
+): T {
+  if (params.componentName) {
+    params.componentName = validateAndNormalizeComponentName(
+      params.componentName,
+    );
+  }
+
+  if (params.directory && typeof params.directory !== 'string') {
+    throw new Error('Directory parameter is required and must be a string');
+  }
+
+  return params;
 }
 
 /**
