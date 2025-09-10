@@ -17,7 +17,7 @@ Step 1: Find violations
    Store the result in a variable called scanResult.
 
 2. Perform first-level error handling:
-   - If the function call returns an error containing "Missing ds.deprecatedCssClassesPath", respond with:
+   - If the function call returns an error or result containing "Missing ds.deprecatedCssClassesPath", respond with:
      <commentary>⚠️ *Cannot proceed: Missing required configuration parameter* – The `ds.deprecatedCssClassesPath` parameter must be provided when starting the MCP server to use violation detection tools. Please restart the server with this parameter configured.</commentary>
      Then stop execution.
    - If the function call returns any other error, respond with:
