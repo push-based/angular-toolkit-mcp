@@ -1,0 +1,63 @@
+## Inputs
+
+| Name       | Type                                                                   | Default      | Description                                            |
+| ---------- | ---------------------------------------------------------------------- | ------------ | ------------------------------------------------------ |
+| `size`     | `'xsmall'` \| `'small'` \| `'medium'` \| `'large'` \| `'xlarge'`      | `'medium'`   | Controls the avatar size.                              |
+| `variant`  | `'circular'` \| `'rounded'` \| `'square'`                              | `'circular'` | Visual shape variant.                                  |
+| `src`      | `string`                                                               | `''`         | Image source URL for the avatar.                      |
+| `alt`      | `string`                                                               | `''`         | Alternative text for the image.                       |
+| `name`     | `string`                                                               | `''`         | Name for generating initials and accessibility.       |
+| `status`   | `'online'` \| `'offline'` \| `'away'` \| `'busy'` \| `null`           | `null`       | Status indicator to display.                          |
+| `disabled` | `boolean`                                                              | `false`      | Visually and semantically marks the avatar as disabled.|
+
+---
+
+## Outputs / Events
+
+This component does not emit any custom events.
+
+---
+
+## Content Projection
+
+The avatar component does not support content projection. All content is handled through inputs.
+
+---
+
+## Host Element Behavior
+
+The following CSS classes are dynamically applied to the host element to reflect component state:
+
+- `ds-avatar` – base class applied to all avatar instances
+- `ds-avatar-[size]` – where `[size]` corresponds to the selected size (e.g. `ds-avatar-medium`)
+- `ds-avatar-[variant]` – where `[variant]` corresponds to the selected variant (e.g. `ds-avatar-circular`)
+- `ds-avatar-disabled` – applied when `disabled` is `true`
+
+These classes are computed and set via the `hostClass()` method using Angular's `@computed()` signal.
+
+The host also defines the following attributes:
+
+- `role="img"` – applied for accessibility support
+- `aria-label` – dynamically generated from name/alt text and status, prepended with `"Disabled"` if `disabled` is `true`
+
+## Internal Elements
+
+### Avatar Container
+- `.ds-avatar-container` – wrapper element for all avatar content
+
+### Image Display
+- `.ds-avatar-image` – applied to the `<img>` element when displaying images
+- Conditionally shown based on `src` input and image load success
+
+### Initials Display  
+- `.ds-avatar-initials` – applied to the initials text container
+- Shown when no image is available or image loading fails
+- Initials generated from the `name` input
+
+### Status Indicator
+- `.ds-avatar-status` – base class for the status indicator dot
+- `.ds-avatar-status-[status]` – variant class based on status type (e.g. `ds-avatar-status-online`)
+- Conditionally shown when `status` input is provided
+
+
+

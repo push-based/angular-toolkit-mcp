@@ -1,0 +1,83 @@
+## Inputs
+
+### DsSegmentedControl
+
+| Name                | Type                          | Default     | Description                                                   |
+| ------------------- | ----------------------------- | ----------- | ------------------------------------------------------------- |
+| `activeOption`      | `string`                      | `''`        | Name of the currently selected option.                        |
+| `fullWidth`         | `boolean`                     | `false`     | Whether the segmented control takes the full container width. |
+| `inverse`           | `boolean`                     | `false`     | Applies inverse color scheme to the component.                |
+| `roleType`          | `'radiogroup'` \| `'tablist'` | `'tablist'` | Sets the ARIA role of the segmented control group.            |
+| `twoLineTruncation` | `boolean`                     | `false`     | Enables two-line truncation for long labels.                  |
+
+### DsSegmentedOption
+
+| Name    | Type     | Required | Default | Description                     |
+| ------- | -------- | -------- | ------- | ------------------------------- |
+| `name`  | `string` | Yes      | —       | Unique name for the option.     |
+| `title` | `string` | No       | `''`    | Displayed label for the option. |
+
+<sup>**1**</sup> **activeOption note:** **name** needs to be added to segmented
+option to have possibility to define selected item
+
+---
+
+## Outputs
+
+### DsSegmentedControl
+
+| Name                 | Type                   | Description                                   |
+| -------------------- | ---------------------- | --------------------------------------------- |
+| `activeOptionChange` | `EventEmitter<string>` | Emits the new selected option name on change. |
+
+```json
+{
+  "index": 2,
+  "event": {
+    "isTrusted": true,
+    "altKey": false,
+    "altitudeAngle": 1.5707963267948966,
+    "azimuthAngle": 0,
+    "bubbles": true,
+    "button": 0,
+    "buttons": 0,
+    "cancelBubble": false,
+    "cancelable": true,
+    "clientX": 433,
+    "clientY": 85,
+    "composed": true,
+    "ctrlKey": false
+  }
+}
+```
+
+### DsSegmentedOption
+
+| Name           | Type                   | Description                        |
+| -------------- | ---------------------- | ---------------------------------- |
+| `selectOption` | `EventEmitter<string>` | Emits when the option is selected. |
+
+---
+
+## Content Projection
+
+| Selector      | Description                                |
+| ------------- | ------------------------------------------ |
+| `#dsTemplate` | A `TemplateRef` for custom option content. |
+
+---
+
+## Host Bindings
+
+### DsSegmentedControl
+
+- `class="ds-segmented-control"` — base class
+- `class.ds-segment-full-width` — applied when `fullWidth` is true
+- `class.ds-segment-inverse` — applied when `inverse` is true
+- `class.ds-sc-ready` — applied after view initialization
+- `role` — set to `tablist` or `radiogroup` depending on `roleType`
+
+### DsSegmentedOption
+
+- Focus state and tabindex are controlled dynamically.
+- Host uses `rxHostPressedListener` for click-based selection.

@@ -1,0 +1,122 @@
+@import '../variables';
+
+// Modal component styles
+.ds-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: $spacing-lg;
+  backdrop-filter: blur(4px);
+
+  &.ds-modal-surface-lowest {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  &.ds-modal-surface-low {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  &.ds-modal-surface {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  &.ds-modal-bottom-sheet {
+    align-items: flex-end;
+    justify-content: stretch;
+    padding: 0;
+  }
+
+  &.ds-modal-inverse {
+    filter: invert(1);
+  }
+}
+
+.ds-modal-content {
+  background: $surface-white;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-xl;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: auto;
+  position: relative;
+  border: 1px solid $neutral-200;
+}
+
+.ds-modal-header {
+  padding: $spacing-xl;
+  border-bottom: 1px solid $neutral-200;
+  border-radius: $radius-xl $radius-xl 0 0;
+
+  &.ds-modal-header-surface-lowest {
+    background-color: $surface-50;
+  }
+
+  &.ds-modal-header-surface-low {
+    background-color: $surface-100;
+  }
+
+  &.ds-modal-header-surface {
+    background-color: $surface-white;
+  }
+
+  &.ds-modal-header-surface-high {
+    background-color: $surface-50;
+    border-bottom: 2px solid $neutral-200;
+  }
+
+  &.ds-modal-header-nav-bg {
+    background-color: $neutral-800;
+    color: $text-inverse;
+  }
+
+  &.ds-modal-header-inverse {
+    filter: invert(1);
+  }
+
+  .ds-modal-header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .ds-modal-header-start,
+  .ds-modal-header-end {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .ds-modal-header-center {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+}
+
+.ds-modal-header-drag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  .ds-modal-header-drag-rectangle {
+    width: 2rem;
+    height: 0.25rem;
+    background-color: #d1d5db;
+    border-radius: 0.125rem;
+  }
+}

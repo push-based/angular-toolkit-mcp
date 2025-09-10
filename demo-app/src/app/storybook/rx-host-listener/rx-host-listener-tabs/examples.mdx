@@ -1,0 +1,76 @@
+import { Canvas } from '@storybook/blocks';
+
+import * as RxHostListenerStories from '../rx-host-listener.component.stories';
+
+## Basic Event Handling
+
+<Canvas of={RxHostListenerStories.BasicHostListener} />
+
+## Pressed Listener (Click + Keyboard)
+
+<Canvas of={RxHostListenerStories.PressedListener} />
+
+## Multiple Listeners
+
+<Canvas of={RxHostListenerStories.MultipleListeners} />
+
+## Usage Example
+
+<Canvas of={RxHostListenerStories.UsageExample} />
+
+## Advanced Usage Patterns
+
+### Event Composition
+```ts
+// Combine multiple events
+merge(
+  rxHostListener('mouseenter'),
+  rxHostListener('focus')
+).pipe(
+  takeUntilDestroyed()
+).subscribe(() => {
+  // Handle hover or focus
+});
+```
+
+### Conditional Event Handling  
+```ts
+// Only listen when enabled
+this.isEnabled$.pipe(
+  switchMap(enabled => 
+    enabled ? rxHostListener('click') : EMPTY
+  ),
+  takeUntilDestroyed()
+).subscribe(event => {
+  // Handle click only when enabled
+});
+```
+
+### Debounced Input
+```ts
+// Debounced input handling
+rxHostListener('input').pipe(
+  debounceTime(300),
+  map(event => event.target.value),
+  distinctUntilChanged(),
+  takeUntilDestroyed()
+).subscribe(value => {
+  // Handle debounced input
+});
+```
+
+### Touch and Mouse Events
+```ts
+// Handle both touch and mouse
+merge(
+  rxHostListener('touchstart'),
+  rxHostListener('mousedown')
+).pipe(
+  takeUntilDestroyed()
+).subscribe(event => {
+  // Handle start of interaction
+});
+```
+
+
+

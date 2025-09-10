@@ -1,0 +1,290 @@
+.components-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  line-height: 1.6;
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: #333;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .intro {
+    font-size: 1.1rem;
+    color: #666;
+    text-align: center;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+  }
+
+  .legacy-comparison {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 1rem;
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+    border-radius: 8px;
+    color: white;
+    border: 2px solid #333;
+
+    p {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .legacy-link {
+      color: #ffff00;
+      text-decoration: underline;
+      font-weight: bold;
+      text-shadow: 1px 1px 0px #000;
+
+      &:hover {
+        color: #ffffff;
+        text-shadow: 2px 2px 0px #000;
+      }
+    }
+  }
+
+  .component-section {
+    background: white;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 400;
+      color: #495057;
+      margin-bottom: 0.5rem;
+      border-bottom: 2px solid #e9ecef;
+      padding-bottom: 0.5rem;
+    }
+
+    > p {
+      color: #666;
+      margin-bottom: 2rem;
+    }
+
+    .demo-group {
+      margin-bottom: 2rem;
+
+      h3 {
+        font-size: 1.2rem;
+        color: #333;
+        margin-bottom: 1rem;
+        font-weight: 500;
+      }
+
+      .selected-info {
+        margin-top: 0.5rem;
+        padding: 0.5rem;
+        background: #f8f9fa;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 0.9rem;
+        color: #495057;
+      }
+    }
+  }
+
+  // Button specific styles
+  .button-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .demo-feedback {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #e8f5e8;
+    border: 1px solid #c3e6c3;
+    border-radius: 6px;
+    color: #2d5a2d;
+
+    p {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    strong {
+      color: #1a4d1a;
+    }
+  }
+
+  // Badge specific styles
+  .badge-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .badge-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  // Button styles
+  .button-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+
+    &.btn-primary {
+      background: #667eea;
+      color: white;
+
+      &:hover {
+        background: #5a6fd8;
+      }
+    }
+
+    &.btn-secondary {
+      background: #6c757d;
+      color: white;
+
+      &:hover {
+        background: #5a6268;
+      }
+    }
+
+    &.btn-outline {
+      background: transparent;
+      color: #667eea;
+      border: 2px solid #667eea;
+
+      &:hover {
+        background: #667eea;
+        color: white;
+      }
+    }
+  }
+
+  // Usage section
+  .usage-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+
+    .usage-card {
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 8px;
+      border: 1px solid #e9ecef;
+
+      h3 {
+        font-size: 1.2rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
+
+      p {
+        color: #666;
+        margin-bottom: 1rem;
+        line-height: 1.5;
+      }
+
+      code {
+        display: block;
+        background: #e9ecef;
+        padding: 0.5rem;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        color: #495057;
+        word-break: break-all;
+      }
+    }
+  }
+
+  // Modal styles
+  .modal-body {
+    padding: 1.5rem;
+
+    h3 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid #e9ecef;
+    }
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #6c757d;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: #f8f9fa;
+      color: #495057;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .components-container {
+    h1 {
+      font-size: 2rem;
+    }
+
+    .component-section {
+      padding: 1.5rem;
+    }
+
+    .button-grid {
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    }
+
+    .badge-grid {
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    }
+
+    .badge-row,
+    .button-row {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .usage-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}

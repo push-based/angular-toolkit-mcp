@@ -1,0 +1,87 @@
+import { Canvas } from '@storybook/blocks';
+
+import * as RxHostListenerStories from '../rx-host-listener.component.stories';
+
+The `rxHostListener` and `rxHostPressedListener` utilities provide reactive, type-safe event handling for host elements in Angular components. They offer a declarative alternative to `@HostListener` decorators with automatic change detection and cleanup.
+
+<Canvas of={RxHostListenerStories.BasicHostListener} />
+
+---
+
+## Usage
+
+Import the utilities in your component and use them in the constructor or lifecycle hooks.
+
+```ts
+import { 
+  rxHostListener, 
+  rxHostPressedListener 
+} from '@frontend/ui/rx-host-listener'; // 👈 add to file imports
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+@Component({
+  selector: 'my-component',
+  template: `...`,
+})
+export class MyComponent {
+  constructor() {
+    // Listen to any DOM event
+    rxHostListener('click')
+      .pipe(takeUntilDestroyed())
+      .subscribe(event => {
+        // Handle click event
+      });
+  }
+}
+```
+
+---
+
+## Key Features
+
+### rxHostListener
+- **Type-safe**: Generic function that preserves event types
+- **Reactive**: Returns RxJS Observable for composability
+- **Automatic cleanup**: Uses `takeUntilDestroyed()` for memory management
+- **Change detection**: Automatically triggers Angular change detection
+- **Debounced**: Built-in debouncing to prevent excessive events
+
+### rxHostPressedListener  
+- **Accessibility-first**: Handles both click and keyboard events (Space/Enter)
+- **Unified interface**: Single observable for both mouse and keyboard interactions
+- **Button semantics**: Perfect for interactive elements like buttons
+- **Debounced**: Prevents duplicate events from rapid interactions
+
+---
+
+## Benefits over @HostListener
+
+1. **Reactive composition**: Easy to combine with other observables
+2. **Automatic cleanup**: No manual unsubscription needed
+3. **Type safety**: Full TypeScript support with event types
+4. **Testability**: Easier to mock and test reactive patterns
+5. **Performance**: Built-in debouncing and optimized change detection
+6. **Flexibility**: Can be used conditionally or combined with other operators
+
+---
+
+## Common Use Cases
+
+- **Interactive components**: Buttons, cards, custom controls
+- **Event composition**: Combining multiple event types
+- **Conditional listening**: Enabling/disabling event handling based on state
+- **Complex interactions**: Multi-step interactions with RxJS operators
+- **Accessibility**: Ensuring both mouse and keyboard support
+
+---
+
+## Integration with Design System
+
+These utilities are used internally by design system components like:
+- `DsButton` - uses `rxHostPressedListener` for accessible interactions
+- Interactive cards and containers
+- Custom form controls
+- Navigation components
+
+
+

@@ -1,0 +1,84 @@
+import { Canvas } from '@storybook/blocks';
+
+import * as ButtonStories from '../button.component.stories';
+
+The `DsButton` component provides a comprehensive button implementation with multiple variants, sizes, and states.
+It supports icons, loading states, and various interaction patterns while maintaining full accessibility.
+
+<Canvas of={ButtonStories.Default} />
+
+---
+
+## Usage
+
+Import `DsButton` in your component and apply `ds-button` selector in your template.
+
+```ts
+import { DsButton } from '@frontend/ui/button'; // 👈 add to file imports
+
+@Component({
+  imports: [DsButton], // 👈 add to component imports
+  template: `...`,
+})
+export class AppComponent {}
+```
+
+---
+
+## Button variants
+
+- Multiple color variants available: primary, secondary, success, danger, warning, info, neutral
+- Each color variant comes in three intensities: default, strong, and subtle
+- Special variants: ghost (transparent) and outline (bordered)
+- Four size options: xsmall, small, medium, and large
+- Support for loading and disabled states
+- Icons can be placed at start or end positions, or button can be icon-only
+- Full-width option available for layout flexibility
+
+---
+
+## Accessibility
+
+- Proper ARIA attributes are automatically applied
+- The `aria-label` is intelligently generated from content or custom input
+- Loading and disabled states are properly communicated to screen readers
+- Keyboard navigation is fully supported
+- Uses reactive host listener for optimal click handling
+
+---
+
+## Test Coverage
+
+The component is comprehensively tested using Angular CDK Testing and a custom `DsButtonHarness`.
+
+### Functional Behavior
+
+- Handles click events with proper disabled/loading state checks
+- Emits focus and blur events for external handling
+- Supports different button types (button, submit, reset)
+- Filters buttons by:
+  - `size` (e.g., `'small'`, `'medium'`)
+  - `variant` (e.g., `'primary'`, `'secondary'`)
+  - `disabled` and `loading` states
+
+### Content Projection
+
+- Supports start and end icon slots
+- Main content area for button text
+- Icon-only buttons with proper accessibility
+
+### State Management
+
+- Loading state prevents interactions and updates aria-label
+- Disabled state prevents interactions and keyboard navigation
+- Inverse theming for dark backgrounds
+- Full-width layout option
+
+### Accessibility
+
+- Dynamic aria-label generation from content
+- Proper disabled and loading state communication
+- Keyboard accessibility with appropriate tabindex management
+
+
+

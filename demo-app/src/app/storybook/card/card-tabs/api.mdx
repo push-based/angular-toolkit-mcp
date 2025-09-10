@@ -1,0 +1,78 @@
+## Inputs
+
+| Name          | Type                                                    | Default     | Description                                            |
+| ------------- | ------------------------------------------------------- | ----------- | ------------------------------------------------------ |
+| `size`        | `'small'` \| `'medium'` \| `'large'`                   | `'medium'`  | Controls the card size and spacing.                   |
+| `variant`     | `'default'` \| `'elevated'` \| `'outlined'` \| `'filled'` | `'default'` | Visual style variant of the card.                     |
+| `disabled`    | `boolean`                                               | `false`     | Visually and semantically marks the card as disabled. |
+| `interactive` | `boolean`                                               | `false`     | Makes the card interactive and clickable.             |
+| `hasHeader`   | `boolean`                                               | `false`     | Controls whether the header section is displayed.     |
+| `hasFooter`   | `boolean`                                               | `false`     | Controls whether the footer section is displayed.     |
+
+---
+
+## Outputs / Events
+
+This component does not emit any custom events.
+
+---
+
+## Content Projection
+
+The card supports slot-based content projection for flexible layouts.
+
+### Named Slots
+
+- `[slot=header]` – content rendered in the header section (only shown if `hasHeader` is true)
+- `[slot=footer]` – content rendered in the footer section (only shown if `hasFooter` is true)
+
+### Default Slot
+
+Content directly inside the component will be rendered in the main card content area.
+
+```html
+<ds-card hasHeader="true" hasFooter="true">
+  <div slot="header">Card Title</div>
+  This is the main card content.
+  <div slot="footer">Card Actions</div>
+</ds-card>
+```
+
+---
+
+## Host Element Behavior
+
+The following CSS classes are dynamically applied to the host element to reflect component state:
+
+- `ds-card` – base class applied to all card instances
+- `ds-card-[size]` – where `[size]` corresponds to the selected size (e.g. `ds-card-medium`)
+- `ds-card-[variant]` – where `[variant]` corresponds to the selected variant (e.g. `ds-card-elevated`)
+- `ds-card-disabled` – applied when `disabled` is `true`
+- `ds-card-interactive` – applied when `interactive` is `true`
+
+These classes are computed and set via the `hostClass()` method using Angular's `@computed()` signal.
+
+The host also defines the following attributes for interactive cards:
+
+- `role="button"` – applied when `interactive` is `true`
+- `tabindex="0"` – applied when `interactive` is `true` and not disabled
+- `aria-disabled` – reflects the disabled state
+
+## Internal Structure
+
+### Header Section
+- `.ds-card-header` – wrapper for header content
+- Conditionally rendered based on `hasHeader` input
+- Content provided via `[slot=header]` projection
+
+### Content Section
+- `.ds-card-content` – wrapper for main card content
+- Always rendered and contains default slot projection
+
+### Footer Section
+- `.ds-card-footer` – wrapper for footer content
+- Conditionally rendered based on `hasFooter` input
+- Content provided via `[slot=footer]` projection
+
+
+

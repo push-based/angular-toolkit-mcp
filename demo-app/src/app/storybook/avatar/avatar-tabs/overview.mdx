@@ -1,0 +1,75 @@
+import { Canvas } from '@storybook/blocks';
+
+import * as AvatarStories from '../avatar.component.stories';
+
+The `DsAvatar` component provides a way to display user avatars with various sizes, shapes, and status indicators.
+You can use it with images or initials, and customize the appearance with different variants and sizes.
+
+<Canvas of={AvatarStories.Default} />
+
+---
+
+## Usage
+
+Import `DsAvatar` in your component and apply `ds-avatar` selector in your template.
+
+```ts
+import { DsAvatar } from '@frontend/ui/avatar'; // 👈 add to file imports
+
+@Component({
+  imports: [DsAvatar], // 👈 add to component imports
+  template: `...`,
+})
+export class AppComponent {}
+```
+
+---
+
+## Avatar variants
+
+- By default, avatars are circular, medium-sized, and display initials from the name
+- Avatars can show images when `src` is provided, falling back to initials if the image fails to load
+- Status indicators can be added to show online, offline, away, or busy states
+- Three shape variants are available: circular, rounded, and square
+- Five size variants are available: xsmall, small, medium, large, and xlarge
+
+---
+
+## Accessibility
+
+- The host sets `role="img"` for screen reader compatibility
+- The `aria-label` is automatically generated from the name, alt text, and status
+- If `disabled` is true, the label is prefixed with `"Disabled"`
+- Status indicators have their own `aria-label` for accessibility
+
+---
+
+## Test Coverage
+
+The component is comprehensively tested using Angular CDK Testing and a custom `DsAvatarHarness`.
+
+### Functional Behavior
+
+- Displays initials when no image is provided
+- Shows image when `src` is provided and valid  
+- Falls back to initials when image fails to load
+- Handles single and multiple names for initial generation
+- Filters avatars by:
+  - `size` (e.g., `'small'`, `'medium'`)
+  - `variant` (e.g., `'circular'`, `'rounded'`)
+  - `status` (e.g., `'online'`, `'offline'`)
+
+### State & Styling
+
+- Verifies dynamic class application based on size and variant
+- Confirms `ds-avatar-disabled` class presence when `disabled` is set
+- Status indicator styling changes based on status type
+
+### Accessibility
+
+- Checks that the computed `aria-label` accurately reflects the name, alt text, and status
+- Validates screen reader output for different states
+- Status indicators provide appropriate accessibility labels
+
+
+

@@ -1,0 +1,56 @@
+## Inputs
+
+| Name       | Type                                                                   | Default     | Description                                            |
+| ---------- | ---------------------------------------------------------------------- | ----------- | ------------------------------------------------------ |
+| `size`     | `'xsmall'` \| `'medium'`                                               | `'medium'`  | Controls the badge size.                               |
+| `variant`  | A value from `DsBadgeVariant`<br/>(e.g. `'primary'`, `'green-strong'`) | `'primary'` | Visual style variant (color + intensity).              |
+| `disabled` | `boolean`                                                              | `false`     | Visually and semantically marks the badge as disabled. |
+| `inverse`  | `boolean`                                                              | `false`     | Applies inverse theme styling (for dark backgrounds).  |
+
+---
+
+## Outputs / Events
+
+This component does not emit any custom events.
+
+---
+
+## Content Projection
+
+The badge supports slot-based content for flexible icon/text layouts.
+
+### Named Slots
+
+- `[slot=start]` – content rendered before the main text.
+- `[slot=end]` – content rendered after the main text.
+
+### Default Slot
+
+Text or elements directly inside the component will be rendered in the central label span.
+
+```html
+<ds-badge variant="green-strong">
+  <span slot="start">✔</span>
+  Confirmed
+  <span slot="end">✓</span>
+</ds-badge>
+```
+
+---
+
+## Host Element Behavior
+
+The following CSS classes are dynamically applied to the host element to reflect component state:
+
+- `ds-badge` – base class applied to all badge instances
+- `ds-badge-xsmall` or `ds-badge-medium` – based on the `size` input
+- `ds-badge-[variant]` – where `[variant]` corresponds to the selected variant (e.g. `ds-badge-green-subtle`)
+- `ds-badge-inverse` – applied when `inverse` is `true`
+- `ds-badge-disabled` – applied when `disabled` is `true`
+
+These classes are computed and set via the `hostClass()` method using Angular’s `@computed()` signal.
+
+The host also defines the following attributes:
+
+- `role="img"` – applied for accessibility support
+- `aria-label` – dynamically generated from content, prepended with `"Disabled badge:"` if `disabled` is `true`

@@ -1,0 +1,24 @@
+// Modal header drag component styles
+.ds-modal-header-drag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  padding: 0.5rem;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  .ds-modal-header-drag-rectangle {
+    width: 2rem;
+    height: 0.25rem;
+    background-color: #d1d5db;
+    border-radius: 0.125rem;
+    transition: background-color 0.2s ease;
+  }
+
+  &:hover .ds-modal-header-drag-rectangle {
+    background-color: #9ca3af;
+  }
+}

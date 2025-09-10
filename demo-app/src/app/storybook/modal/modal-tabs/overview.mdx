@@ -1,0 +1,70 @@
+You are tasked with creating a comprehensive refactoring plan for migrating legacy markup to a single design-system component. This plan should cover templates, class TypeScript files, styles, NgModules, and specs surfaced by the usage graph. Follow these instructions carefully to generate the plan:
+
+1. Review the following input variables:
+<component_name>
+{{COMPONENT_NAME}}
+</component_name>
+
+<subfolder>
+{{SUBFOLDER}}
+</subfolder>
+
+<violations>
+{{VIOLATIONS}}
+</violations>
+
+<scan_result>
+{{SCAN_RESULT}}
+</scan_result>
+
+<file_scan>
+{{FILE_SCAN}}
+</file_scan>
+
+2. Acquire reference material:
+   a. Call the function get-component-docs with the component name as the argument.
+   b. If there's an error or no docs are found, output a commentary message and stop.
+   c. Parse the docs to create a dsExemplar object containing markup, required parts, optional parts, and API information.
+
+3. Map dependencies and impact:
+   a. Call the function build-component-usage-graph with the subfolder as the argument.
+   b. If there's an error or any violation file is missing from the graph, output a commentary message and stop.
+   c. Derive working sets for host templates, classes, styles, specs, and modules.
+
+4. Generate baseline contracts:
+   a. For each host template, call the build_component_contract function.
+   b. If there's a contract build error, output a commentary message and stop.
+
+5. Analyze refactorability:
+   a. Compare each violation instance with the dsExemplar markup.
+   b. Classify as "non-viable", "requires-restructure", or "simple-swap".
+   c. Record template edits, CSS clean-up, and ancillary edits.
+   d. Calculate complexity scores.
+   e. Aggregate results into filePlans.
+
+6. Synthesize and output the plan:
+   a. Sort filePlans by complexity score, violation count, and file path.
+   b. Generate the plan in the following format:
+
+<plan>
+[For each file in filePlans, include:
+- File path
+- File type (template|class|style|spec|module)
+- Refactor class (non-viable|requires-restructure|simple-swap)
+- Actions to take (bullet points for template edits, TS updates, style removal, NgModule changes, spec tweaks)
+- Complexity score]
+</plan>
+
+7. After the plan, ask the following question:
+🛠️ Approve this plan or specify adjustments?
+
+Important reminders:
+- Maintain NgModule-based structure (no stand-alone conversion).
+- Generate contracts only for host components (template + class).
+- Output must be minimal: a single <plan> block followed by one question.
+- All other messages or errors should be enclosed in <commentary> tags.
+- Ensure every host module needing a new import appears in filePlans.
+- Ensure every host spec appears in filePlans (even if action="none").
+- Verify that dsExemplar was referenced at least once.
+
+Your final output should consist of only the <plan> block and the follow-up question. Any additional comments or error messages should be enclosed in <commentary> tags.

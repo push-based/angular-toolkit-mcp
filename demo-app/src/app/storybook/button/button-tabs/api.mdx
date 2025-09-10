@@ -1,0 +1,90 @@
+## Inputs
+
+| Name        | Type                                                                      | Default     | Description                                            |
+| ----------- | ------------------------------------------------------------------------- | ----------- | ------------------------------------------------------ |
+| `size`      | `'xsmall'` \| `'small'` \| `'medium'` \| `'large'`                      | `'medium'`  | Controls the button size.                              |
+| `variant`   | A value from `DsButtonVariant`<br/>(e.g. `'primary'`, `'secondary-strong'`) | `'primary'` | Visual style variant (color + intensity).             |
+| `type`      | `'button'` \| `'submit'` \| `'reset'`                                    | `'button'`  | HTML button type attribute.                           |
+| `disabled`  | `boolean`                                                                 | `false`     | Visually and functionally disables the button.        |
+| `loading`   | `boolean`                                                                 | `false`     | Shows loading state and prevents interaction.         |
+| `inverse`   | `boolean`                                                                 | `false`     | Applies inverse theme styling (for dark backgrounds). |
+| `fullWidth` | `boolean`                                                                 | `false`     | Makes the button take full width of container.        |
+| `ariaLabel` | `string`                                                                  | `''`        | Custom aria-label (auto-generated if empty).          |
+
+---
+
+## Outputs / Events
+
+| Name    | Type           | Description                                    |
+| ------- | -------------- | ---------------------------------------------- |
+| `click` | `MouseEvent`   | Emitted when button is clicked (if enabled).  |
+| `focus` | `FocusEvent`   | Emitted when button receives focus.           |
+| `blur`  | `FocusEvent`   | Emitted when button loses focus.              |
+
+---
+
+## Content Projection
+
+The button supports slot-based content for flexible icon/text layouts.
+
+### Named Slots
+
+- `[slot=start]` – content rendered before the main text (typically icons)
+- `[slot=end]` – content rendered after the main text (typically icons)
+
+### Default Slot
+
+Text or elements directly inside the component will be rendered in the central button text area.
+
+```html
+<ds-button variant="primary">
+  <ds-icon slot="start" name="plus"/>
+  Add Item
+  <ds-icon slot="end" name="arrow-right"/>
+</ds-button>
+```
+
+---
+
+## Host Element Behavior
+
+The following CSS classes are dynamically applied to the host element to reflect component state:
+
+- `ds-button` – base class applied to all button instances
+- `ds-button-[size]` – where `[size]` corresponds to the selected size (e.g. `ds-button-medium`)
+- `ds-button-[variant]` – where `[variant]` corresponds to the selected variant (e.g. `ds-button-primary`)
+- `ds-button-disabled` – applied when `disabled` is `true`
+- `ds-button-inverse` – applied when `inverse` is `true`
+- `ds-button-loading` – applied when `loading` is `true`
+- `ds-button-full-width` – applied when `fullWidth` is `true`
+
+These classes are computed and set via the `hostClass()` method using Angular's `@computed()` signal.
+
+The host also defines the following attributes:
+
+- `role="button"` – applied for accessibility support
+- `tabindex="0"` – for keyboard navigation (when not disabled)
+- `aria-label` – dynamically generated from content and state
+- `aria-disabled` – reflects the disabled state
+- `disabled` – HTML disabled attribute when disabled
+- `type` – HTML button type attribute
+
+## Internal Structure
+
+### Icon Containers
+- `.ds-button-slot-container.ds-button-start` – wrapper for start slot content
+- `.ds-button-slot-container.ds-button-end` – wrapper for end slot content
+
+### Text Content
+- `.ds-button-text` – wrapper for the main button text content
+
+## Reactive Behavior
+
+The button uses a reactive host listener (`rxHostPressedListener`) for optimal click handling:
+- Automatically handles both mouse clicks and keyboard activation
+- Respects disabled and loading states
+- Emits click events only when appropriate
+- Integrates with Angular's change detection efficiently
+
+
+

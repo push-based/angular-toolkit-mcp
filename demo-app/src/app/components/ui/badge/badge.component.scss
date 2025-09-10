@@ -1,0 +1,231 @@
+@import '../variables';
+
+// Badge component styles
+.ds-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-xs;
+  border-radius: $radius-md;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  transition: all $transition-normal;
+  font-family: inherit;
+
+  &.ds-badge-xsmall {
+    padding: $spacing-xs $spacing-sm;
+    font-size: 0.75rem;
+    border-radius: $radius-sm;
+  }
+
+  &.ds-badge-medium {
+    padding: $spacing-xs $spacing-sm;
+    font-size: 0.875rem;
+  }
+
+  // Primary variants
+  &.ds-badge-primary {
+    background-color: $primary-500;
+    color: $text-inverse;
+    box-shadow: $shadow-sm;
+  }
+
+  &.ds-badge-primary-strong {
+    background-color: $primary-700;
+    color: $text-inverse;
+    box-shadow: $shadow-md;
+  }
+
+  &.ds-badge-primary-subtle {
+    background-color: $primary-50;
+    color: $primary-700;
+    border: 1px solid $primary-200;
+  }
+
+  // Secondary variants
+  &.ds-badge-secondary {
+    background-color: $neutral-600;
+    color: $text-inverse;
+    box-shadow: $shadow-sm;
+  }
+
+  &.ds-badge-secondary-strong {
+    background-color: $neutral-700;
+    color: $text-inverse;
+    box-shadow: $shadow-md;
+  }
+
+  &.ds-badge-secondary-subtle {
+    background-color: $neutral-50;
+    color: $neutral-700;
+    border: 1px solid $neutral-200;
+  }
+
+  // Success variants (renamed from green)
+  &.ds-badge-success,
+  &.ds-badge-green {
+    background-color: $success-500;
+    color: $text-inverse;
+    box-shadow: $shadow-sm;
+  }
+
+  &.ds-badge-success-strong,
+  &.ds-badge-green-strong {
+    background-color: $success-700;
+    color: $text-inverse;
+    box-shadow: $shadow-md;
+  }
+
+  &.ds-badge-success-subtle,
+  &.ds-badge-green-subtle {
+    background-color: $success-50;
+    color: $success-700;
+    border: 1px solid $success-200;
+  }
+
+  // Info variants (renamed from blue)
+  &.ds-badge-info,
+  &.ds-badge-blue {
+    background-color: $info-500;
+    color: $text-inverse;
+    box-shadow: $shadow-sm;
+  }
+
+  &.ds-badge-info-strong,
+  &.ds-badge-blue-strong {
+    background-color: $info-700;
+    color: $text-inverse;
+    box-shadow: $shadow-md;
+  }
+
+  &.ds-badge-info-subtle,
+  &.ds-badge-blue-subtle {
+    background-color: $info-50;
+    color: $info-700;
+    border: 1px solid $info-200;
+  }
+
+  // Error variants (renamed from red)
+  &.ds-badge-error,
+  &.ds-badge-red {
+    background-color: $error-500;
+    color: $text-inverse;
+    box-shadow: $shadow-sm;
+  }
+
+  &.ds-badge-error-strong,
+  &.ds-badge-red-strong {
+    background-color: $error-700;
+    color: $text-inverse;
+    box-shadow: $shadow-md;
+  }
+
+  &.ds-badge-error-subtle,
+  &.ds-badge-red-subtle {
+    background-color: $error-50;
+    color: $error-700;
+    border: 1px solid $error-200;
+  }
+
+  // Purple variants (using primary colors)
+  &.ds-badge-purple {
+    background-color: $primary-600;
+    color: $text-inverse;
+    box-shadow: $shadow-sm;
+  }
+
+  &.ds-badge-purple-strong {
+    background-color: $primary-800;
+    color: $text-inverse;
+    box-shadow: $shadow-md;
+  }
+
+  &.ds-badge-purple-subtle {
+    background-color: $primary-50;
+    color: $primary-800;
+    border: 1px solid $primary-200;
+  }
+
+  // Neutral variants
+  &.ds-badge-neutral {
+    background-color: $neutral-500;
+    color: $text-inverse;
+    box-shadow: $shadow-sm;
+  }
+
+  &.ds-badge-neutral-strong {
+    background-color: $neutral-700;
+    color: $text-inverse;
+    box-shadow: $shadow-md;
+  }
+
+  &.ds-badge-neutral-subtle {
+    background-color: $neutral-50;
+    color: $neutral-700;
+    border: 1px solid $neutral-200;
+  }
+
+  // Warning variants (renamed from yellow)
+  &.ds-badge-warning,
+  &.ds-badge-yellow {
+    background-color: $warning-500;
+    color: $text-inverse;
+    box-shadow: $shadow-sm;
+  }
+
+  &.ds-badge-warning-strong,
+  &.ds-badge-yellow-strong {
+    background-color: $warning-700;
+    color: $text-inverse;
+    box-shadow: $shadow-md;
+  }
+
+  &.ds-badge-warning-subtle,
+  &.ds-badge-yellow-subtle {
+    background-color: $warning-50;
+    color: $warning-700;
+    border: 1px solid $warning-200;
+  }
+
+  // Orange variants
+  &.ds-badge-orange {
+    background-color: #f97316;
+    color: $text-inverse;
+    box-shadow: $shadow-sm;
+  }
+
+  &.ds-badge-orange-strong {
+    background-color: #ea580c;
+    color: $text-inverse;
+    box-shadow: $shadow-md;
+  }
+
+  &.ds-badge-orange-subtle {
+    background-color: #fed7aa;
+    color: #ea580c;
+    border: 1px solid #fdba74;
+  }
+
+  // States
+  &.ds-badge-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &.ds-badge-inverse {
+    filter: invert(1);
+  }
+
+  .ds-badge-slot-container {
+    display: flex;
+    align-items: center;
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  .ds-badge-text {
+    flex: 1;
+  }
+}

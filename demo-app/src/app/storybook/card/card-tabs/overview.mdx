@@ -1,0 +1,80 @@
+import { Canvas } from '@storybook/blocks';
+
+import * as CardStories from '../card.component.stories';
+
+The `DsCard` component provides a flexible container for displaying content with optional header and footer sections.
+Cards can be styled with different variants and sizes, and can be made interactive for clickable use cases.
+
+<Canvas of={CardStories.Default} />
+
+---
+
+## Usage
+
+Import `DsCard` in your component and apply `ds-card` selector in your template.
+
+```ts
+import { DsCard } from '@frontend/ui/card'; // 👈 add to file imports
+
+@Component({
+  imports: [DsCard], // 👈 add to component imports
+  template: `...`,
+})
+export class AppComponent {}
+```
+
+---
+
+## Card variants
+
+- By default, cards have a default appearance with medium size
+- Four visual variants are available: default, elevated, outlined, and filled
+- Three size variants control the overall spacing: small, medium, and large
+- Cards can be made interactive with the `interactive` property for clickable behavior
+- Optional header and footer sections can be enabled with `hasHeader` and `hasFooter`
+
+---
+
+## Accessibility
+
+- Interactive cards automatically receive `role="button"` and appropriate tabindex
+- The `aria-disabled` attribute is set when the card is disabled
+- Interactive cards are keyboard accessible when enabled
+- Proper focus management is handled for interactive states
+
+---
+
+## Test Coverage
+
+The component is comprehensively tested using Angular CDK Testing and a custom `DsCardHarness`.
+
+### Functional Behavior
+
+- Renders content in the main card area
+- Conditionally displays header and footer sections based on inputs
+- Handles interactive behavior with proper ARIA attributes
+- Filters cards by:
+  - `size` (e.g., `'small'`, `'medium'`)
+  - `variant` (e.g., `'default'`, `'elevated'`)
+  - `interactive` state
+
+### Content Projection
+
+- Verifies content projection for main content area
+- Tests header content projection with `[slot=header]`
+- Tests footer content projection with `[slot=footer]`
+
+### State & Styling
+
+- Verifies dynamic class application based on size and variant
+- Confirms `ds-card-disabled` class presence when `disabled` is set
+- Validates `ds-card-interactive` class for interactive cards
+
+### Accessibility
+
+- Checks that interactive cards have proper role and tabindex
+- Validates aria-disabled attribute for disabled states
+- Confirms keyboard accessibility for interactive cards
+
+
+

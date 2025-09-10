@@ -1,0 +1,574 @@
+@import '../variables';
+
+// Button component styles
+.ds-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  border: 1px solid transparent;
+  border-radius: $radius-md;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all $transition-normal;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  outline: none;
+  font-family: inherit;
+
+  &:focus-visible {
+    box-shadow: $focus-ring;
+    outline: none;
+  }
+
+  // Sizes
+  &.ds-button-xsmall {
+    padding: $spacing-xs $spacing-sm;
+    font-size: 0.75rem;
+    min-height: 1.75rem;
+    border-radius: $radius-sm;
+  }
+
+  &.ds-button-small {
+    padding: $spacing-sm $spacing-md;
+    font-size: 0.875rem;
+    min-height: 2.25rem;
+  }
+
+  &.ds-button-medium {
+    padding: $spacing-sm $spacing-lg;
+    font-size: 0.875rem;
+    min-height: 2.75rem;
+  }
+
+  &.ds-button-large {
+    padding: $spacing-md $spacing-xl;
+    font-size: 1rem;
+    min-height: 3.25rem;
+    border-radius: $radius-lg;
+  }
+
+  // Primary variants
+  &.ds-button-primary {
+    background-color: $primary-500;
+    color: $text-inverse;
+    border-color: $primary-500;
+    box-shadow: $shadow-sm;
+
+    &:hover:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: $primary-600;
+      border-color: $primary-600;
+      box-shadow: $shadow-md;
+      transform: translateY(-1px);
+    }
+
+    &:active:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: $primary-700;
+      border-color: $primary-700;
+      transform: translateY(0);
+      box-shadow: $shadow-sm;
+    }
+  }
+
+  &.ds-button-primary-strong {
+    background-color: $primary-700;
+    color: $text-inverse;
+    border-color: $primary-700;
+    box-shadow: $shadow-md;
+
+    &:hover:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: $primary-800;
+      border-color: $primary-800;
+      box-shadow: $shadow-lg;
+      transform: translateY(-1px);
+    }
+
+    &:active:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: $primary-900;
+      border-color: $primary-900;
+      transform: translateY(0);
+      box-shadow: $shadow-md;
+    }
+  }
+
+  &.ds-button-primary-subtle {
+    background-color: $primary-50;
+    color: $primary-700;
+    border-color: $primary-200;
+
+    &:hover:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: $primary-100;
+      border-color: $primary-300;
+      transform: translateY(-1px);
+    }
+
+    &:active:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: $primary-200;
+      border-color: $primary-400;
+      transform: translateY(0);
+    }
+  }
+
+  // Secondary variants
+  &.ds-button-secondary {
+    background-color: $neutral-600;
+    color: $text-inverse;
+    border-color: $neutral-600;
+    box-shadow: $shadow-sm;
+
+    &:hover:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: $neutral-700;
+      border-color: $neutral-700;
+      box-shadow: $shadow-md;
+      transform: translateY(-1px);
+    }
+
+    &:active:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: $neutral-800;
+      border-color: $neutral-800;
+      transform: translateY(0);
+      box-shadow: $shadow-sm;
+    }
+  }
+
+  &.ds-button-secondary-strong {
+    background-color: #374151;
+    color: white;
+    border-color: #374151;
+
+    &:hover:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: #1f2937;
+      border-color: #1f2937;
+    }
+
+    &:active:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: #111827;
+      border-color: #111827;
+    }
+  }
+
+  &.ds-button-secondary-subtle {
+    background-color: #f3f4f6;
+    color: #374151;
+    border-color: #f3f4f6;
+
+    &:hover:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: #e5e7eb;
+      border-color: #e5e7eb;
+    }
+
+    &:active:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: #d1d5db;
+      border-color: #d1d5db;
+    }
+  }
+
+  // Success variants
+  &.ds-button-success {
+    background-color: $success-500;
+    color: $text-inverse;
+    border-color: $success-500;
+    box-shadow: $shadow-sm;
+
+    &:hover:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: $success-600;
+      border-color: $success-600;
+      box-shadow: $shadow-md;
+      transform: translateY(-1px);
+    }
+
+    &:active:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: $success-700;
+      border-color: $success-700;
+      transform: translateY(0);
+      box-shadow: $shadow-sm;
+    }
+  }
+
+  &.ds-button-success-strong {
+    background-color: #047857;
+    color: white;
+    border-color: #047857;
+
+    &:hover:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: #065f46;
+      border-color: #065f46;
+    }
+
+    &:active:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: #064e3b;
+      border-color: #064e3b;
+    }
+  }
+
+  &.ds-button-success-subtle {
+    background-color: #d1fae5;
+    color: #047857;
+    border-color: #d1fae5;
+
+    &:hover:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: #a7f3d0;
+      border-color: #a7f3d0;
+    }
+
+    &:active:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: #6ee7b7;
+      border-color: #6ee7b7;
+    }
+  }
+
+  // Danger variants
+  &.ds-button-danger {
+    background-color: $error-500;
+    color: $text-inverse;
+    border-color: $error-500;
+    box-shadow: $shadow-sm;
+
+    &:hover:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: $error-600;
+      border-color: $error-600;
+      box-shadow: $shadow-md;
+      transform: translateY(-1px);
+    }
+
+    &:active:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: $error-700;
+      border-color: $error-700;
+      transform: translateY(0);
+      box-shadow: $shadow-sm;
+    }
+  }
+
+  &.ds-button-danger-strong {
+    background-color: #dc2626;
+    color: white;
+    border-color: #dc2626;
+
+    &:hover:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: #b91c1c;
+      border-color: #b91c1c;
+    }
+
+    &:active:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: #991b1b;
+      border-color: #991b1b;
+    }
+  }
+
+  &.ds-button-danger-subtle {
+    background-color: #fee2e2;
+    color: #dc2626;
+    border-color: #fee2e2;
+
+    &:hover:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: #fecaca;
+      border-color: #fecaca;
+    }
+
+    &:active:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: #fca5a5;
+      border-color: #fca5a5;
+    }
+  }
+
+  // Warning variants
+  &.ds-button-warning {
+    background-color: $warning-500;
+    color: $text-inverse;
+    border-color: $warning-500;
+    box-shadow: $shadow-sm;
+
+    &:hover:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: $warning-600;
+      border-color: $warning-600;
+      box-shadow: $shadow-md;
+      transform: translateY(-1px);
+    }
+
+    &:active:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: $warning-700;
+      border-color: $warning-700;
+      transform: translateY(0);
+      box-shadow: $shadow-sm;
+    }
+  }
+
+  &.ds-button-warning-strong {
+    background-color: #ca8a04;
+    color: white;
+    border-color: #ca8a04;
+
+    &:hover:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: #a16207;
+      border-color: #a16207;
+    }
+
+    &:active:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: #854d0e;
+      border-color: #854d0e;
+    }
+  }
+
+  &.ds-button-warning-subtle {
+    background-color: #fef3c7;
+    color: #ca8a04;
+    border-color: #fef3c7;
+
+    &:hover:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: #fde68a;
+      border-color: #fde68a;
+    }
+
+    &:active:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: #fcd34d;
+      border-color: #fcd34d;
+    }
+  }
+
+  // Info variants
+  &.ds-button-info {
+    background-color: $info-500;
+    color: $text-inverse;
+    border-color: $info-500;
+    box-shadow: $shadow-sm;
+
+    &:hover:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: $info-600;
+      border-color: $info-600;
+      box-shadow: $shadow-md;
+      transform: translateY(-1px);
+    }
+
+    &:active:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: $info-700;
+      border-color: $info-700;
+      transform: translateY(0);
+      box-shadow: $shadow-sm;
+    }
+  }
+
+  &.ds-button-info-strong {
+    background-color: #0284c7;
+    color: white;
+    border-color: #0284c7;
+
+    &:hover:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: #0369a1;
+      border-color: #0369a1;
+    }
+
+    &:active:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: #075985;
+      border-color: #075985;
+    }
+  }
+
+  &.ds-button-info-subtle {
+    background-color: #e0f2fe;
+    color: #0284c7;
+    border-color: #e0f2fe;
+
+    &:hover:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: #bae6fd;
+      border-color: #bae6fd;
+    }
+
+    &:active:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: #7dd3fc;
+      border-color: #7dd3fc;
+    }
+  }
+
+  // Neutral variants
+  &.ds-button-neutral {
+    background-color: $neutral-500;
+    color: $text-inverse;
+    border-color: $neutral-500;
+    box-shadow: $shadow-sm;
+
+    &:hover:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: $neutral-600;
+      border-color: $neutral-600;
+      box-shadow: $shadow-md;
+      transform: translateY(-1px);
+    }
+
+    &:active:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: $neutral-700;
+      border-color: $neutral-700;
+      transform: translateY(0);
+      box-shadow: $shadow-sm;
+    }
+  }
+
+  &.ds-button-neutral-strong {
+    background-color: #374151;
+    color: white;
+    border-color: #374151;
+
+    &:hover:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: #1f2937;
+      border-color: #1f2937;
+    }
+
+    &:active:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: #111827;
+      border-color: #111827;
+    }
+  }
+
+  &.ds-button-neutral-subtle {
+    background-color: #f9fafb;
+    color: #374151;
+    border-color: #e5e7eb;
+
+    &:hover:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: #f3f4f6;
+      border-color: #d1d5db;
+    }
+
+    &:active:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: #e5e7eb;
+      border-color: #9ca3af;
+    }
+  }
+
+  // Ghost variant
+  &.ds-button-ghost {
+    background-color: transparent;
+    color: $text-secondary;
+    border-color: transparent;
+
+    &:hover:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: $neutral-100;
+      border-color: $neutral-100;
+      color: $text-primary;
+      transform: translateY(-1px);
+    }
+
+    &:active:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: $neutral-200;
+      border-color: $neutral-200;
+      transform: translateY(0);
+    }
+  }
+
+  // Outline variant
+  &.ds-button-outline {
+    background-color: transparent;
+    color: $primary-600;
+    border-color: $primary-300;
+
+    &:hover:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: $primary-500;
+      border-color: $primary-500;
+      color: $text-inverse;
+      transform: translateY(-1px);
+      box-shadow: $shadow-md;
+    }
+
+    &:active:not(.ds-button-disabled):not(.ds-button-loading) {
+      background-color: $primary-600;
+      border-color: $primary-600;
+      color: $text-inverse;
+      transform: translateY(0);
+      box-shadow: $shadow-sm;
+    }
+  }
+
+  // States
+  &.ds-button-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  &.ds-button-loading {
+    cursor: wait;
+    pointer-events: none;
+
+    .ds-button-text {
+      opacity: 0.7;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid transparent;
+      border-top: 2px solid currentColor;
+      border-radius: 50%;
+      animation: ds-button-spin 1s linear infinite;
+      right: 0.75rem;
+    }
+  }
+
+  &.ds-button-full-width {
+    width: 100%;
+  }
+
+  &.ds-button-inverse {
+    filter: invert(1);
+  }
+
+  // Slot containers
+  .ds-button-slot-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:empty {
+      display: none;
+    }
+
+    &.ds-button-start {
+      margin-right: -0.25rem;
+    }
+
+    &.ds-button-end {
+      margin-left: -0.25rem;
+    }
+  }
+
+  .ds-button-text {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s ease;
+  }
+}
+
+// Loading animation
+@keyframes ds-button-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// Accessibility
+@media (prefers-reduced-motion: reduce) {
+  .ds-button {
+    transition: none;
+
+    &.ds-button-loading::after {
+      animation: none;
+    }
+  }
+}
+
+// High contrast mode
+@media (prefers-contrast: high) {
+  .ds-button {
+    border-width: 2px;
+  }
+}

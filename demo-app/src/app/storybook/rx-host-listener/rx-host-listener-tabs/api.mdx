@@ -1,0 +1,156 @@
+## Functions
+
+### rxHostListener<T extends Event>(event: string): Observable<T>
+
+Creates a reactive event listener for the host element with automatic cleanup and change detection.
+
+#### Parameters
+
+| Name    | Type     | Description                                    |
+| ------- | -------- | ---------------------------------------------- |
+| `event` | `string` | The DOM event name to listen for (e.g., 'click', 'mouseenter') |
+
+#### Returns
+
+`Observable<T>` - An observable that emits events of the specified type
+
+#### Features
+
+- **Type-safe**: Generic type parameter preserves event types
+- **Auto cleanup**: Uses `takeUntilDestroyed()` internally
+- **Change detection**: Automatically calls `markForCheck()` 
+- **Debounced**: Built-in `debounceTime(0)` prevents excessive events
+- **Dependency injection**: Uses Angular's inject() for ElementRef and ChangeDetectorRef
+
+#### Example
+
+```ts
+// Type-safe click events
+rxHostListener<MouseEvent>('click')
+  .pipe(takeUntilDestroyed())
+  .subscribe(event => {
+    console.log('Clicked at:', event.clientX, event.clientY);
+  });
+
+// Any DOM event
+rxHostListener('focus').subscribe(event => {
+  console.log('Element focused');
+});
+```
+
+---
+
+### rxHostPressedListener(): Observable<any>
+
+Creates a unified listener for both click and keyboard activation events (Space/Enter keys).
+
+#### Returns
+
+`Observable<any>` - An observable that emits when the element is "pressed" via click or keyboard
+
+#### Features
+
+- **Accessibility**: Handles both mouse and keyboard interactions
+- **Unified interface**: Single observable for multiple interaction types
+- **Keyboard support**: Responds to Space and Enter keys
+- **Debounced**: Prevents duplicate events from rapid interactions
+- **Button semantics**: Perfect for implementing button-like behavior
+
+#### Implementation Details
+
+Internally merges:
+- `rxHostListener('click')` - for mouse interactions
+- `rxHostListener('keyup')` - filtered for Space and Enter keys
+
+#### Example
+
+```ts
+// Perfect for interactive components
+rxHostPressedListener()
+  .pipe(takeUntilDestroyed())
+  .subscribe(() => {
+    console.log('Element activated via click or keyboard');
+  });
+```
+
+---
+
+## Dependencies
+
+Both functions require the following Angular dependencies to be available via injection:
+
+- `ElementRef` - for accessing the host element
+- `ChangeDetectorRef` - for triggering change detection
+- `DestroyRef` - for automatic cleanup (via `takeUntilDestroyed()`)
+
+These are automatically injected when called within a component context.
+
+---
+
+## Best Practices
+
+### Memory Management
+Always use `takeUntilDestroyed()` to prevent memory leaks:
+
+```ts
+rxHostListener('click')
+  .pipe(takeUntilDestroyed()) // 👈 Essential for cleanup
+  .subscribe(event => {
+    // Handle event
+  });
+```
+
+### Type Safety
+Use generic type parameters for better TypeScript support:
+
+```ts
+// Specific event types
+rxHostListener<MouseEvent>('click')
+rxHostListener<KeyboardEvent>('keydown')
+rxHostListener<FocusEvent>('focus')
+```
+
+### Conditional Listening
+Use RxJS operators for dynamic event handling:
+
+```ts
+// Only listen when component is enabled
+this.enabled$.pipe(
+  switchMap(enabled => 
+    enabled ? rxHostListener('click') : EMPTY
+  ),
+  takeUntilDestroyed()
+).subscribe(/* ... */);
+```
+
+### Event Composition
+Combine multiple event streams:
+
+```ts
+merge(
+  rxHostListener('mouseenter').pipe(mapTo('hover')),
+  rxHostListener('focus').pipe(mapTo('focus'))
+).pipe(
+  takeUntilDestroyed()
+).subscribe(interactionType => {
+  // Handle different interaction types
+});
+```
+
+---
+
+## Comparison with @HostListener
+
+| Feature | @HostListener | rxHostListener |
+|---------|---------------|----------------|
+| **Syntax** | Decorator | Function call |
+| **Reactive** | No | Yes (Observable) |
+| **Composition** | Limited | Full RxJS support |
+| **Cleanup** | Automatic | Manual (`takeUntilDestroyed`) |
+| **Type Safety** | Basic | Full TypeScript support |
+| **Testability** | Harder | Easier (mockable) |
+| **Performance** | Standard | Debounced by default |
+| **Conditional** | Static | Dynamic |
+
+
+

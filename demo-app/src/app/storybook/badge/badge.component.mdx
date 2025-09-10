@@ -1,0 +1,17 @@
+import { Meta } from '@storybook/blocks';
+
+import * as BadgeStories from './badge.component.stories';
+import OverviewTab from './badge-tabs/overview.mdx';
+import ExamplesTab from './badge-tabs/examples.mdx';
+import ApiTab from './badge-tabs/api.mdx';
+import { ComponentDocTabs } from '../../../../shared-storybook-utils/src/lib/component-doc-tabs/component-doc-tabs.mdx';
+
+<Meta of={BadgeStories} />
+
+# Badge Component
+
+<ComponentDocTabs
+  OverviewTab={OverviewTab}
+  ExamplesTab={ExamplesTab}
+  ApiTab={ApiTab}
+/>

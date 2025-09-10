@@ -1,0 +1,143 @@
+@import '../variables';
+
+// Segmented Control component styles
+.ds-segmented-control {
+  display: inline-block;
+  width: 100%;
+}
+
+.ds-segmented-control-container {
+  position: relative;
+  display: inline-flex;
+  width: 100%;
+}
+
+.ds-segmented-controls {
+  position: relative;
+  display: flex;
+  background-color: $neutral-100;
+  border-radius: $radius-lg;
+  padding: $spacing-xs;
+  width: 100%;
+  border: 1px solid $neutral-200;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: $spacing-xs;
+    left: var(--ds-sc-highlight-x-pos, #{$spacing-xs});
+    width: var(--ds-sc-highlight-width, 0);
+    height: calc(100% - #{$spacing-xs * 2});
+    background-color: $surface-white;
+    border-radius: $radius-md;
+    box-shadow: $shadow-md;
+    transition: all $transition-normal;
+    z-index: 1;
+    border: 1px solid $neutral-200;
+  }
+
+  &.ds-sc-ready::before {
+    transition: all 0.2s ease;
+  }
+
+  &.ds-segment-full-width {
+    width: 100%;
+  }
+
+  &.ds-segment-inverse {
+    background-color: #374151;
+
+    &::before {
+      background-color: #1f2937;
+    }
+  }
+}
+
+.ds-segment-item {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $radius-md;
+  cursor: pointer;
+  transition: all $transition-normal;
+  z-index: 2;
+  min-height: 2.75rem;
+  font-weight: 500;
+
+  &:focus {
+    box-shadow: $focus-ring;
+    outline: none;
+  }
+
+  &.ds-segment-selected {
+    color: $text-primary;
+    font-weight: 600;
+  }
+
+  &:not(.ds-segment-selected) {
+    color: $text-tertiary;
+
+    &:hover {
+      color: $text-secondary;
+    }
+  }
+
+  .ds-segmented-control-hidden-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    width: 0;
+    height: 0;
+  }
+
+  .ds-segment-item-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &.ds-segmented-item-two-line-text {
+      flex-direction: column;
+      gap: 0.25rem;
+      text-align: center;
+    }
+
+    &.ds-segment-item-custom-template {
+      padding: 0;
+    }
+  }
+}
+
+// Inverse theme
+.ds-segment-inverse {
+  .ds-segment-item {
+    &.ds-segment-selected {
+      color: #f9fafb;
+    }
+
+    &:not(.ds-segment-selected) {
+      color: #9ca3af;
+
+      &:hover {
+        color: #d1d5db;
+      }
+    }
+  }
+}
+
+// Accessibility
+@media (prefers-reduced-motion: reduce) {
+  .ds-segmented-controls::before,
+  .ds-segment-item {
+    transition: none;
+  }
+}

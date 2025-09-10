@@ -1,0 +1,125 @@
+@import '../variables';
+
+// Card component styles
+.ds-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: $radius-lg;
+  transition: all $transition-normal;
+  position: relative;
+  overflow: hidden;
+  background: $surface-white;
+
+  &:focus-visible {
+    box-shadow: $focus-ring;
+    outline: none;
+  }
+
+  // Sizes
+  &.ds-card-small {
+    .ds-card-header,
+    .ds-card-content,
+    .ds-card-footer {
+      padding: $spacing-md;
+    }
+  }
+
+  &.ds-card-medium {
+    .ds-card-header,
+    .ds-card-content,
+    .ds-card-footer {
+      padding: $spacing-lg;
+    }
+  }
+
+  &.ds-card-large {
+    .ds-card-header,
+    .ds-card-content,
+    .ds-card-footer {
+      padding: $spacing-xl;
+    }
+  }
+
+  // Variants
+  &.ds-card-default {
+    border: 1px solid $neutral-200;
+    box-shadow: $shadow-sm;
+  }
+
+  &.ds-card-elevated {
+    border: 1px solid $neutral-200;
+    box-shadow: $shadow-lg;
+  }
+
+  &.ds-card-outlined {
+    border: 2px solid $neutral-300;
+    box-shadow: none;
+  }
+
+  &.ds-card-filled {
+    border: 1px solid $neutral-200;
+    background-color: $surface-50;
+    box-shadow: none;
+  }
+
+  // Interactive states
+  &.ds-card-interactive {
+    cursor: pointer;
+
+    &:hover:not(.ds-card-disabled) {
+      transform: translateY(-1px);
+
+      &.ds-card-default,
+      &.ds-card-elevated {
+        box-shadow: $shadow-xl;
+      }
+
+      &.ds-card-outlined {
+        border-color: $neutral-400;
+      }
+
+      &.ds-card-filled {
+        background-color: $surface-100;
+      }
+    }
+
+    &:active:not(.ds-card-disabled) {
+      transform: translateY(0);
+    }
+  }
+
+  // Disabled state
+  &.ds-card-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  // Card sections
+  .ds-card-header {
+    border-bottom: 1px solid $neutral-200;
+    font-weight: 600;
+    color: $text-primary;
+  }
+
+  .ds-card-content {
+    flex: 1;
+    color: $text-secondary;
+  }
+
+  .ds-card-footer {
+    border-top: 1px solid $neutral-200;
+    background-color: $surface-50;
+    font-size: 0.875rem;
+    color: $text-tertiary;
+  }
+
+  // Remove borders when sections are empty
+  .ds-card-header:empty {
+    display: none;
+  }
+
+  .ds-card-footer:empty {
+    display: none;
+  }
+}

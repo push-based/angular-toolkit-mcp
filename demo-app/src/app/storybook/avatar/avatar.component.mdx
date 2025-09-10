@@ -1,0 +1,20 @@
+import { Meta } from '@storybook/blocks';
+
+import * as AvatarStories from './avatar.component.stories';
+import OverviewTab from './avatar-tabs/overview.mdx';
+import ExamplesTab from './avatar-tabs/examples.mdx';
+import ApiTab from './avatar-tabs/api.mdx';
+import { ComponentDocTabs } from '../../../../shared-storybook-utils/src/lib/component-doc-tabs/component-doc-tabs.mdx';
+
+<Meta of={AvatarStories} />
+
+# Avatar Component
+
+<ComponentDocTabs
+  OverviewTab={OverviewTab}
+  ExamplesTab={ExamplesTab}
+  ApiTab={ApiTab}
+/>
+
+
+
