@@ -5,7 +5,7 @@ import {
   DS_BUTTON_VARIANT_ARRAY,
   DS_BUTTON_TYPE_ARRAY,
   DsButton,
-} from '../../components/ui/button';
+} from '../../components/ui/button/src';
 import {
   DsComplexityRatingComponent,
   getVariantInfo,
@@ -364,6 +364,3 @@ export const ChromaticTestStory: Story = {
         `,
   }),
 };
-
-
-

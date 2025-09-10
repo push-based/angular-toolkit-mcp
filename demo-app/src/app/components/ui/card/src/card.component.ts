@@ -8,15 +8,6 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-export const DS_CARD_VARIANT_ARRAY = [
-  'default',
-  'elevated',
-  'outlined',
-  'filled',
-] as const;
-
-export type DsCardVariant = (typeof DS_CARD_VARIANT_ARRAY)[number];
-
 export const DS_CARD_SIZE_ARRAY = ['small', 'medium', 'large'] as const;
 export type DsCardSize = (typeof DS_CARD_SIZE_ARRAY)[number];
 
@@ -50,13 +41,10 @@ export type DsCardSize = (typeof DS_CARD_SIZE_ARRAY)[number];
 })
 export class DsCard {
   size = input<DsCardSize>('medium');
-  variant = input<DsCardVariant>('default');
   disabled = input(false, { transform: booleanAttribute });
   interactive = input(false, { transform: booleanAttribute });
   hasHeader = input(false, { transform: booleanAttribute });
   hasFooter = input(false, { transform: booleanAttribute });
 
-  hostClass = computed(
-    () => `ds-card-${this.size()} ds-card-${this.variant()}`,
-  );
+  hostClass = computed(() => `ds-card-${this.size()}`);
 }

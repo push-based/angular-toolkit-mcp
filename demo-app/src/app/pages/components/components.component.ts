@@ -2,14 +2,14 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
-import { DsBadge } from '../../components/ui/badge/badge.component';
-import { DsButton } from '../../components/ui/button/button.component';
-import { DsModal } from '../../components/ui/modal/modal.component';
-import { DsModalContent } from '../../components/ui/modal/modal-content.component';
-import { DsModalHeader } from '../../components/ui/modal/modal-header.component';
-import { DsModalHeaderDrag } from '../../components/ui/modal/modal-header-drag.component';
-import { DsSegmentedControl } from '../../components/ui/segmented-control/segmented-control.component';
-import { DsSegmentedOption } from '../../components/ui/segmented-control/segmented-option.component';
+import { DsBadge } from '../../components/ui/badge/src/badge.component';
+import { DsButton } from '../../components/ui/button/src/button.component';
+import { DsModal } from '../../components/ui/modal/src/modal.component';
+import { DsModalContent } from '../../components/ui/modal/src/modal-content.component';
+import { DsModalHeader } from '../../components/ui/modal/src/modal-header.component';
+import { DsModalHeaderDrag } from '../../components/ui/modal/src/modal-header-drag.component';
+import { DsSegmentedControl } from '../../components/ui/segmented-control/src/segmented-control.component';
+import { DsSegmentedOption } from '../../components/ui/segmented-control/src/segmented-option.component';
 
 @Component({
   selector: 'app-components',

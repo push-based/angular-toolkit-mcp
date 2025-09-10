@@ -25,14 +25,6 @@ export const DS_AVATAR_VARIANT_ARRAY = [
 ] as const;
 export type DsAvatarVariant = (typeof DS_AVATAR_VARIANT_ARRAY)[number];
 
-export const DS_AVATAR_STATUS_ARRAY = [
-  'online',
-  'offline',
-  'away',
-  'busy',
-] as const;
-export type DsAvatarStatus = (typeof DS_AVATAR_STATUS_ARRAY)[number];
-
 @Component({
   selector: 'ds-avatar',
   template: `
@@ -46,13 +38,6 @@ export type DsAvatarStatus = (typeof DS_AVATAR_STATUS_ARRAY)[number];
       <div *ngIf="!shouldShowImage()" class="ds-avatar-initials">
         {{ getInitials() }}
       </div>
-
-      <div
-        *ngIf="status()"
-        class="ds-avatar-status"
-        [class]="getStatusClass()"
-        [attr.aria-label]="getStatusAriaLabel()"
-      ></div>
     </div>
   `,
   host: {
@@ -74,7 +59,6 @@ export class DsAvatar {
   src = input<string>('');
   alt = input<string>('');
   name = input<string>('');
-  status = input<DsAvatarStatus | null>(null);
   disabled = input(false, { transform: booleanAttribute });
 
   imageError = false;
@@ -91,14 +75,6 @@ export class DsAvatar {
 
   onImageError(): void {
     this.imageError = true;
-  }
-
-  getStatusClass(): string {
-    return `ds-avatar-status-${this.status()}`;
-  }
-
-  getStatusAriaLabel(): string {
-    return `${this.status()} status`;
   }
 
   getInitials(): string {
@@ -118,7 +94,6 @@ export class DsAvatar {
   getAriaLabel(): string {
     const name = this.name();
     const alt = this.alt();
-    const status = this.status();
 
     let label = '';
 
@@ -128,10 +103,6 @@ export class DsAvatar {
       label = `Avatar for ${name}`;
     } else {
       label = 'User avatar';
-    }
-
-    if (status) {
-      label += `, ${status} status`;
     }
 
     if (this.disabled()) {

@@ -1,4 +1,4 @@
-@import '../variables';
+@import '../../variables';
 
 // Avatar component styles
 .ds-avatar {
@@ -14,12 +14,6 @@
     .ds-avatar-initials {
       font-size: 0.625rem;
     }
-
-    .ds-avatar-status {
-      width: 0.375rem;
-      height: 0.375rem;
-      border-width: 1px;
-    }
   }
 
   &.ds-avatar-small {
@@ -28,12 +22,6 @@
 
     .ds-avatar-initials {
       font-size: 0.75rem;
-    }
-
-    .ds-avatar-status {
-      width: 0.5rem;
-      height: 0.5rem;
-      border-width: 1px;
     }
   }
 
@@ -44,12 +32,6 @@
     .ds-avatar-initials {
       font-size: 0.875rem;
     }
-
-    .ds-avatar-status {
-      width: 0.625rem;
-      height: 0.625rem;
-      border-width: 2px;
-    }
   }
 
   &.ds-avatar-large {
@@ -59,12 +41,6 @@
     .ds-avatar-initials {
       font-size: 1rem;
     }
-
-    .ds-avatar-status {
-      width: 0.75rem;
-      height: 0.75rem;
-      border-width: 2px;
-    }
   }
 
   &.ds-avatar-xlarge {
@@ -73,12 +49,6 @@
 
     .ds-avatar-initials {
       font-size: 1.25rem;
-    }
-
-    .ds-avatar-status {
-      width: 1rem;
-      height: 1rem;
-      border-width: 2px;
     }
   }
 
@@ -142,31 +112,6 @@
     color: $text-secondary;
     background: linear-gradient(135deg, $primary-100 0%, $primary-200 100%);
     user-select: none;
-  }
-
-  // Status indicator
-  .ds-avatar-status {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    border: 2px solid $surface-white;
-    border-radius: $radius-full;
-
-    &.ds-avatar-status-online {
-      background-color: $success-500;
-    }
-
-    &.ds-avatar-status-offline {
-      background-color: $neutral-500;
-    }
-
-    &.ds-avatar-status-away {
-      background-color: $warning-500;
-    }
-
-    &.ds-avatar-status-busy {
-      background-color: $error-500;
-    }
   }
 
   // Hover effects for interactive avatars

@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { rxHostPressedListener } from '../rx-host-listener/rx-host-listener';
+import { rxHostPressedListener } from '../../rx-host-listener/src/rx-host-listener';
 
 import { DsSegmentedControl } from './segmented-control.component';
 

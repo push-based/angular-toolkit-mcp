@@ -4,7 +4,7 @@ import {
   DS_AVATAR_VARIANT_ARRAY,
   DS_AVATAR_STATUS_ARRAY,
   DsAvatar,
-} from '../../components/ui/avatar';
+} from '../../components/ui/avatar/src';
 import {
   DsComplexityRatingComponent,
   getVariantInfo,
@@ -257,6 +257,3 @@ export const ChromaticTestStory: Story = {
         `,
   }),
 };
-
-
-

@@ -4,7 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   rxHostListener,
   rxHostPressedListener,
-} from '../../components/ui/rx-host-listener/rx-host-listener';
+} from '../../components/ui/rx-host-listener/src/rx-host-listener';
 import { Meta, StoryObj, moduleMetadata } from '@storybook/angular';
 
 import { allThemes } from '../../modes';
@@ -278,6 +278,3 @@ export const ChromaticTestStory: Story = {
     `,
   }),
 };
-
-
-

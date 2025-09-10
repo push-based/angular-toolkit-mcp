@@ -1,0 +1,121 @@
+---
+description: A 2-phase workflow to observe design system violations and orient migration data by collecting violations, extracting refactoring steps, and preparing comprehensive migration plans for component modernization.
+globs:
+alwaysApply: false
+---
+
+```json
+{
+  "task": "Migration Data Collection and Analysis Framework",
+  "failureCriteria": {
+    "ORIENT1": "Immediately end if migration-data.md cannot be loaded"
+  },
+  "phases": [
+    {
+      "id": 1,
+      "name": "A. OBSERVE",
+      "steps": [
+        "1. Create a folder .cursor/tmp/migrations/profiles-migration",
+        "2. EXTRACT ALL violations in demo-app/src/app/pages/profile using the find all violations tool. USE <violation_template> to create list of violations. Include all files with violations as separate bullet point list. Save to file current-violations.md"
+      ],
+      "available_tools": {
+        "report-all-violations": "USE TO report all design system violations in the path"
+      },
+      "error_handling": "ONLY STOP WORKFLOW if failureCriteria.OBSERVE1 met."
+    },
+    {
+      "id": 2,
+      "name": "B. ORIENT",
+      "proceed_without_approval": true,
+      "steps": [
+        "3. IDENTIFY unhandled violations. Use <detect_unhandled> rules. For every unhandled violation read the mentioned file. USE list-ds-components tool to get list of all available design system components, identify most fitting component. USE get-ds-component-data and read implementation or documentation before creating new steps. Use <refactoring_step_template> to create new migration steps",
+        "4. Write migration-data.md file using <migration_data_template>",
+        "5. READ created migration-data.md file. USE <filtering_rules> to remove migration steps from the document. Update migration-data.md file."
+      ],
+      "available_tools": {
+        "list-ds-components": "USE TO get overview of all available design system components",
+        "get-ds-component-data": "USE TO get list of design system component implementation files and documentation"
+      },
+      "error_handling": "ONLY STOP WORKFLOW if failureCriteria.ORIENT1 is met."
+    }
+  ],
+  "final_output_format": "Use <final_output> template"
+}
+```
+
+<migration_data_template>
+
+# {{TITLE}}
+
+## Violations Found
+
+{{List of <violation_template>}}
+
+## Refactoring Steps
+
+{{List of <refactoring_step_template>}}
+
+## Files with Violations
+
+{{Bullet point list of relative paths to files with violations}}
+
+## Summary
+
+- **Total Violations**: {{violations_count}} violations in {{files_count}} files
+- **Components to Migrate**: {{USED_DS_COMPONENTS}}
+- **Migration Complexity**: {{Assesment of migration complexity}}
+
+</migration_data_template>
+
+<violation_template>
+
+<violation>
+  **ID:** VI_XX_YY (XX - file index, YY - violation index)
+  **File:** <file>path/to/file<file>
+  **Lines:** [line1, line2, line3]
+  **Description:** 
+  - [IF STYLES] Usage of {{deprecated-class}} in styles.
+  - [IF TEMPLATE] Usage of {{deprecated-class}} in {{element}}. Use {{ds-component}} instead.
+</violation>
+
+</violation_template>
+
+<refactoring_step_template>
+
+  <step>
+    **ID:** RS_XX_YY (XX - file index, YY - step index)
+    **File**: <file>path/to/file</file>
+    **Before code**: Code snippet of current state
+    **After code**: Code snippet of after state
+  </step>
+
+</refactoring_step_template>
+
+<filtering_rules>
+Direct violation — Include:
+
+- [ ] Step <<**File**>> is listed in <<## Files with Violations>>
+
+Component TS metadata — Include only if ALL:
+
+- [ ] Step targets \*.component.ts
+- [ ] Sibling \*.component.html is listed in <<## Files with Violations>>
+- [ ] Step’s <<**After code**>> adds DS imports (e.g., DsButton, DsModal, DsToast)
+      </filtering_rules>
+
+<detect_unhandled>
+
+- [ ] None of the <<## Refactoring Steps>> handle violaiton <file>
+      </detect_unhandled>
+
+<final_output>
+
+## 🔍 OBSERVE & ORIENT
+
+- Refactoring scope: {{refactoring_folder_path}}
+- {{violations_count}} violations in {{scope_directory}}
+- {{steps_total}} refactoring steps extracted
+- {{steps_review_ready}} ready for review
+- {{steps_filtered_count}} refactoring steps removed. {{5 words reason}}
+- Plan saved to `path/to/migration-data.md`
+  </final_output>

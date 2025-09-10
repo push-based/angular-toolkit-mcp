@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { DsBadge } from '../../components/ui/badge/badge.component';
+import { DsBadge } from '../../components/ui/badge/src/badge.component';
 
 @Component({
   selector: 'app-features',

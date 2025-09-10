@@ -1,0 +1,261 @@
+---
+description: A 5-phase workflow to assess viability, validate technical implementation, and execute Angular component migrations from legacy CSS to design system components with proper documentation and testing.
+globs:
+alwaysApply: false
+---
+
+```json
+{
+  "task": "Design System Component Migration Decision Framework",
+  "phases": [
+    {
+      "id": 1,
+      "name": "A. VIABILITY ASSESMENT",
+      "proceed_without_approval": true,
+      "steps": [
+        "1. LOAD migration-data.md. Validate each migration <step> using <viability_assesment> rules to decide if migration is viable or not.",
+        "2. Use <viability_conclusion_template> to provide feedback to the user. DO NOT provide any detailed validation information to the user."
+      ]
+    },
+    {
+      "id": 2,
+      "name": "B. TECHNICAL VALIDATION",
+      "precondition": "<migration_status> is 🟢 VIABLE",
+      "steps": [
+        "3. Validate each <step> using <technical_assesment> criterias."
+        "4. Use <technical_investigation> to confirm or investigate further <step> validation errors. Apply proper <technical_corrections>.",
+        "5. Update migration-data.md. Provide conclusion using <technical_conclusion_template>"
+      ],
+    },
+    {
+      "id": 3,
+      "name": "C. DEFINITION OF DONE",
+      "precondition": "<migration_status> is 🟢 VIABLE",
+      "steps": [
+        "6. IDENTIFY affected components where refactoring happens, gather additional context by finding their usage in the actual codebase (search by component tags). Based on migration-data.md create a functional testing document using <testing_template>, save as new document.",
+        "7. Based on migration-data.md generate a migration-checklist.md using <migraiton_checklist_template>. Validate that the content of each <step> and <violation> is identical between migration-checklist.md and migration-data.md.",
+        "8. Generate Definition Of Done document using <dod_template>"
+      ],
+    },
+    {
+      "id": 4,
+      "name": "D. FINALIZATION",
+      "precondition": "<migration_status> is 🟢 VIABLE",
+      "steps": [
+        "12. Genrate affected components contracts using build_component_contract tools, save in ticket folder"
+      ],
+    },
+    {
+      "id": 5,
+      "name": "E. BACKUP PLAN",
+      "precondition": "<migration_status> is 🔴 NON VIABLE",
+      "steps": [
+        "3. Identify root level styles (i.e. packages/my-project/styles) folder in the affected project. Create a non-viable-handling.md using <non_viable_template>, save in ticket folder",
+      ],
+    }
+  ],
+  "final_output_format": "Use <final_output> template"
+}
+```
+
+<viability_assesment>
+
+- [ ] \*.component.(html | ts) template using design system component as tag or angular directive.
+- [ ] \*.component.(html | ts) changes not present and ticket is only css cleanup.
+      </viability_assesment>
+
+<viability_conclusion_template>
+
+## 📄 VIABILITY ASSESSMENT - <migraiton_status>{{🟢 VIABLE | 🔴 NON VIABLE}}</migraiton_status>.
+
+### Reason
+
+{{100 symbols executive summary of the decision}}
+</viability_conclusion_template>
+
+<technical_assesment>
+
+- [ ] <Criteria1>. Old API is preserved in refactored component. For example click events calling same methods, disabled class mapped to disabled attribute and removed from class bindings
+- [ ] <Criteria2>. If Design System Component has [class] or [ngClass] attributes those classes styles do not override internal styling of the component. Confirm by reading the actual style files.
+- [ ] <Criteria3>. Design System Component don't have internal style overrides via [style.*] or [ngStyle] binding. Only layout properties like external margin, position overrides allowed
+- [ ] <Criteria4>. All imported Design System Components are used in the template
+- [ ] <Criteria5>. All used design system components have imports in typescript file.
+      </technical_assesment>
+
+<technical_investigation>
+
+- <Criteria1>: Investigate design system component stories (use fetching of stories via mcp tool) to find usage examples. Suggest an approach to match old functionality.
+- <Criteria2>: Investigate by reading related style files.
+- <Criteria3>: Confirm that internal styles of component don't modified
+- <Criteria4>: Check template and typescript imports
+- <Criteria5>: Check template and typescript imports
+  </technical_investigation>
+
+<technical_corrections>
+
+- <Criteria1>: Extend refactoring to match old functionality. Refer to design system component documentation.
+- <Criteria2>: Remove non-valid classes from design system component
+- <Criteria3>: Remove non-valid style bindings from design system component
+- <Criteria4>: Remove unused imports
+- <Criteria5>: Extend typescript imports with needed components
+  </technical_corrections>
+
+<technical_conclusion_template>
+
+## Technical validation status
+
+{{200 symbols executive summary}}
+</technical_conclusion_template>
+
+<testing_template>
+
+# {{TITLE}}
+
+## Migration Summary
+
+**Ticket**: {{Ticket name}}
+**Files**: {{list of affected files}}
+**Goal**: {{1 sentence goal summary}}
+
+## Functional Tests
+
+{{List of functional requirements in <test_case_template> format that describe how refactored components should function after migration}}
+
+</testing_template>
+
+<test_case_template>
+
+### {{X}}. {{Topic}}
+
+**Components Under Test**: {{list of affected components}}
+**Test Environment**: {{dev/staging/prod}}
+
+## Functional Test Cases
+
+{{For each functional requirement}}
+
+### TC-{{X}}.{{Y}} - {{Topic}} Validation
+
+**Test Objective**: Verify {{requirement description}}
+**Affected Elements**: {{DOM elements from requirement}}
+**Priority**: {{High/Medium/Low}}
+
+#### Test Steps:
+
+1. {{Step 1}}
+2. {{Step 2}}
+3. {{Step 3}}
+
+#### Expected Results:
+
+- {{Expected behavior 1}}
+- {{Expected behavior 2}}
+
+#### Acceptance Criteria:
+
+- [ ] {{Specific validation point 1}}
+- [ ] {{Specific validation point 2}}
+
+</test_case_template>
+
+<migration_checklist_template>
+
+## Jira Ticket Information
+
+- **Ticket ID**: {{ID}}
+- **Project**: {{project}}
+- **Feature**: {{feature}}
+- **Scope Directory**: {{relative path to directory}}
+- **Components**: {{relative path to each refactored component}}
+
+## Violations Found
+
+<violation>
+{{exact content from migraiton-data.md}}
+</violation>
+
+## Checklist
+
+{{Grouped checklist to optimize AI operations order. Ensure that ALL original steps are covered}}
+
+- [ ] {{StepID}}
+
+{{exact <step> content from migraiton-data.md}}
+
+</migraiton_checklist_template>
+
+<dod_template>
+
+# Definition of Done - {{Ticket ID}}
+
+## Migration Overview
+
+**Ticket**: {{Brief ticket description}}
+**Objective**: {{Brief ticket objective}}
+
+## Definition of Done Criteria
+
+### 1. Code Implementation
+
+{{Checklist of code requirements that should be met}}
+
+### 2. Functional Validation
+
+{{Checklist of functional validations that should be confirmed}}
+
+### 3. Design System Compliance
+
+{{Checklist of design system standards that should be met}}
+
+### 4. Code Quality Requirements
+
+- [ ] No ESLint errors or warnings introduced by migration
+- [ ] Used Design System components properly added to project package.json as dependencies.
+- [ ] No unused imports in TypeScript files
+- [ ] Component builds successfully with `$env:NX_TUI="false"; yarn nx build {{project_name}}`
+- [ ] No TypeScript compilation errors
+
+## Acceptance Criteria Summary
+
+{{When migration is considered a complete one? Bullet point list that answers this question}}
+
+</dod_template>
+
+<non_viable_template>
+
+# Non-Viable Component Migration
+
+{{Component}} cannot be migrated to design system equivalents, perform CSS cleanup instead:
+
+## Input Parameters
+
+- **Target Component Class Name**: {{identified_class}}
+- **Global Styles Directory**: packages/themepark/app/styles
+- **Styles Overrides Directory**: {{Path to project styles folder}}
+
+## Process
+
+1. **Prefix HTML classes**: Change `{{identified_class}}` to `after-migration-{{identified_class}}` in templates
+2. **Duplicate CSS selectors**: Keep original `{{identified_class}}` and add `{{identified_class}}, .after-migration-{{identified_class}}`
+3. **Validate**: Ensure CSS counts stay same, component violations reduce by replacement count
+
+This maintains existing functionality while cleaning up deprecated class usage.
+
+</non_viable_template>
+
+<final_output>
+
+> IMPORTANT! Keep only list items that have content.
+
+{{TicketId}} - DECIDE PHASE COMPLETE
+
+- Migration Status: {{migration_status}}
+- Technical Validation: {{validation_status}}
+  - {{brief_summary_of_results}}
+- Functional Testing Document: {{path_to_testing_document}}
+- Migration Checklist: {{path_to_checklist}}
+- Definition of Done: {{path_to_dod_file}}
+- Before state contracts: {{path_to_contract_files}}
+- Jira Comments: {{ADDED | SKIPPED}}
+
+</final_output>

@@ -1,4 +1,4 @@
-@import '../variables';
+@import '../../variables';
 
 // Card component styles
 .ds-card {
@@ -9,6 +9,8 @@
   position: relative;
   overflow: hidden;
   background: $surface-white;
+  border: 1px solid $neutral-200;
+  box-shadow: $shadow-sm;
 
   &:focus-visible {
     box-shadow: $focus-ring;
@@ -40,47 +42,13 @@
     }
   }
 
-  // Variants
-  &.ds-card-default {
-    border: 1px solid $neutral-200;
-    box-shadow: $shadow-sm;
-  }
-
-  &.ds-card-elevated {
-    border: 1px solid $neutral-200;
-    box-shadow: $shadow-lg;
-  }
-
-  &.ds-card-outlined {
-    border: 2px solid $neutral-300;
-    box-shadow: none;
-  }
-
-  &.ds-card-filled {
-    border: 1px solid $neutral-200;
-    background-color: $surface-50;
-    box-shadow: none;
-  }
-
   // Interactive states
   &.ds-card-interactive {
     cursor: pointer;
 
     &:hover:not(.ds-card-disabled) {
       transform: translateY(-1px);
-
-      &.ds-card-default,
-      &.ds-card-elevated {
-        box-shadow: $shadow-xl;
-      }
-
-      &.ds-card-outlined {
-        border-color: $neutral-400;
-      }
-
-      &.ds-card-filled {
-        background-color: $surface-100;
-      }
+      box-shadow: $shadow-xl;
     }
 
     &:active:not(.ds-card-disabled) {

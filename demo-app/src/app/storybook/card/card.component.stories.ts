@@ -3,7 +3,7 @@ import {
   DS_CARD_SIZE_ARRAY,
   DS_CARD_VARIANT_ARRAY,
   DsCard,
-} from '../../components/ui/card';
+} from '../../components/ui/card/src';
 import {
   DsComplexityRatingComponent,
   getVariantInfo,
@@ -371,6 +371,3 @@ export const ChromaticTestStory: Story = {
         `,
   }),
 };
-
-
-

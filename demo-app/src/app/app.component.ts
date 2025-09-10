@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { NotificationService } from './services/notification.service';
-import { DsBadge } from './components/ui/badge/badge.component';
+import { DsBadge } from './components/ui/badge/src/badge.component';
 
 @Component({
   selector: 'app-root',
