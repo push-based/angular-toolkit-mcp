@@ -25,13 +25,8 @@ alwaysApply: false
       "proceed_without_approval": true,
       "steps": [
         "3. IDENTIFY unhandled violations. Use <detect_unhandled> rules. For every unhandled violation read the mentioned file. USE get-ds-component-data if you need additional component information. Use <refactoring_step_template> to create new migration steps",
-        "4. Write migration-data.md file using <migration_data_template>",
-        "5. READ created migration-data.md file. USE <filtering_rules> to remove migration steps from the document. Update migration-data.md file."
+        "4. Write migration-data.md file using <migration_data_template>"
       ],
-      "available_tools": {
-        "list-ds-components": "USE TO get overview of all available design system components",
-        "get-ds-component-data": "USE TO get list of design system component implementation files and documentation"
-      },
       "error_handling": "ONLY STOP WORKFLOW if failureCriteria.ORIENT1 is met."
     }
   ],
@@ -87,18 +82,6 @@ alwaysApply: false
 
 </refactoring_step_template>
 
-<filtering_rules>
-Direct violation — Include:
-
-- [ ] Step <<**File**>> is listed in <<## Files with Violations>>
-
-Component TS metadata — Include only if ALL:
-
-- [ ] Step targets \*.component.ts
-- [ ] Sibling \*.component.html is listed in <<## Files with Violations>>
-- [ ] Step’s <<**After code**>> adds DS imports (e.g., DsButton, DsModal, DsToast)
-      </filtering_rules>
-
 <detect_unhandled>
 
 - [ ] None of the <<## Refactoring Steps>> handle violaiton <file>
@@ -114,4 +97,5 @@ Component TS metadata — Include only if ALL:
 - {{steps_review_ready}} ready for review
 - {{steps_filtered_count}} refactoring steps removed. {{5 words reason}}
 - Plan saved to `path/to/migration-data.md`
-  </final_output>
+
+</final_output>

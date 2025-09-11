@@ -1,18 +1,10 @@
-// Retro 2000s Segmented Control Styles
-$primary-blue: #000080;
-$yellow: #ffff00;
-$white: #ffffff;
-$black: #000000;
-$light-gray: #e0e0e0;
-$medium-gray: #cccccc;
-$dark-gray: #666666;
+@import '../../variables';
 
-$font-stack: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-$small-padding: 6px 8px;
-
+// Material Design Segmented Control Styles
 .ds-segmented-control {
   display: inline-block;
   width: 100%;
+  margin-bottom: 24px;
 }
 
 .ds-segmented-control-container {
@@ -22,10 +14,12 @@ $small-padding: 6px 8px;
 
 .ds-segmented-controls {
   display: flex;
-  background: $light-gray;
-  border: 2px inset $medium-gray;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
   width: 100%;
-  overflow-x: auto;
+  overflow: hidden;
+  position: relative;
 
   &.ds-segment-full-width {
     width: 100%;
@@ -35,37 +29,146 @@ $small-padding: 6px 8px;
 .ds-segment-item {
   flex: 1;
   min-width: 100px;
-  padding: $small-padding;
-  background: $light-gray;
-  border: 1px outset $medium-gray;
-  border-bottom: none;
-  color: $black;
-  font-family: $font-stack;
-  font-weight: 600;
+  padding: 12px 20px;
+  background: transparent;
+  border: none;
+  border-right: 1px solid #e0e0e0;
+  color: #6b7280;
+  font-family:
+    'Roboto',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.025em;
   cursor: pointer;
-  text-transform: uppercase;
-  font-size: 0.65rem;
-  transition: all 0.2s ease;
+  transition: all 200ms ease-in-out;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 3px;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+  text-transform: none;
 
-  &:hover {
-    background: #d0d0d0;
+  &:last-child {
+    border-right: none;
+  }
+
+  // Subtle hover effect
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #3b82f6;
+    opacity: 0;
+    transition: opacity 200ms ease-in-out;
+    pointer-events: none;
+  }
+
+  &:hover:not(.ds-segment-selected) {
+    color: #374151;
+    background: #f8fafc;
+
+    &::before {
+      opacity: 0.02;
+    }
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #3b82f6;
+  }
+
+  &:active:not(.ds-segment-selected) {
+    transform: scale(0.98);
   }
 
   &.ds-segment-selected {
-    background: $white;
-    border: 1px inset $medium-gray;
-    border-bottom: 1px solid $white;
-    color: $primary-blue;
-    font-weight: bold;
+    background: #3b82f6;
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+
+    &::before {
+      opacity: 0;
+    }
+
+    &:hover {
+      background: #2563eb;
+      box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
   }
 
   .tab-count {
-    font-size: 0.6rem;
-    opacity: 0.8;
+    font-size: 11px;
+    font-weight: 600;
+    background: rgba(107, 114, 128, 0.1);
+    color: #6b7280;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  &.ds-segment-selected .tab-count {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+  }
+}
+
+// Clean elevation for container
+.ds-segmented-controls {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+// Dark theme support
+@media (prefers-color-scheme: dark) {
+  .ds-segmented-controls {
+    background: #1f2937;
+    border-color: #374151;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  .ds-segment-item {
+    color: #9ca3af;
+    border-right-color: #374151;
+
+    &:hover:not(.ds-segment-selected) {
+      color: #d1d5db;
+      background: #374151;
+    }
+
+    &.ds-segment-selected {
+      background: #3b82f6;
+      color: white;
+      box-shadow: 0 2px 4px rgba(59, 130, 246, 0.4);
+
+      &:hover {
+        background: #2563eb;
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.5);
+      }
+    }
+
+    .tab-count {
+      background: rgba(156, 163, 175, 0.1);
+      color: #9ca3af;
+    }
+
+    &.ds-segment-selected .tab-count {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
   }
 }
 
@@ -73,5 +176,9 @@ $small-padding: 6px 8px;
 @media (prefers-reduced-motion: reduce) {
   .ds-segment-item {
     transition: none;
+
+    &::before {
+      transition: none;
+    }
   }
 }

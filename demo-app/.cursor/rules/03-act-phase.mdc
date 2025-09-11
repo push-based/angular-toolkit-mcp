@@ -17,8 +17,9 @@ alwaysApply: false
       "name": "A. REFACTORING EXECUTION",
       "proceed_without_approval": true,
       "steps": [
+        "0. You don't need to serve application. Use playwright MCP, open localhost:4200 to monitor development process. Make screenshot of initial state before you continue",
         "1. Load checklist from checklist_path (default value: .cursor/tmp/migrations/profiles-migration/migration-checklist.md)",
-        "2. Execute loaded checklist fully and step by step. Update migration-checklist.md file to mark completed items",
+        "2. Execute loaded checklist fully and step by step. Update migration-checklist.md file to mark completed items AFTER EACH EIDT and READ NEXT STEP",
         "3. Skip any build or test checks. Build a contract for CHANGED components state, save in ticket folder",
         "4. Create a contracts diff using diff_component_contract tool to get a diff between before and after states. Move the diff file to ticket folder"
       ]
@@ -81,7 +82,6 @@ alwaysApply: false
 <code_quality_validation>
 
 - Identify the project package.json, read peerDependencies section and validate that {{DesignSystemComponent}} is listed. If not, add it if it's a buildable or publishable library.
-- Run the build command and validate no typescript compilation or build errors
 - Use search or direct source file reads to confirm status of each still unchecked item
 - Update original definition of done document with pass/fail item status.
   </code_quality_validation>

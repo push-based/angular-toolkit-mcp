@@ -19,61 +19,48 @@
       class="user-card"
       [ngClass]="{ 'premium-border': user.role === 'premium' }"
     >
-      <!-- Avatar -->
-      <div class="avatar-container">
-        <div class="retro-avatar">
-          <div class="avatar-inner">
-            {{ user.username.charAt(0).toUpperCase() }}
+      <!-- User Header -->
+      <div class="user-header">
+        <!-- Avatar -->
+        <div class="avatar-container">
+          <div class="retro-avatar">
+            <div class="avatar-inner">
+              {{ user.username.charAt(0).toUpperCase() }}
+            </div>
           </div>
+        </div>
+
+        <!-- User Info Header -->
+        <div class="user-info-header">
+          <h3 class="username">{{ user.fullName }}</h3>
+          <div class="user-handle">&#64;{{ user.username }}</div>
+          <div class="user-email">{{ user.email }}</div>
         </div>
       </div>
 
-      <!-- User Info -->
-      <div class="user-info">
-        <h3 class="username">{{ user.fullName }}</h3>
-        <div class="user-handle">&#64;{{ user.username }}</div>
-        <div class="user-email">{{ user.email }}</div>
-
-        <!-- Badges -->
-        <div class="badge-container">
-          <div class="retro-badge role-badge" [class]="'role-' + user.role">
-            {{ user.role.toUpperCase() }}
-          </div>
-          <div
-            class="retro-badge status-badge"
-            [class]="'status-' + user.status"
-          >
-            {{ user.status.toUpperCase() }}
-          </div>
-          <div class="retro-badge verified-badge" *ngIf="user.verified">
-            ✓ VERIFIED
-          </div>
+      <!-- User Details -->
+      <div class="user-details">
+        <div class="detail-row">
+          <span class="detail-label">Joined:</span>
+          <span class="detail-value">{{ user.joinDate }}</span>
         </div>
+      </div>
 
-        <!-- User Details -->
-        <div class="user-details">
-          <div class="detail-row">
-            <span class="detail-label">Joined:</span>
-            <span class="detail-value">{{ user.joinDate }}</span>
-          </div>
-        </div>
-
-        <!-- Action Button -->
-        <div class="user-actions">
-          <button
-            class="retro-button danger"
-            [ngStyle]="{
-              border:
-                user.role === 'premium' ? '2px solid rgb(195, 165, 0)' : null,
-              color: user.role === 'premium' ? '#000000' : null,
-              background: user.role === 'premium' ? '#ffd501' : null,
-            }"
-            [disabled]="user.role === 'admin'"
-            (click)="deleteUser(user)"
-          >
-            <span class="button-text">🗑️ DELETE USER</span>
-          </button>
-        </div>
+      <!-- Action Button -->
+      <div class="user-actions">
+        <button
+          class="retro-button danger"
+          [ngStyle]="{
+            border:
+              user.role === 'premium' ? '2px solid rgb(195, 165, 0)' : null,
+            color: user.role === 'premium' ? '#000000' : null,
+            background: user.role === 'premium' ? '#ffd501' : null,
+          }"
+          [disabled]="user.role === 'admin'"
+          (click)="deleteUser(user)"
+        >
+          <span class="button-text">🗑️ DELETE USER</span>
+        </button>
       </div>
     </div>
   </div>

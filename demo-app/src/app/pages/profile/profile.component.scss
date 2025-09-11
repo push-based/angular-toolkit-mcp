@@ -104,13 +104,22 @@ $small-padding: 6px 8px;
   }
 }
 
-.user-info {
-  text-align: center;
+.user-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.user-info-header {
+  flex: 1;
+  text-align: left;
 }
 
 .avatar-container {
   position: relative;
   flex-shrink: 0;
+  margin-bottom: 0;
 }
 
 .retro-avatar {
@@ -131,8 +140,8 @@ $small-padding: 6px 8px;
 }
 
 .username {
-  font-size: 1rem;
-  margin: 0 0 4px 0;
+  font-size: 0.95rem;
+  margin: 0 0 2px 0;
   color: $primary-blue;
   font-weight: bold;
 }
@@ -140,21 +149,21 @@ $small-padding: 6px 8px;
 .user-handle {
   font-size: 0.75rem;
   color: $dark-gray;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .user-email {
   font-size: 0.7rem;
   color: #888888;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .badge-container {
   display: flex;
   gap: 4px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .retro-badge {
@@ -204,7 +213,7 @@ $small-padding: 6px 8px;
 }
 
 .user-details {
-  margin: 8px 0;
+  margin: 12px 0 8px 0;
 }
 
 @mixin button-variant($bg-color, $hover-color: darken($bg-color, 15%)) {
