@@ -1,9 +1,10 @@
 .app-container {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   font-family:
     -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow: hidden;
 }
 
 .header {
@@ -68,23 +69,25 @@
 
 .main-content {
   flex: 1;
-  padding: 2rem;
+  padding: 0.5rem;
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .footer {
   background: #f8f9fa;
-  padding: 1rem 2rem;
+  padding: 0.25rem 1rem;
   text-align: center;
   color: #6c757d;
   border-top: 1px solid #e9ecef;
+  flex-shrink: 0;
 
   p {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 0.7rem;
   }
 }
 
