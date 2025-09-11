@@ -49,7 +49,7 @@ export const reportAllViolationsHandler = createHandler<
   async (params, { cwd, deprecatedCssClassesPath }) => {
     if (!deprecatedCssClassesPath) {
       throw new Error(
-        'Missing ds.deprecatedCssClassesPath. Provide it when starting the server to use this tool.',
+        'Missing ds.deprecatedCssClassesPath. Provide --ds.deprecatedCssClassesPath in mcp.json file.',
       );
     }
     const groupBy = params.groupBy || 'file';

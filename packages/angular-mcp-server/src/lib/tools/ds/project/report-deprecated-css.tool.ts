@@ -44,7 +44,7 @@ export const reportDeprecatedCssHandler = createHandler<
 
     if (!deprecatedCssClassesPath) {
       throw new Error(
-        'Missing ds.deprecatedCssClassesPath. Provide it when starting the server to use this tool.',
+        'Missing ds.deprecatedCssClassesPath. Provide --ds.deprecatedCssClassesPath in mcp.json file.',
       );
     }
 

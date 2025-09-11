@@ -171,36 +171,36 @@ export const listDsComponentsHandler = createHandler<
           }
 
           const documentationFiles: string[] = [];
-          if (includeDocumentation && storybookDocsRoot) {
-            const docsBasePath = resolveCrossPlatformPath(
-              cwd,
-              storybookDocsRoot,
-            );
-            const docPaths = getComponentDocPathsForName(
-              docsBasePath,
-              componentName,
-            );
-
-            if (fs.existsSync(docPaths.paths.api)) {
-              documentationFiles.push(`file://${docPaths.paths.api}`);
-            }
-            if (fs.existsSync(docPaths.paths.overview)) {
-              documentationFiles.push(`file://${docPaths.paths.overview}`);
-            }
-          }
 
           let storiesFilePaths: string[] = [];
-          if (includeStories && storybookDocsRoot) {
+          if (storybookDocsRoot) {
             const docsBasePath = resolveCrossPlatformPath(
               cwd,
               storybookDocsRoot,
             );
-            const storiesComponentFolderPath = path.join(
-              docsBasePath,
-              folderName,
-            );
-            const storiesFiles = findStoriesFiles(storiesComponentFolderPath);
-            storiesFilePaths = storiesFiles.map((file) => `file://${file}`);
+
+            if (includeDocumentation) {
+              const docPaths = getComponentDocPathsForName(
+                docsBasePath,
+                componentName,
+              );
+
+              if (fs.existsSync(docPaths.paths.api)) {
+                documentationFiles.push(`file://${docPaths.paths.api}`);
+              }
+              if (fs.existsSync(docPaths.paths.overview)) {
+                documentationFiles.push(`file://${docPaths.paths.overview}`);
+              }
+            }
+
+            if (includeStories) {
+              const storiesComponentFolderPath = path.join(
+                docsBasePath,
+                folderName,
+              );
+              const storiesFiles = findStoriesFiles(storiesComponentFolderPath);
+              storiesFilePaths = storiesFiles.map((file) => `file://${file}`);
+            }
           }
 
           components.push({
