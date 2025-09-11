@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { rxHostPressedListener } from '../../rx-host-listener/src/rx-host-listener';
+import { rxHostPressedListener } from '@frontend/ui/rx-host-listener/src/rx-host-listener';
 
 export const DS_BUTTON_VARIANT_ARRAY = [
   'primary',

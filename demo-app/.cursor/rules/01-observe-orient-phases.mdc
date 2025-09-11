@@ -16,19 +16,15 @@ alwaysApply: false
       "name": "A. OBSERVE",
       "steps": [
         "1. Create a folder .cursor/tmp/migrations/profiles-migration",
-        "2. EXTRACT ALL violations in demo-app/src/app/pages/profile using the find all violations tool. USE <violation_template> to create list of violations. Include all files with violations as separate bullet point list. Save to file current-violations.md"
-      ],
-      "available_tools": {
-        "report-all-violations": "USE TO report all design system violations in the path"
-      },
-      "error_handling": "ONLY STOP WORKFLOW if failureCriteria.OBSERVE1 met."
+        "2. EXTRACT ALL violations in demo-app/src/app/pages/profile using the find all violations tool. USE <violation_template> to create list of violations. Include all files with violations as separate bullet point list."
+      ]
     },
     {
       "id": 2,
       "name": "B. ORIENT",
       "proceed_without_approval": true,
       "steps": [
-        "3. IDENTIFY unhandled violations. Use <detect_unhandled> rules. For every unhandled violation read the mentioned file. USE list-ds-components tool to get list of all available design system components, identify most fitting component. USE get-ds-component-data and read implementation or documentation before creating new steps. Use <refactoring_step_template> to create new migration steps",
+        "3. IDENTIFY unhandled violations. Use <detect_unhandled> rules. For every unhandled violation read the mentioned file. USE get-ds-component-data if you need additional component information. Use <refactoring_step_template> to create new migration steps",
         "4. Write migration-data.md file using <migration_data_template>",
         "5. READ created migration-data.md file. USE <filtering_rules> to remove migration steps from the document. Update migration-data.md file."
       ],

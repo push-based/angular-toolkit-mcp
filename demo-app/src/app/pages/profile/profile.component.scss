@@ -1,71 +1,47 @@
-/* Simple Early 2000s Styling */
+/* Retro 2000s Profile Styles - Optimized */
+
+$primary-blue: #000080;
+$yellow: #ffff00;
+$white: #ffffff;
+$black: #000000;
+$red: #ff0000;
+$green: #00ff00;
+$gold: #ffd700;
+$light-gray: #e0e0e0;
+$medium-gray: #cccccc;
+$dark-gray: #666666;
+
+$font-stack: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+$border-style: 2px solid;
+$small-padding: 6px 8px;
 
 .retro-container {
-  background: #000080;
+  background: $primary-blue;
   height: 100%;
   padding: 8px;
-  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-  color: #ffffff;
+  font-family: $font-stack;
+  color: $white;
   overflow-y: auto;
   box-sizing: border-box;
 }
 
-/* Header Styling */
-.retro-header {
-  background: #800080;
-  border: 2px solid #ffffff;
-  padding: 8px;
-  margin-bottom: 10px;
-  text-align: center;
-}
-
-.retro-title {
-  font-size: 1.4rem;
-  font-weight: bold;
-  margin: 0;
-  color: #ffff00;
-}
-
-.retro-subtitle {
-  font-size: 1rem;
-  margin-top: 5px;
-  color: #ffffff;
-}
-
-/* Blinking Animation */
-.blink {
-  animation: blink 1s infinite;
-}
-
-@keyframes blink {
-  0%,
-  50% {
-    opacity: 1;
-  }
-  51%,
-  100% {
-    opacity: 0;
-  }
-}
-
-/* Filter Tabs */
 .filter-tabs {
   display: flex;
-  background: #e0e0e0;
-  border: 2px inset #cccccc;
-  margin-bottom: 8px;
+  background: $light-gray;
+  border: 2px inset $medium-gray;
+  margin-bottom: 24px;
   overflow-x: auto;
 }
 
 .retro-tab {
   flex: 1;
   min-width: 100px;
-  padding: 6px 8px;
-  background: #e0e0e0;
-  border: 1px outset #cccccc;
+  padding: $small-padding;
+  background: $light-gray;
+  border: 1px outset $medium-gray;
   border-bottom: none;
-  color: #000000;
-  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  color: $black;
+  font-family: $font-stack;
   font-weight: 600;
   cursor: pointer;
   text-transform: uppercase;
@@ -75,34 +51,33 @@
   align-items: center;
   justify-content: center;
   gap: 3px;
-}
 
-.retro-tab:hover {
-  background: #d0d0d0;
-}
+  &:hover {
+    background: #d0d0d0;
+  }
 
-.retro-tab.active {
-  background: #ffffff;
-  border: 1px inset #cccccc;
-  border-bottom: 1px solid #ffffff;
-  color: #000080;
-  font-weight: bold;
+  &.active {
+    background: $white;
+    border: 1px inset $medium-gray;
+    border-bottom: 1px solid $white;
+    color: $primary-blue;
+    font-weight: bold;
+
+    .tab-count {
+      background: $primary-blue;
+    }
+  }
 }
 
 .tab-count {
-  background: #666666;
-  color: #ffffff;
+  background: $dark-gray;
+  color: $white;
   padding: 2px 6px;
   border-radius: 10px;
   font-size: 0.65rem;
   font-weight: normal;
 }
 
-.retro-tab.active .tab-count {
-  background: #000080;
-}
-
-/* Users Grid */
 .users-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -113,27 +88,26 @@
 }
 
 .user-card {
-  background: #ffffff;
-  border: 2px solid #000000;
+  background: $white;
+  border: $border-style $black;
   padding: 12px;
-  color: #000000;
-}
+  color: $black;
 
-.user-card.premium-border {
-  background: #fbf4d0;
-  border: 3px solid #ffd700; /* Gold border for premium users */
-}
+  &.premium-border {
+    background: #fbf4d0;
+    border: 3px solid $gold;
+  }
 
-.user-card .avatar-container {
-  text-align: center;
-  margin-bottom: 8px;
+  .avatar-container {
+    text-align: center;
+    margin-bottom: 8px;
+  }
 }
 
 .user-info {
   text-align: center;
 }
 
-/* Avatar */
 .avatar-container {
   position: relative;
   flex-shrink: 0;
@@ -142,64 +116,30 @@
 .retro-avatar {
   width: 60px;
   height: 60px;
-  background: #cccccc;
-  border: 2px solid #000000;
+  background: $medium-gray;
+  border: $border-style $black;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto;
 }
 
-.retro-avatar.small {
-  width: 50px;
-  height: 50px;
-}
-
 .avatar-inner {
   font-size: 1.4rem;
   font-weight: bold;
-  color: #000000;
-}
-
-.retro-avatar.small .avatar-inner {
-  font-size: 1.2rem;
-}
-
-.status-indicator {
-  position: absolute;
-  bottom: 5px;
-  right: 5px;
-  width: 15px;
-  height: 15px;
-  border: 1px solid #000000;
-}
-
-.status-online {
-  background: #00ff00;
-}
-.status-offline {
-  background: #ff0000;
-}
-.status-away {
-  background: #ffff00;
-}
-
-/* Profile Info */
-.profile-info {
-  flex: 1;
-  min-width: 300px;
+  color: $black;
 }
 
 .username {
   font-size: 1rem;
   margin: 0 0 4px 0;
-  color: #000080;
+  color: $primary-blue;
   font-weight: bold;
 }
 
 .user-handle {
   font-size: 0.75rem;
-  color: #666666;
+  color: $dark-gray;
   margin-bottom: 4px;
 }
 
@@ -209,9 +149,7 @@
   margin-bottom: 8px;
 }
 
-/* Badges */
-.badge-container,
-.notification-badges {
+.badge-container {
   display: flex;
   gap: 4px;
   margin-bottom: 8px;
@@ -223,50 +161,44 @@
   padding: 3px 6px;
   font-size: 0.6rem;
   font-weight: bold;
-  border: 1px solid #000000;
+  border: 1px solid $black;
 }
 
 .role-admin {
-  background: #ff0000;
-  color: #ffffff;
+  background: $red;
+  color: $white;
 }
 
 .role-premium {
-  background: #ffd700;
-  color: #000000;
+  background: $gold;
+  color: $black;
 }
 
 .role-free {
-  background: #cccccc;
-  color: #000000;
+  background: $medium-gray;
+  color: $black;
 }
 
 .status-online {
-  background: #00ff00;
-  color: #000000;
+  background: $green;
+  color: $black;
 }
 
 .status-offline {
-  background: #ff0000;
-  color: #ffffff;
+  background: $red;
+  color: $white;
 }
 
 .status-away {
-  background: #ffff00;
-  color: #000000;
+  background: $yellow;
+  color: $black;
 }
 
 .verified-badge {
-  background: #00ff00;
-  color: #000000;
+  background: $green;
+  color: $black;
 }
 
-.notification-badge {
-  background: #ff00ff;
-  color: #ffffff;
-}
-
-/* User Actions */
 .user-actions {
   margin-top: 8px;
 }
@@ -275,76 +207,38 @@
   margin: 8px 0;
 }
 
+@mixin button-variant($bg-color, $hover-color: darken($bg-color, 15%)) {
+  background: $bg-color;
+  border-color: $bg-color;
+
+  &:hover {
+    background: $hover-color;
+  }
+}
+
 .retro-button {
   padding: 6px 10px;
   border: 2px outset;
-  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  font-family: $font-stack;
   font-weight: 600;
   cursor: pointer;
   text-transform: uppercase;
   font-size: 0.7rem;
-}
 
-.retro-button.primary {
-  background: #0080ff;
-  border-color: #0080ff;
-  color: #ffffff;
-}
+  &.danger {
+    @include button-variant($red, #cc0000);
+    color: $white;
+  }
 
-.retro-button.primary:hover {
-  background: #0060cc;
-}
-
-.retro-button.secondary {
-  background: #cccccc;
-  border-color: #cccccc;
-  color: #000000;
-}
-
-.retro-button.secondary:hover {
-  background: #aaaaaa;
-}
-
-.retro-button.danger {
-  background: #ff0000;
-  border-color: #ff0000;
-  color: #ffffff;
-}
-
-.retro-button.danger:hover {
-  background: #cc0000;
-}
-
-.retro-button.neutral {
-  background: #666666;
-  border-color: #666666;
-  color: #ffffff;
-}
-
-.retro-button.neutral:hover {
-  background: #444444;
-}
-
-.retro-button.large {
-  padding: 6px 12px;
-  font-size: 0.7rem;
-}
-
-.retro-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
 .button-text {
   position: relative;
   z-index: 1;
-}
-
-/* Profile Details */
-.profile-details {
-  background: #f0f0f0;
-  border: 2px inset #cccccc;
-  padding: 15px;
 }
 
 .detail-row {
@@ -356,203 +250,14 @@
 
 .detail-label {
   font-weight: bold;
-  color: #000080;
+  color: $primary-blue;
   min-width: 60px;
   margin-right: 6px;
   font-size: 0.65rem;
 }
 
 .detail-value {
-  color: #000000;
+  color: $black;
   flex: 1;
   font-size: 0.65rem;
-}
-
-/* Modal Styling */
-.retro-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.retro-modal {
-  background: #ffffff;
-  border: 3px outset #cccccc;
-  width: 90%;
-  max-width: 400px;
-  max-height: 60vh;
-  overflow-y: auto;
-}
-
-.delete-modal {
-  max-width: 350px;
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 12px;
-  border-bottom: 2px inset #cccccc;
-  background: #cccccc;
-}
-
-.modal-title {
-  margin: 0;
-  font-size: 0.9rem;
-  color: #000000;
-  font-weight: bold;
-}
-
-.close-button {
-  padding: 2px 6px;
-  font-size: 0.8rem;
-  min-width: auto;
-}
-
-/* Tabs */
-.retro-tabs {
-  display: flex;
-  background: #e0e0e0;
-  border-bottom: 1px solid #999999;
-}
-
-.retro-tab {
-  flex: 1;
-  padding: 10px 15px;
-  background: #e0e0e0;
-  border: 1px outset #cccccc;
-  border-bottom: none;
-  color: #000000;
-  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 600;
-  cursor: pointer;
-  text-transform: uppercase;
-  font-size: 0.8rem;
-}
-
-.retro-tab:hover {
-  background: #d0d0d0;
-}
-
-.retro-tab.active {
-  background: #ffffff;
-  border: 1px inset #cccccc;
-  border-bottom: 1px solid #ffffff;
-}
-
-/* Modal Content */
-.modal-content {
-  padding: 12px;
-}
-
-.tab-content {
-  color: #000000;
-}
-
-.section-title {
-  color: #000080;
-  font-size: 1.1rem;
-  margin-bottom: 15px;
-  font-weight: bold;
-  border-bottom: 1px solid #cccccc;
-  padding-bottom: 5px;
-}
-
-/* Form Elements */
-.form-group {
-  margin-bottom: 20px;
-}
-
-.retro-label {
-  display: block;
-  color: #000080;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.retro-input,
-.retro-textarea,
-.retro-select {
-  width: 100%;
-  padding: 6px;
-  background: #ffffff;
-  border: 2px inset #cccccc;
-  color: #000000;
-  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-  font-size: 0.9rem;
-}
-
-.retro-input:focus,
-.retro-textarea:focus,
-.retro-select:focus {
-  outline: none;
-  border: 2px inset #0080ff;
-}
-
-.retro-textarea {
-  resize: vertical;
-  min-height: 100px;
-}
-
-/* Checkboxes */
-.checkbox-group {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.retro-checkbox {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  color: #000000;
-  font-weight: normal;
-  margin-bottom: 8px;
-}
-
-.retro-checkbox input[type='checkbox'] {
-  margin-right: 8px;
-  width: 16px;
-  height: 16px;
-}
-
-.checkmark {
-  display: none;
-}
-
-/* Delete Modal Specific Styles */
-.delete-confirmation {
-  text-align: center;
-  padding: 12px;
-}
-
-.confirmation-text {
-  color: #000000;
-  font-size: 0.85rem;
-  margin-bottom: 8px;
-}
-
-.warning-text {
-  color: #ff0000;
-  font-weight: bold;
-  margin: 0;
-}
-
-/* Modal Actions */
-.modal-actions {
-  display: flex;
-  gap: 6px;
-  padding: 8px 12px;
-  border-top: 1px solid #cccccc;
-  background: #f0f0f0;
-  flex-wrap: wrap;
-  justify-content: center;
 }

@@ -42,7 +42,7 @@ export class DsModal {
   bottomSheet = input(false, { transform: booleanAttribute });
   variant = input<DsModalVariant>('surface');
 
-  private context = inject(DsModalContext);
+  private readonly context = inject(DsModalContext);
 
   protected hostClass = computed(() => `ds-modal-${this.variant()}`);
 

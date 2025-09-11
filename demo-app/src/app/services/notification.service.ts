@@ -22,8 +22,8 @@ export class NotificationService {
   private readonly STORAGE_KEY = 'retro-notifications';
 
   // Reactive signals for notifications
-  private _notifications = signal<Notification[]>([]);
-  private _unreadCount = signal<number>(0);
+  private readonly _notifications = signal<Notification[]>([]);
+  private readonly _unreadCount = signal<number>(0);
 
   // Public readonly signals
   public readonly notifications = this._notifications.asReadonly();

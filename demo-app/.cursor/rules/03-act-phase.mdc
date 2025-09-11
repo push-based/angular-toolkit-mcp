@@ -19,7 +19,7 @@ alwaysApply: false
       "steps": [
         "1. Load checklist from checklist_path (default value: .cursor/tmp/migrations/profiles-migration/migration-checklist.md)",
         "2. Execute loaded checklist fully and step by step. Update migration-checklist.md file to mark completed items",
-        "3. Skip any build or test checks. Build a contract for refactoring components state, save in ticket folder",
+        "3. Skip any build or test checks. Build a contract for CHANGED components state, save in ticket folder",
         "4. Create a contracts diff using diff_component_contract tool to get a diff between before and after states. Move the diff file to ticket folder"
       ]
     },
@@ -27,7 +27,7 @@ alwaysApply: false
       "id": 2,
       "name": "B. Implementation validation",
       "steps": [
-        "1. Load definition of done documdod_path (default value: .cursor/tmp/migrations/profiles-migration/definition-of-done.md)",
+        "1. Load definition of done dod_path (default value: .cursor/tmp/migrations/profiles-migration/definition-of-done.md)",
         "2. Read section <<### 1. Code Implementation>>.",
         "3. Follow validation instrucitons in <contract_based_validation>"
       ]
@@ -73,16 +73,15 @@ alwaysApply: false
 <contract_based_validation>
 
 - Iterate over every item one by one
-- Use grep search in the created contracts diff file to validate item status
-- Use grep on other code areas if requirements can not be fully confirmed with diff file alone.
+- Use search in the created contracts diff file to validate item status
+- Use on other code areas if requirements can not be fully confirmed with diff file alone.
 - Update original definition of done document with pass/fail item status.
   </contract_based_validation>
 
 <code_quality_validation>
 
-- Use linting through ESLint MCP server to confirm new code is not introducing new eslint errors
 - Identify the project package.json, read peerDependencies section and validate that {{DesignSystemComponent}} is listed. If not, add it if it's a buildable or publishable library.
 - Run the build command and validate no typescript compilation or build errors
-- Use grep or direct source file reads to confirm status of each still unchecked item
+- Use search or direct source file reads to confirm status of each still unchecked item
 - Update original definition of done document with pass/fail item status.
   </code_quality_validation>

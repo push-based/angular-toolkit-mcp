@@ -1,64 +1,18 @@
-<div class="ds-segmented-control-container" #scContainer>
+<div class="ds-segmented-control-container">
   <div
     class="ds-segmented-controls"
-    [attr.role]="roleType()"
-    [class.ds-sc-ready]="isReady()"
     [class.ds-segment-full-width]="fullWidth()"
-    [class.ds-segment-inverse]="inverse()"
-    (keydown)="onKeydown($event)"
   >
-    @for (option of segmentedOptions(); track option.name()) {
-      <div
-        #tabOption
-        class="ds-segment-item"
-        [class.ds-segment-selected]="
-          option.name() === this.selectedOption()?.name()
-        "
-        [id]="'ds-segment-item-' + option.name()"
-        [attr.tabindex]="
-          option.name() === this.selectedOption()?.name() ? 0 : -1
-        "
-        [attr.role]="roleType() === 'tablist' ? 'tab' : 'radio'"
-        [attr.aria-selected]="
-          roleType() === 'tablist'
-            ? option.name() === this.selectedOption()?.name()
-              ? 'true'
-              : 'false'
-            : null
-        "
-        [attr.aria-checked]="
-          roleType() === 'radiogroup'
-            ? option.name() === this.selectedOption()?.name()
-              ? 'true'
-              : 'false'
-            : null
-        "
-        [attr.aria-label]="option.title() || option.name()"
-        (click)="selectOption(option.name(), $event)"
+    <button
+      *ngFor="let tab of tabs()"
+      class="ds-segment-item"
+      [class.ds-segment-selected]="activeTab() === tab.id"
+      (click)="selectTab(tab.id)"
+    >
+      {{ tab.label }}
+      <span class="tab-count" *ngIf="tab.count && tab.count > 0"
+        >({{ tab.count }})</span
       >
-        <input
-          type="radio"
-          class="ds-segmented-control-hidden-input"
-          [value]="option.name()"
-          [name]="option.name()"
-          [id]="'ds-sc-option-' + option.name()"
-          [checked]="option.selected()"
-          [attr.aria-labelledby]="'ds-segment-item-' + option.name()"
-          [title]="option.title()"
-        />
-        <label
-          class="ds-segment-item-label"
-          [for]="'ds-sc-option-' + option.title()"
-          [class.ds-segmented-item-two-line-text]="twoLineTruncation()"
-          [class.ds-segment-item-custom-template]="option.customTemplate()"
-        >
-          @if (option.customTemplate()) {
-            <ng-container [ngTemplateOutlet]="option.customTemplate()!" />
-          } @else {
-            {{ option.title() }}
-          }
-        </label>
-      </div>
-    }
+    </button>
   </div>
 </div>

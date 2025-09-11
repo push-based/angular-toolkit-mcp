@@ -42,7 +42,7 @@ alwaysApply: false
       "name": "D. FINALIZATION",
       "precondition": "<migration_status> is 🟢 VIABLE",
       "steps": [
-        "12. Genrate affected components contracts using build_component_contract tools, save in ticket folder"
+        "12. Genrate contracts for the components that will be CHANGED using build_component_contract tools, save in ticket folder"
       ],
     },
     {
@@ -80,6 +80,7 @@ alwaysApply: false
 - [ ] <Criteria3>. Design System Component don't have internal style overrides via [style.*] or [ngStyle] binding. Only layout properties like external margin, position overrides allowed
 - [ ] <Criteria4>. All imported Design System Components are used in the template
 - [ ] <Criteria5>. All used design system components have imports in typescript file.
+- [ ] <Criteria6>. Internal styling of design system components can NEVER be overwritten from outside.
       </technical_assesment>
 
 <technical_investigation>

@@ -25,6 +25,6 @@ export class AppComponent {
   title = 'Angular Demo App';
   angularVersion = '19.2.7';
 
-  private notificationService = inject(NotificationService);
+  private readonly notificationService = inject(NotificationService);
   unreadCount = this.notificationService.unreadCount;
 }

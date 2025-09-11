@@ -4,8 +4,112 @@ import * as SegmentedControlStories from '../segmented-control.component.stories
 
 ## Default
 
+Basic usage with simple tabs and counts.
+
 <Canvas of={SegmentedControlStories.Default} />
 
-## With Image
+## With Counts
 
-<Canvas of={SegmentedControlStories.WithImage} />
+Example showing tabs with and without count badges.
+
+<Canvas of={SegmentedControlStories.WithCounts} />
+
+---
+
+## Code Examples
+
+### Basic Usage
+
+```typescript
+import { Component, signal } from '@angular/core';
+import { DsSegmentedControl, type DsSegmentedTab } from '@ui/segmented-control';
+
+@Component({
+  selector: 'app-example',
+  imports: [DsSegmentedControl],
+  template: `
+    <ds-segmented-control
+      [tabs]="tabs"
+      [activeTab]="activeTab()"
+      (tabChange)="onTabChange($event)"
+    ></ds-segmented-control>
+
+    <p>Active tab: {{ activeTab() }}</p>
+  `,
+})
+export class ExampleComponent {
+  tabs: DsSegmentedTab[] = [
+    { id: 'home', label: 'HOME' },
+    { id: 'about', label: 'ABOUT' },
+    { id: 'contact', label: 'CONTACT' },
+  ];
+
+  activeTab = signal('home');
+
+  onTabChange(tabId: string) {
+    this.activeTab.set(tabId);
+    console.log('Tab changed to:', tabId);
+  }
+}
+```
+
+### With Dynamic Counts
+
+```typescript
+import { Component, signal, computed } from '@angular/core';
+import { DsSegmentedControl, type DsSegmentedTab } from '@ui/segmented-control';
+
+@Component({
+  selector: 'app-dynamic-example',
+  imports: [DsSegmentedControl],
+  template: `
+    <ds-segmented-control
+      [tabs]="tabsWithCounts()"
+      [activeTab]="activeFilter()"
+      (tabChange)="setActiveFilter($event)"
+    ></ds-segmented-control>
+  `,
+})
+export class DynamicExampleComponent {
+  items = signal([
+    { status: 'active', type: 'user' },
+    { status: 'pending', type: 'admin' },
+    { status: 'active', type: 'user' },
+    // ... more items
+  ]);
+
+  activeFilter = signal('all');
+
+  tabsWithCounts = computed(() => {
+    const allItems = this.items();
+    return [
+      { id: 'all', label: 'ALL', count: allItems.length },
+      {
+        id: 'active',
+        label: 'ACTIVE',
+        count: allItems.filter((i) => i.status === 'active').length,
+      },
+      {
+        id: 'pending',
+        label: 'PENDING',
+        count: allItems.filter((i) => i.status === 'pending').length,
+      },
+    ];
+  });
+
+  setActiveFilter(filter: string) {
+    this.activeFilter.set(filter);
+  }
+}
+```
+
+### Full Width Layout
+
+```html
+<ds-segmented-control
+  [tabs]="tabs"
+  [activeTab]="activeTab()"
+  [fullWidth]="true"
+  (tabChange)="onTabChange($event)"
+></ds-segmented-control>
+```

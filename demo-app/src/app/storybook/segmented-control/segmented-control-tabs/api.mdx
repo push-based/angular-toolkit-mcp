@@ -2,23 +2,11 @@
 
 ### DsSegmentedControl
 
-| Name                | Type                          | Default     | Description                                                   |
-| ------------------- | ----------------------------- | ----------- | ------------------------------------------------------------- |
-| `activeOption`      | `string`                      | `''`        | Name of the currently selected option.                        |
-| `fullWidth`         | `boolean`                     | `false`     | Whether the segmented control takes the full container width. |
-| `inverse`           | `boolean`                     | `false`     | Applies inverse color scheme to the component.                |
-| `roleType`          | `'radiogroup'` \| `'tablist'` | `'tablist'` | Sets the ARIA role of the segmented control group.            |
-| `twoLineTruncation` | `boolean`                     | `false`     | Enables two-line truncation for long labels.                  |
-
-### DsSegmentedOption
-
-| Name    | Type     | Required | Default | Description                     |
-| ------- | -------- | -------- | ------- | ------------------------------- |
-| `name`  | `string` | Yes      | —       | Unique name for the option.     |
-| `title` | `string` | No       | `''`    | Displayed label for the option. |
-
-<sup>**1**</sup> **activeOption note:** **name** needs to be added to segmented
-option to have possibility to define selected item
+| Name        | Type               | Default | Description                                                   |
+| ----------- | ------------------ | ------- | ------------------------------------------------------------- |
+| `tabs`      | `DsSegmentedTab[]` | —       | Array of tab objects to display.                              |
+| `activeTab` | `string`           | `''`    | ID of the currently active tab.                               |
+| `fullWidth` | `boolean`          | `true`  | Whether the segmented control takes the full container width. |
 
 ---
 
@@ -26,44 +14,33 @@ option to have possibility to define selected item
 
 ### DsSegmentedControl
 
-| Name                 | Type                   | Description                                   |
-| -------------------- | ---------------------- | --------------------------------------------- |
-| `activeOptionChange` | `EventEmitter<string>` | Emits the new selected option name on change. |
-
-```json
-{
-  "index": 2,
-  "event": {
-    "isTrusted": true,
-    "altKey": false,
-    "altitudeAngle": 1.5707963267948966,
-    "azimuthAngle": 0,
-    "bubbles": true,
-    "button": 0,
-    "buttons": 0,
-    "cancelBubble": false,
-    "cancelable": true,
-    "clientX": 433,
-    "clientY": 85,
-    "composed": true,
-    "ctrlKey": false
-  }
-}
-```
-
-### DsSegmentedOption
-
-| Name           | Type                   | Description                        |
-| -------------- | ---------------------- | ---------------------------------- |
-| `selectOption` | `EventEmitter<string>` | Emits when the option is selected. |
+| Name        | Type                   | Description                             |
+| ----------- | ---------------------- | --------------------------------------- |
+| `tabChange` | `EventEmitter<string>` | Emits the tab ID when a tab is clicked. |
 
 ---
 
-## Content Projection
+## Interfaces
 
-| Selector      | Description                                |
-| ------------- | ------------------------------------------ |
-| `#dsTemplate` | A `TemplateRef` for custom option content. |
+### DsSegmentedTab
+
+```typescript
+interface DsSegmentedTab {
+  id: string; // Unique identifier for the tab
+  label: string; // Display text (automatically uppercased in UI)
+  count?: number; // Optional count to display in parentheses
+}
+```
+
+**Example:**
+
+```typescript
+const tabs: DsSegmentedTab[] = [
+  { id: 'all', label: 'ALL USERS', count: 25 },
+  { id: 'active', label: 'ACTIVE', count: 12 },
+  { id: 'inactive', label: 'INACTIVE' }, // No count
+];
+```
 
 ---
 
@@ -71,13 +48,55 @@ option to have possibility to define selected item
 
 ### DsSegmentedControl
 
-- `class="ds-segmented-control"` — base class
-- `class.ds-segment-full-width` — applied when `fullWidth` is true
-- `class.ds-segment-inverse` — applied when `inverse` is true
-- `class.ds-sc-ready` — applied after view initialization
-- `role` — set to `tablist` or `radiogroup` depending on `roleType`
+- `class="ds-segmented-control"` — base class applied to the host element
 
-### DsSegmentedOption
+### Internal Elements
 
-- Focus state and tabindex are controlled dynamically.
-- Host uses `rxHostPressedListener` for click-based selection.
+- `.ds-segmented-control-container` — wrapper container
+- `.ds-segmented-controls` — main control container
+  - `class.ds-segment-full-width` — applied when `fullWidth` is true
+- `.ds-segment-item` — individual tab button
+  - `class.ds-segment-selected` — applied to the active tab
+- `.tab-count` — count badge (when count is provided)
+
+---
+
+## Styling
+
+The component uses a retro 2000s aesthetic with:
+
+- **Container**: Light gray background with inset border
+- **Tabs**: Outset borders that become inset when active
+- **Active State**: White background with blue text
+- **Hover State**: Slightly darker background
+- **Typography**: Uppercase labels with system fonts
+
+### CSS Classes
+
+```scss
+.ds-segmented-control {
+  // Host element styles
+}
+
+.ds-segmented-controls {
+  // Main container with retro styling
+  &.ds-segment-full-width {
+    // Full width variant
+  }
+}
+
+.ds-segment-item {
+  // Individual tab styling
+  &.ds-segment-selected {
+    // Active tab styling
+  }
+
+  &:hover {
+    // Hover state
+  }
+}
+
+.tab-count {
+  // Count badge styling
+}
+```

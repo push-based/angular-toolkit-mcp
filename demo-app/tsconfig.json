@@ -18,7 +18,29 @@
     "target": "ES2022",
     "module": "ES2022",
     "useDefineForClassFields": false,
-    "lib": ["ES2022", "dom"]
+    "lib": ["ES2022", "dom"],
+    "paths": {
+      "@ui/*": ["src/app/components/ui/*"],
+      "@ui/avatar": ["src/app/components/ui/avatar"],
+      "@ui/badge": ["src/app/components/ui/badge"],
+      "@ui/button": ["src/app/components/ui/button"],
+      "@ui/card": ["src/app/components/ui/card"],
+      "@ui/modal": ["src/app/components/ui/modal"],
+      "@ui/rx-host-listener": ["src/app/components/ui/rx-host-listener"],
+      "@ui/segmented-control": ["src/app/components/ui/segmented-control"],
+      "@frontend/ui/*": ["src/app/components/ui/*"],
+      "@frontend/ui/avatar": ["src/app/components/ui/avatar"],
+      "@frontend/ui/badge": ["src/app/components/ui/badge"],
+      "@frontend/ui/button": ["src/app/components/ui/button"],
+      "@frontend/ui/card": ["src/app/components/ui/card"],
+      "@frontend/ui/modal": ["src/app/components/ui/modal"],
+      "@frontend/ui/rx-host-listener": [
+        "src/app/components/ui/rx-host-listener"
+      ],
+      "@frontend/ui/segmented-control": [
+        "src/app/components/ui/segmented-control"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
