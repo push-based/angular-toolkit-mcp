@@ -9,10 +9,7 @@ import {
 import { diffComponentContractSchema } from './models/schema.js';
 import type { DomPathDictionary } from '../shared/models/types.js';
 import { loadContract } from '../shared/utils/contract-file-ops.js';
-import {
-  componentNameToKebabCase,
-  validateAndNormalizeComponentName,
-} from '../../shared/utils/component-validation.js';
+import { componentNameToKebabCase } from '../../shared/utils/component-validation.js';
 import { basename } from 'node:path';
 import {
   consolidateAndPruneRemoveOperationsWithDeduplication,
@@ -38,11 +35,6 @@ export const diffComponentContractHandler = createHandler<
 >(
   diffComponentContractSchema.name,
   async (params, { workspaceRoot }) => {
-    // Normalize component name at handler entry point
-    const dsComponentName = validateAndNormalizeComponentName(
-      params.dsComponentName,
-    );
-
     const effectiveBeforePath = resolveCrossPlatformPath(
       params.directory,
       params.contractBeforePath,
@@ -65,7 +57,7 @@ export const diffComponentContractHandler = createHandler<
     const diffData = {
       before: effectiveBeforePath,
       after: effectiveAfterPath,
-      dsComponentName: dsComponentName,
+      dsComponentName: params.dsComponentName,
       timestamp: new Date().toISOString(),
       domPathDictionary: domPathDict.paths,
       changes: groupedChanges,
@@ -76,7 +68,7 @@ export const diffComponentContractHandler = createHandler<
     const normalizedDiffData = normalizePathsInObject(diffData, workspaceRoot);
 
     // Create component-specific diffs directory
-    const componentKebab = componentNameToKebabCase(dsComponentName);
+    const componentKebab = componentNameToKebabCase(params.dsComponentName);
     const diffDir = resolveCrossPlatformPath(
       workspaceRoot,
       `.cursor/tmp/contracts/${componentKebab}/diffs`,

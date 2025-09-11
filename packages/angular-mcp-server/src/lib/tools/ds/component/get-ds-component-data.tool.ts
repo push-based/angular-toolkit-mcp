@@ -7,7 +7,7 @@ import { COMMON_ANNOTATIONS } from '../shared/models/schema-helpers.js';
 import { getComponentPathsInfo } from './utils/paths-helpers.js';
 import { getComponentDocPathsForName } from './utils/doc-helpers.js';
 import {
-  validateAndNormalizeComponentName,
+  validateComponentName,
   componentNameToKebabCase,
 } from '../shared/utils/component-validation.js';
 import { resolveCrossPlatformPath } from '../shared/utils/cross-platform-path.js';
@@ -114,11 +114,12 @@ export const getDsComponentDataHandler = createHandler<
   DsComponentData
 >(
   getDsComponentDataToolSchema.name,
-  async (params, { cwd, uiRoot, storybookDocsRoot }) => {
-    const { sections = ['all'] } = params;
-    let { componentName } = params;
+  async (
+    { componentName, sections = ['all'] },
+    { cwd, uiRoot, storybookDocsRoot },
+  ) => {
     try {
-      componentName = validateAndNormalizeComponentName(componentName);
+      validateComponentName(componentName);
 
       const includeAll = sections.includes('all');
       const includeImplementation =

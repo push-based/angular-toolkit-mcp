@@ -1,15 +1,6 @@
 import { COMPONENT_REGEXES } from './regex-helpers.js';
 
 /**
- * Normalizes a component name to ensure it has the "Ds" prefix
- * @param componentName The component name (e.g., "Button" or "DsButton")
- * @returns The normalized component name with "Ds" prefix (e.g., "DsButton")
- */
-export function normalizeComponentName(componentName: string): string {
-  return componentName.startsWith('Ds') ? componentName : `Ds${componentName}`;
-}
-
-/**
  * Validates that a component name is a valid Design System component name
  * Accepts both formats: "Button" and "DsButton"
  * @param componentName The component name to validate
@@ -27,20 +18,6 @@ export function validateComponentName(
       'Invalid component name. Must be a valid PascalCase string (e.g., "Button" or "DsButton").',
     );
   }
-}
-
-/**
- * Validates and normalizes a component name to ensure it has the "Ds" prefix
- * Accepts both formats: "Button" and "DsButton" but always returns "DsButton"
- * @param componentName The component name to validate and normalize
- * @returns The normalized component name with "Ds" prefix (e.g., "DsButton")
- * @throws Error if the component name is invalid
- */
-export function validateAndNormalizeComponentName(
-  componentName: unknown,
-): string {
-  validateComponentName(componentName);
-  return normalizeComponentName(componentName);
 }
 
 /**

@@ -3,7 +3,6 @@ import {
   BaseHandlerOptions,
   RESULT_FORMATTERS,
 } from '../shared/utils/handler-helpers.js';
-import { validateAndNormalizeComponentName } from '../shared/utils/component-validation.js';
 import {
   createViolationReportingSchema,
   COMMON_ANNOTATIONS,
@@ -37,14 +36,7 @@ export const reportViolationsHandler = createHandler<
     // Default to 'file' grouping if not specified
     const groupBy = params.groupBy || 'file';
 
-    // Normalize component name at handler entry point
-    const normalizedParams = {
-      ...params,
-      componentName: validateAndNormalizeComponentName(params.componentName),
-    };
-
-    const result =
-      await analyzeViolationsBase<ViolationResult>(normalizedParams);
+    const result = await analyzeViolationsBase<ViolationResult>(params);
 
     const formattedContent = formatViolations(result, params.directory, {
       groupBy,

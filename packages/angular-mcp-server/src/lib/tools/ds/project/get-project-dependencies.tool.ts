@@ -8,7 +8,7 @@ import {
   COMMON_ANNOTATIONS,
 } from '../shared/models/schema-helpers.js';
 import { analyzeProjectDependencies } from './utils/dependencies-helpers.js';
-import { validateAndNormalizeComponentName } from '../shared/utils/component-validation.js';
+import { validateComponentName } from '../shared/utils/component-validation.js';
 
 interface ProjectDependenciesOptions extends BaseHandlerOptions {
   directory: string;
@@ -42,11 +42,10 @@ export const getProjectDependenciesHandler = createHandler<
 >(
   getProjectDependenciesSchema.name,
   async (params, { cwd, workspaceRoot, uiRoot }) => {
-    const { directory } = params;
-    let { componentName } = params;
+    const { directory, componentName } = params;
 
     if (componentName) {
-      componentName = validateAndNormalizeComponentName(componentName);
+      validateComponentName(componentName);
     }
 
     return await analyzeProjectDependencies(

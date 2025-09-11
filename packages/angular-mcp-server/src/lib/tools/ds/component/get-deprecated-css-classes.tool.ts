@@ -5,7 +5,6 @@ import {
   COMMON_ANNOTATIONS,
 } from '../shared/models/schema-helpers.js';
 import { getDeprecatedCssClasses } from './utils/deprecated-css-helpers.js';
-import { validateAndNormalizeComponentName } from '../shared/utils/component-validation.js';
 
 interface DeprecatedCssClassesOptions {
   componentName: string;
@@ -29,12 +28,8 @@ export const getDeprecatedCssClassesHandler = createHandler<
 >(
   getDeprecatedCssClassesSchema.name,
   async ({ componentName }, { cwd, deprecatedCssClassesPath }) => {
-    // Normalize component name at handler entry point
-    const normalizedComponentName =
-      validateAndNormalizeComponentName(componentName);
-
     return getDeprecatedCssClasses(
-      normalizedComponentName,
+      componentName,
       deprecatedCssClassesPath,
       cwd,
     );
