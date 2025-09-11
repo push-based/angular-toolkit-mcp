@@ -17,6 +17,10 @@
       "type": "stdio",
       "command": "npx",
       "args": ["@eslint/mcp@latest"]
+    },
+    "playwright": {
+      "command": "npx @playwright/mcp@latest",
+      "env": {}
     }
   }
 }
