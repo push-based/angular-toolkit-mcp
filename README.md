@@ -67,6 +67,8 @@ Copy `.cursor/mcp.json.example` to the project you're working on. Copied file sh
 }
 ```
 
+> Note: `ds.storybookDocsRoot` and `ds.deprecatedCssClassesPath` are optional. The server will start without them. Tools that require these paths will return a clear error prompting you to provide the missing parameter.
+
 > **Note**: The example file contains configuration for `ESLint` official MCP which is required for the toolkit to work properly.
 
 ### Configuration Parameters
@@ -76,9 +78,19 @@ Copy `.cursor/mcp.json.example` to the project you're working on. Copied file sh
 | Parameter | Type | Description | Example |
 |-----------|------|-------------|---------|
 | `workspaceRoot` | Absolute path | Root directory of your Angular workspace | `/Users/dev/my-angular-app` |
-| `ds.storybookDocsRoot` | Relative path | Root directory containing Storybook documentation | `storybook/docs` |
-| `ds.deprecatedCssClassesPath` | Relative path | JavaScript file mapping deprecated CSS classes | `design-system/component-options.js` |
 | `ds.uiRoot` | Relative path | Directory containing UI components | `packages/ui` |
+
+#### Optional Parameters
+
+| Parameter | Type | Description | Example |
+|-----------|------|-------------|---------|
+| `ds.storybookDocsRoot` | Relative path | Root directory containing Storybook documentation used by documentation-related tools | `storybook/docs` |
+| `ds.deprecatedCssClassesPath` | Relative path | JavaScript file mapping deprecated CSS classes used by violation and deprecated CSS tools | `design-system/component-options.js` |
+
+When optional parameters are omitted:
+
+- `ds.storybookDocsRoot`: Tools will skip Storybook documentation lookups (e.g., `get-ds-component-data` will still return implementation/import data but may have no docs files).
+- `ds.deprecatedCssClassesPath`: Tools that require the mapping will fail fast with a clear error. Affected tools include: `get-deprecated-css-classes`, `report-deprecated-css`, `report-all-violations`, and `report-violations`.
 
 #### Deprecated CSS Classes File Format
 
@@ -140,6 +152,29 @@ my-angular-workspace/
 - **`get-ds-component-data`**: Return data for a component including implementation files, documentation files, and import path
 
 - **`build-component-usage-graph`**: Maps where given Angular components are imported (modules, specs, templates, styles) so refactors touch every file
+
+### Tool behavior with optional parameters
+
+The following tools work without optional params:
+
+- `get-project-dependencies`
+- `build-component-usage-graph`
+- `get-ds-component-data` (documentation section is empty if `ds.storybookDocsRoot` is not set)
+- Component contract tools:
+  - `build_component_contract`
+  - `diff_component_contract`
+  - `list_component_contracts`
+
+The following tools require optional params to work:
+
+- Requires `ds.deprecatedCssClassesPath`:
+  - `get-deprecated-css-classes`
+  - `report-deprecated-css`
+  - `report-all-violations`
+  - `report-violations`
+
+- Requires `ds.storybookDocsRoot` for docs lookup (skipped otherwise):
+  - `get-ds-component-data` (docs files discovery only)
 
 ### Component Contracts
 

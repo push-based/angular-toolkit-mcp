@@ -26,8 +26,8 @@ export interface BaseHandlerOptions {
 export interface HandlerContext {
   cwd: string;
   workspaceRoot: string;
-  storybookDocsRoot: string;
-  deprecatedCssClassesPath: string;
+  storybookDocsRoot?: string;
+  deprecatedCssClassesPath?: string;
   uiRoot: string;
 }
 
@@ -60,8 +60,8 @@ export function setupHandlerEnvironment(
   return {
     cwd,
     workspaceRoot: params.workspaceRoot || cwd,
-    storybookDocsRoot: params.storybookDocsRoot || '',
-    deprecatedCssClassesPath: params.deprecatedCssClassesPath || '',
+    storybookDocsRoot: params.storybookDocsRoot,
+    deprecatedCssClassesPath: params.deprecatedCssClassesPath,
     uiRoot: params.uiRoot || '',
   };
 }

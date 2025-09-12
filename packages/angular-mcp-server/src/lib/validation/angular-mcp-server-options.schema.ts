@@ -10,14 +10,20 @@ export const AngularMcpServerOptionsSchema = z.object({
       'workspaceRoot must be an absolute path to the repository root where MCP server is working (e.g., /path/to/workspace-root)',
   }),
   ds: z.object({
-    storybookDocsRoot: z.string().refine(isRelativePath, {
-      message:
-        'ds.storybookDocsRoot must be a relative path from workspace root to the storybook project root (e.g., path/to/storybook/components)',
-    }),
-    deprecatedCssClassesPath: z.string().refine(isRelativePath, {
-      message:
-        'ds.deprecatedCssClassesPath must be a relative path from workspace root to the file component to deprecated css classes mapping (e.g., path/to/components-config.js)',
-    }),
+    storybookDocsRoot: z
+      .string()
+      .optional()
+      .refine((val) => val === undefined || isRelativePath(val), {
+        message:
+          'ds.storybookDocsRoot must be a relative path from workspace root to the storybook project root (e.g., path/to/storybook/components)',
+      }),
+    deprecatedCssClassesPath: z
+      .string()
+      .optional()
+      .refine((val) => val === undefined || isRelativePath(val), {
+        message:
+          'ds.deprecatedCssClassesPath must be a relative path from workspace root to the file component to deprecated css classes mapping (e.g., path/to/components-config.js)',
+      }),
     uiRoot: z.string().refine(isRelativePath, {
       message:
         'ds.uiRoot must be a relative path from workspace root to the components folder (e.g., path/to/components)',
