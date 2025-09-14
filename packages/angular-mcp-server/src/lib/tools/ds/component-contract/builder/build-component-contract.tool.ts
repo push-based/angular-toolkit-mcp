@@ -43,13 +43,11 @@ export const buildComponentContractHandler = createHandler<
       effectiveTypescriptPath,
     );
 
-    // Custom save logic using the provided saveLocation
     const contractString = JSON.stringify(contract, null, 2);
     const hash = require('node:crypto').createHash('sha256').update(contractString).digest('hex');
     
     const effectiveSaveLocation = resolveCrossPlatformPath(cwd, saveLocation);
     
-    // Ensure directory exists
     const { mkdir, writeFile } = await import('node:fs/promises');
     const { dirname } = await import('node:path');
     await mkdir(dirname(effectiveSaveLocation), { recursive: true });

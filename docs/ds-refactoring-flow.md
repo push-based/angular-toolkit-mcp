@@ -566,7 +566,7 @@ This is your last chance to make changes before opening the pull request.
   - Features: Automatic ESLint config resolution, comprehensive rule coverage
 
 - `build_component_contract` - Creates contracts for refactored components
-  - Parameters: `directory`, `templateFile`, `styleFile`, `typescriptFile`, `dsComponentName`
+  - Parameters: `saveLocation`, `templateFile`, `styleFile`, `typescriptFile`, `dsComponentName`
   - Returns: JSON contract with public API, DOM structure, and styles
   - Purpose: Capture post-refactoring component state
 
@@ -576,9 +576,9 @@ This is your last chance to make changes before opening the pull request.
   - Purpose: Identify before/after contract pairs for comparison
 
 - `diff_component_contract` - Compares component contracts
-  - Parameters: `directory`, `contractBeforePath`, `contractAfterPath`, `dsComponentName`
+  - Parameters: `saveLocation`, `contractBeforePath`, `contractAfterPath`, `dsComponentName`
   - Returns: Detailed diff highlighting changes in API, DOM, and styles
-  - Saves: Diff files to `.cursor/tmp/contracts/<component>/diffs/`
+  - Saves: Diff files to the specified saveLocation path
 
 ### Flow
 

@@ -58,13 +58,10 @@ export const diffComponentContractHandler = createHandler<
       summary: generateDiffSummary(processedResult, groupedChanges),
     };
 
-    // Normalize absolute paths to relative paths for portability
     const normalizedDiffData = normalizePathsInObject(diffData, workspaceRoot);
 
-    // Use the provided saveLocation
     const effectiveSaveLocation = resolveCrossPlatformPath(cwd, saveLocation);
     
-    // Ensure directory exists
     const { dirname } = await import('node:path');
     await mkdir(dirname(effectiveSaveLocation), { recursive: true });
     
