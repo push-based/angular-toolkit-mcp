@@ -1,7 +1,6 @@
 import { ToolSchemaOptions } from '@push-based/models';
 import {
   COMMON_ANNOTATIONS,
-  createProjectAnalysisSchema,
 } from '../../../shared';
 
 /**
@@ -12,32 +11,38 @@ export const buildComponentContractSchema: ToolSchemaOptions = {
   description:
     "Generate a static surface contract for a component's template and SCSS.",
   inputSchema: {
-    ...createProjectAnalysisSchema({
+    type: 'object',
+    properties: {
+      saveLocation: {
+        type: 'string',
+        description:
+          'Path where to save the contract file. Supports both absolute and relative paths.',
+      },
       templateFile: {
         type: 'string',
         description:
-          'File name of the component template file (.html) or TypeScript component file (.ts) for inline templates',
+          'Path to the component template file (.html) or TypeScript component file (.ts) for inline templates. Supports both absolute and relative paths.',
       },
       styleFile: {
         type: 'string',
         description:
-          'File name of the component style file (.scss, .sass, .less, .css)',
+          'Path to the component style file (.scss, .sass, .less, .css). Supports both absolute and relative paths.',
       },
       typescriptFile: {
         type: 'string',
-        description: 'File name of the TypeScript component file (.ts)',
+        description: 'Path to the TypeScript component file (.ts). Supports both absolute and relative paths.',
       },
       dsComponentName: {
         type: 'string',
         description: 'The name of the design system component being used',
+        default: '',
       },
-    }),
+    },
     required: [
-      'directory',
+      'saveLocation',
       'templateFile',
       'styleFile',
       'typescriptFile',
-      'dsComponentName',
     ],
   },
   annotations: {

@@ -5,18 +5,17 @@ import {
 import { buildComponentContractSchema } from './models/schema.js';
 import { buildComponentContract } from './utils/build-contract.js';
 import {
-  saveContract,
   generateContractSummary,
 } from '../shared/utils/contract-file-ops.js';
 import { ContractResult } from './models/types.js';
 import { resolveCrossPlatformPath } from '../../shared/utils/cross-platform-path.js';
 
 interface BuildComponentContractOptions extends BaseHandlerOptions {
-  directory: string;
+  saveLocation: string;
   templateFile: string;
   styleFile: string;
   typescriptFile: string;
-  dsComponentName: string;
+  dsComponentName?: string;
 }
 
 export const buildComponentContractHandler = createHandler<
@@ -24,24 +23,18 @@ export const buildComponentContractHandler = createHandler<
   ContractResult
 >(
   buildComponentContractSchema.name,
-  async (params, { cwd, workspaceRoot }) => {
+  async (params, { cwd, workspaceRoot: _workspaceRoot }) => {
     const {
-      directory,
+      saveLocation,
       templateFile,
       styleFile,
       typescriptFile,
-      dsComponentName,
+      dsComponentName = '',
     } = params;
 
-    const effectiveTemplatePath = resolveCrossPlatformPath(
-      directory,
-      templateFile,
-    );
-    const effectiveScssPath = resolveCrossPlatformPath(directory, styleFile);
-    const effectiveTypescriptPath = resolveCrossPlatformPath(
-      directory,
-      typescriptFile,
-    );
+    const effectiveTemplatePath = resolveCrossPlatformPath(cwd, templateFile);
+    const effectiveScssPath = resolveCrossPlatformPath(cwd, styleFile);
+    const effectiveTypescriptPath = resolveCrossPlatformPath(cwd, typescriptFile);
 
     const contract = await buildComponentContract(
       effectiveTemplatePath,
@@ -50,18 +43,40 @@ export const buildComponentContractHandler = createHandler<
       effectiveTypescriptPath,
     );
 
-    const { contractFilePath, hash } = await saveContract(
+    // Custom save logic using the provided saveLocation
+    const contractString = JSON.stringify(contract, null, 2);
+    const hash = require('node:crypto').createHash('sha256').update(contractString).digest('hex');
+    
+    const effectiveSaveLocation = resolveCrossPlatformPath(cwd, saveLocation);
+    
+    // Ensure directory exists
+    const { mkdir, writeFile } = await import('node:fs/promises');
+    const { dirname } = await import('node:path');
+    await mkdir(dirname(effectiveSaveLocation), { recursive: true });
+    
+    const contractData = {
       contract,
-      workspaceRoot,
-      effectiveTemplatePath,
-      effectiveScssPath,
-      cwd,
-      dsComponentName,
+      hash: `sha256-${hash}`,
+      metadata: {
+        templatePath: effectiveTemplatePath,
+        scssPath: effectiveScssPath,
+        typescriptPath: effectiveTypescriptPath,
+        timestamp: new Date().toISOString(),
+        dsComponentName,
+      },
+    };
+
+    await writeFile(
+      effectiveSaveLocation,
+      JSON.stringify(contractData, null, 2),
+      'utf-8',
     );
+
+    const contractFilePath = effectiveSaveLocation;
 
     return {
       contract,
-      hash,
+      hash: `sha256-${hash}`,
       contractFilePath,
     };
   },

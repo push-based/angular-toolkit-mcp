@@ -9,8 +9,6 @@ import {
 import { diffComponentContractSchema } from './models/schema.js';
 import type { DomPathDictionary } from '../shared/models/types.js';
 import { loadContract } from '../shared/utils/contract-file-ops.js';
-import { componentNameToKebabCase } from '../../shared/utils/component-validation.js';
-import { basename } from 'node:path';
 import {
   consolidateAndPruneRemoveOperationsWithDeduplication,
   groupChangesByDomainAndType,
@@ -20,10 +18,10 @@ import { writeFile, mkdir } from 'node:fs/promises';
 import diff from 'microdiff';
 
 interface DiffComponentContractOptions extends BaseHandlerOptions {
-  directory: string;
+  saveLocation: string;
   contractBeforePath: string;
   contractAfterPath: string;
-  dsComponentName: string;
+  dsComponentName?: string;
 }
 
 export const diffComponentContractHandler = createHandler<
@@ -34,15 +32,11 @@ export const diffComponentContractHandler = createHandler<
   }
 >(
   diffComponentContractSchema.name,
-  async (params, { workspaceRoot }) => {
-    const effectiveBeforePath = resolveCrossPlatformPath(
-      params.directory,
-      params.contractBeforePath,
-    );
-    const effectiveAfterPath = resolveCrossPlatformPath(
-      params.directory,
-      params.contractAfterPath,
-    );
+  async (params, { cwd, workspaceRoot }) => {
+    const { saveLocation, contractBeforePath, contractAfterPath, dsComponentName = '' } = params;
+    
+    const effectiveBeforePath = resolveCrossPlatformPath(cwd, contractBeforePath);
+    const effectiveAfterPath = resolveCrossPlatformPath(cwd, contractAfterPath);
 
     const contractBefore = await loadContract(effectiveBeforePath);
     const contractAfter = await loadContract(effectiveAfterPath);
@@ -57,7 +51,7 @@ export const diffComponentContractHandler = createHandler<
     const diffData = {
       before: effectiveBeforePath,
       after: effectiveAfterPath,
-      dsComponentName: params.dsComponentName,
+      dsComponentName,
       timestamp: new Date().toISOString(),
       domPathDictionary: domPathDict.paths,
       changes: groupedChanges,
@@ -67,25 +61,14 @@ export const diffComponentContractHandler = createHandler<
     // Normalize absolute paths to relative paths for portability
     const normalizedDiffData = normalizePathsInObject(diffData, workspaceRoot);
 
-    // Create component-specific diffs directory
-    const componentKebab = componentNameToKebabCase(params.dsComponentName);
-    const diffDir = resolveCrossPlatformPath(
-      workspaceRoot,
-      `.cursor/tmp/contracts/${componentKebab}/diffs`,
-    );
-    await mkdir(diffDir, { recursive: true });
-
-    // Generate simplified diff filename: diff-{componentName}-{timestamp}.json
-    const componentBaseName = basename(
-      effectiveBeforePath,
-      '.contract.json',
-    ).split('-')[0]; // Extract component name before timestamp
-    const timestamp = new Date()
-      .toISOString()
-      .replace(/[-:]/g, '')
-      .replace(/\.\d+Z$/, 'Z');
-    const diffFileName = `diff-${componentBaseName}-${timestamp}.json`;
-    const diffFilePath = resolveCrossPlatformPath(diffDir, diffFileName);
+    // Use the provided saveLocation
+    const effectiveSaveLocation = resolveCrossPlatformPath(cwd, saveLocation);
+    
+    // Ensure directory exists
+    const { dirname } = await import('node:path');
+    await mkdir(dirname(effectiveSaveLocation), { recursive: true });
+    
+    const diffFilePath = effectiveSaveLocation;
 
     const formattedJson = JSON.stringify(normalizedDiffData, null, 2);
     await writeFile(diffFilePath, formattedJson, 'utf-8');
