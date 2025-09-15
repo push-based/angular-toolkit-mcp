@@ -65,11 +65,17 @@ Because contracts track every public-facing facet of a component, any refactor t
 Rules taking care about the contract building during the workflow, but if you need to build it "manually" say in the chat:
 
 ```
-build_component_contract(<component-file.ts>, dsComponentName)
+build_component_contract(saveLocation, templateFile, styleFile, typescriptFile, dsComponentName)
 ``` 
 
-> Replace `<component-file.ts>` with the path to your component and set `dsComponentName` to the design-system component (e.g., `DsBadge`). The tool analyses the template, TypeScript, and styles, then saves a timestamped `*.contract.json` to  
-> `.cursor/tmp/contracts/<ds-component-kebab>/`.
+> Replace the parameters with:
+> - `saveLocation`: Path where to save the contract file (supports absolute and relative paths)
+> - `templateFile`: Path to the component template file (.html or .ts for inline)
+> - `styleFile`: Path to the component style file (.scss, .css, etc.)
+> - `typescriptFile`: Path to the TypeScript component file (.ts)
+> - `dsComponentName`: Optional design system component name (e.g., `DsBadge`)
+> 
+> The tool analyses the template, TypeScript, and styles, then saves the contract to your specified location.
 
 ## When to Build a Contract
 
@@ -160,10 +166,13 @@ What happens when QA finds a bug or a reviewer requests changes **after** the in
 3. **Locate the original baseline contract** – this is the contract that was captured for the initial state (usually the very first timestamp in the folder).
 4. **Generate a diff** between the baseline and the latest contract:
    ```
-   User: diff_component_contract(<baseline>.contract.json, <latest>.contract.json, dsComponentName)
+   User: diff_component_contract(saveLocation, contractBeforePath, contractAfterPath, dsComponentName)
    ```
-   The diff file will land under
-   `.cursor/tmp/contracts/<ds-component-kebab>/diffs/`.
+   > Replace the parameters with:
+   > - `saveLocation`: Path where to save the diff result file (supports absolute and relative paths)
+   > - `contractBeforePath`: Path to the baseline contract file
+   > - `contractAfterPath`: Path to the latest contract file
+   > - `dsComponentName`: Optional design system component name
 5. **Review the diff output using AI** – attach the diff and ask it to analyze it.
    * If only intentional changes appear, proceed to merge / re-test.
    * If unexpected API, DOM, or style changes surface, iterate on the fix and repeat steps 1-4.

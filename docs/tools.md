@@ -113,10 +113,11 @@ This document provides comprehensive guidance for AI agents working with Angular
 **Purpose**: Creates static surface contracts for component templates and styles
 **AI Usage**: Generate contracts before refactoring to track breaking changes
 **Key Parameters**:
-- `directory`: Component directory
+- `saveLocation`: Path where to save the contract file (supports absolute and relative paths)
 - `templateFile`: Template file name (.html or .ts for inline)
 - `styleFile`: Style file name (.scss, .css, etc.)
 - `typescriptFile`: TypeScript component file (.ts)
+- `dsComponentName`: Optional design system component name
 **Output**: Component contract file with API surface
 **Best Practice**: Create contracts before major refactoring for comparison
 
@@ -124,9 +125,10 @@ This document provides comprehensive guidance for AI agents working with Angular
 **Purpose**: Compares before/after contracts to identify breaking changes
 **AI Usage**: Validate that refactoring doesn't introduce breaking changes
 **Key Parameters**:
-- `directory`: Component directory
+- `saveLocation`: Path where to save the diff result file (supports absolute and relative paths)
 - `contractBeforePath`: Path to pre-refactoring contract
 - `contractAfterPath`: Path to post-refactoring contract
+- `dsComponentName`: Optional design system component name
 **Output**: Diff analysis showing breaking changes
 **Best Practice**: Essential validation step after component modifications
 

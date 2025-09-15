@@ -234,12 +234,12 @@ The rule implements a comprehensive validation process:
 ### Tools used
 
 - `build_component_contract` - Creates post-refactor component contract
-  - Parameters: `componentFile`, `dsComponentName` (set to "AUTO")
+  - Parameters: `saveLocation`, `templateFile`, `styleFile`, `typescriptFile`, `dsComponentName`
   - Returns: updated contract path with refactored component state
   - Purpose: Capture final component state for comparison
 
 - `diff_component_contract` - Compares baseline and updated contracts
-  - Parameters: `contractBeforePath`, `contractAfterPath`, `dsComponentName` (set to "AUTO")
+  - Parameters: `saveLocation`, `contractBeforePath`, `contractAfterPath`, `dsComponentName`
   - Returns: detailed diff analysis showing specific changes
   - Purpose: Identify and analyze all modifications made during refactoring
 
