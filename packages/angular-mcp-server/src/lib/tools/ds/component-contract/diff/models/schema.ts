@@ -1,7 +1,5 @@
 import { ToolSchemaOptions } from '@push-based/models';
-import {
-  COMMON_ANNOTATIONS,
-} from '../../../shared';
+import { COMMON_ANNOTATIONS } from '../../../shared';
 
 /**
  * Schema for diffing component contracts
@@ -20,11 +18,13 @@ export const diffComponentContractSchema: ToolSchemaOptions = {
       },
       contractBeforePath: {
         type: 'string',
-        description: 'Path to the contract file before refactoring. Supports both absolute and relative paths.',
+        description:
+          'Path to the contract file before refactoring. Supports both absolute and relative paths.',
       },
       contractAfterPath: {
         type: 'string',
-        description: 'Path to the contract file after refactoring. Supports both absolute and relative paths.',
+        description:
+          'Path to the contract file after refactoring. Supports both absolute and relative paths.',
       },
       dsComponentName: {
         type: 'string',
@@ -32,11 +32,7 @@ export const diffComponentContractSchema: ToolSchemaOptions = {
         default: '',
       },
     },
-    required: [
-      'saveLocation',
-      'contractBeforePath',
-      'contractAfterPath',
-    ],
+    required: ['saveLocation', 'contractBeforePath', 'contractAfterPath'],
   },
   annotations: {
     title: 'Diff Component Contract',

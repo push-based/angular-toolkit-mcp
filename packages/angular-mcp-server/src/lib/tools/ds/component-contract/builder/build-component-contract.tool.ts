@@ -4,9 +4,7 @@ import {
 } from '../../shared/utils/handler-helpers.js';
 import { buildComponentContractSchema } from './models/schema.js';
 import { buildComponentContract } from './utils/build-contract.js';
-import {
-  generateContractSummary,
-} from '../shared/utils/contract-file-ops.js';
+import { generateContractSummary } from '../shared/utils/contract-file-ops.js';
 import { ContractResult } from './models/types.js';
 import { resolveCrossPlatformPath } from '../../shared/utils/cross-platform-path.js';
 
@@ -34,7 +32,10 @@ export const buildComponentContractHandler = createHandler<
 
     const effectiveTemplatePath = resolveCrossPlatformPath(cwd, templateFile);
     const effectiveScssPath = resolveCrossPlatformPath(cwd, styleFile);
-    const effectiveTypescriptPath = resolveCrossPlatformPath(cwd, typescriptFile);
+    const effectiveTypescriptPath = resolveCrossPlatformPath(
+      cwd,
+      typescriptFile,
+    );
 
     const contract = await buildComponentContract(
       effectiveTemplatePath,
@@ -44,14 +45,17 @@ export const buildComponentContractHandler = createHandler<
     );
 
     const contractString = JSON.stringify(contract, null, 2);
-    const hash = require('node:crypto').createHash('sha256').update(contractString).digest('hex');
-    
+    const hash = require('node:crypto')
+      .createHash('sha256')
+      .update(contractString)
+      .digest('hex');
+
     const effectiveSaveLocation = resolveCrossPlatformPath(cwd, saveLocation);
-    
+
     const { mkdir, writeFile } = await import('node:fs/promises');
     const { dirname } = await import('node:path');
     await mkdir(dirname(effectiveSaveLocation), { recursive: true });
-    
+
     const contractData = {
       contract,
       hash: `sha256-${hash}`,

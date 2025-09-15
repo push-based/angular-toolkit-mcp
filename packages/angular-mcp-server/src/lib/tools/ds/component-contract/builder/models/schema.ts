@@ -1,7 +1,5 @@
 import { ToolSchemaOptions } from '@push-based/models';
-import {
-  COMMON_ANNOTATIONS,
-} from '../../../shared';
+import { COMMON_ANNOTATIONS } from '../../../shared';
 
 /**
  * Schema for building component contracts
@@ -30,7 +28,8 @@ export const buildComponentContractSchema: ToolSchemaOptions = {
       },
       typescriptFile: {
         type: 'string',
-        description: 'Path to the TypeScript component file (.ts). Supports both absolute and relative paths.',
+        description:
+          'Path to the TypeScript component file (.ts). Supports both absolute and relative paths.',
       },
       dsComponentName: {
         type: 'string',
@@ -38,12 +37,7 @@ export const buildComponentContractSchema: ToolSchemaOptions = {
         default: '',
       },
     },
-    required: [
-      'saveLocation',
-      'templateFile',
-      'styleFile',
-      'typescriptFile',
-    ],
+    required: ['saveLocation', 'templateFile', 'styleFile', 'typescriptFile'],
   },
   annotations: {
     title: 'Build Component Contract',

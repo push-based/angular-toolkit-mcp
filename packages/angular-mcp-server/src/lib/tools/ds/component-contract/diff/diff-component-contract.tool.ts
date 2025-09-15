@@ -33,9 +33,17 @@ export const diffComponentContractHandler = createHandler<
 >(
   diffComponentContractSchema.name,
   async (params, { cwd, workspaceRoot }) => {
-    const { saveLocation, contractBeforePath, contractAfterPath, dsComponentName = '' } = params;
-    
-    const effectiveBeforePath = resolveCrossPlatformPath(cwd, contractBeforePath);
+    const {
+      saveLocation,
+      contractBeforePath,
+      contractAfterPath,
+      dsComponentName = '',
+    } = params;
+
+    const effectiveBeforePath = resolveCrossPlatformPath(
+      cwd,
+      contractBeforePath,
+    );
     const effectiveAfterPath = resolveCrossPlatformPath(cwd, contractAfterPath);
 
     const contractBefore = await loadContract(effectiveBeforePath);
@@ -61,10 +69,10 @@ export const diffComponentContractHandler = createHandler<
     const normalizedDiffData = normalizePathsInObject(diffData, workspaceRoot);
 
     const effectiveSaveLocation = resolveCrossPlatformPath(cwd, saveLocation);
-    
+
     const { dirname } = await import('node:path');
     await mkdir(dirname(effectiveSaveLocation), { recursive: true });
-    
+
     const diffFilePath = effectiveSaveLocation;
 
     const formattedJson = JSON.stringify(normalizedDiffData, null, 2);
