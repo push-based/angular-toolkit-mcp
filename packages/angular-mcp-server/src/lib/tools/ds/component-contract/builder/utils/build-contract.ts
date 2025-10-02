@@ -54,7 +54,9 @@ export async function buildComponentContract(
   const sources = {
     ts: readFileSync(componentTsPath, 'utf-8'),
     scss: isInlineOrNoStyles ? '' : readFileSync(resolvedScssPath, 'utf-8'),
-    template: isInlineTemplate ? '' : readFileSync(resolvedTemplatePath, 'utf-8'),
+    template: isInlineTemplate
+      ? ''
+      : readFileSync(resolvedTemplatePath, 'utf-8'),
   };
 
   const [parsedComponent] = await parseComponents([componentTsPath]);
@@ -65,7 +67,11 @@ export async function buildComponentContract(
   const relativeTemplatePath = relative(cwd, resolvedTemplatePath);
   const relativeScssPath = relative(cwd, resolvedScssPath);
 
-  const meta = generateMeta(relativeTemplatePath, parsedComponent, isInlineTemplate);
+  const meta = generateMeta(
+    relativeTemplatePath,
+    parsedComponent,
+    isInlineTemplate,
+  );
   const publicApi = extractPublicApi(parsedComponent);
   const { slots, dom } = await extractSlotsAndDom(parsedComponent);
 
