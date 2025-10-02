@@ -65,17 +65,19 @@ Because contracts track every public-facing facet of a component, any refactor t
 Rules taking care about the contract building during the workflow, but if you need to build it "manually" say in the chat:
 
 ```
-build_component_contract(saveLocation, templateFile, styleFile, typescriptFile, dsComponentName)
+build_component_contract(saveLocation, typescriptFile, templateFile?, styleFile?, dsComponentName?)
 ``` 
 
 > Replace the parameters with:
 > - `saveLocation`: Path where to save the contract file (supports absolute and relative paths)
-> - `templateFile`: Path to the component template file (.html or .ts for inline)
-> - `styleFile`: Path to the component style file (.scss, .css, etc.)
-> - `typescriptFile`: Path to the TypeScript component file (.ts)
-> - `dsComponentName`: Optional design system component name (e.g., `DsBadge`)
+> - `typescriptFile`: Path to the TypeScript component file (.ts) — **Required**
+> - `templateFile`: *(Optional)* Path to the component template file (.html). Omit for inline templates
+> - `styleFile`: *(Optional)* Path to the component style file (.scss, .css, etc.). Omit for inline styles or components without styles
+> - `dsComponentName`: *(Optional)* Design system component name (e.g., `DsBadge`)
 > 
 > The tool analyses the template, TypeScript, and styles, then saves the contract to your specified location.
+> 
+> **Note**: Angular components can have inline templates and styles. If `templateFile` or `styleFile` are not provided, the tool will extract inline template/styles from the TypeScript file.
 
 ## When to Build a Contract
 

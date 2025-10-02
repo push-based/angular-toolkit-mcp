@@ -19,12 +19,12 @@ export const buildComponentContractSchema: ToolSchemaOptions = {
       templateFile: {
         type: 'string',
         description:
-          'Path to the component template file (.html) or TypeScript component file (.ts) for inline templates. Supports both absolute and relative paths.',
+          'Path to the component template file (.html). Optional - if not provided or if the path matches typescriptFile, will extract inline template from the component. Supports both absolute and relative paths.',
       },
       styleFile: {
         type: 'string',
         description:
-          'Path to the component style file (.scss, .sass, .less, .css). Supports both absolute and relative paths.',
+          'Path to the component style file (.scss, .sass, .less, .css). Optional - if not provided or if the path matches typescriptFile, will extract inline styles from the component. Supports both absolute and relative paths.',
       },
       typescriptFile: {
         type: 'string',
@@ -37,7 +37,7 @@ export const buildComponentContractSchema: ToolSchemaOptions = {
         default: '',
       },
     },
-    required: ['saveLocation', 'templateFile', 'styleFile', 'typescriptFile'],
+    required: ['saveLocation', 'typescriptFile'],
   },
   annotations: {
     title: 'Build Component Contract',
