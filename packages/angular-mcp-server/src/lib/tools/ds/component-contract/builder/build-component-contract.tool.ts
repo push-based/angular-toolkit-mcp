@@ -10,8 +10,8 @@ import { resolveCrossPlatformPath } from '../../shared/utils/cross-platform-path
 
 interface BuildComponentContractOptions extends BaseHandlerOptions {
   saveLocation: string;
-  templateFile: string;
-  styleFile: string;
+  templateFile?: string;
+  styleFile?: string;
   typescriptFile: string;
   dsComponentName?: string;
 }
@@ -30,12 +30,19 @@ export const buildComponentContractHandler = createHandler<
       dsComponentName = '',
     } = params;
 
-    const effectiveTemplatePath = resolveCrossPlatformPath(cwd, templateFile);
-    const effectiveScssPath = resolveCrossPlatformPath(cwd, styleFile);
     const effectiveTypescriptPath = resolveCrossPlatformPath(
       cwd,
       typescriptFile,
     );
+
+    // If templateFile or styleFile are not provided, use the TypeScript file path
+    // This indicates inline template/styles
+    const effectiveTemplatePath = templateFile
+      ? resolveCrossPlatformPath(cwd, templateFile)
+      : effectiveTypescriptPath;
+    const effectiveScssPath = styleFile
+      ? resolveCrossPlatformPath(cwd, styleFile)
+      : effectiveTypescriptPath;
 
     const contract = await buildComponentContract(
       effectiveTemplatePath,

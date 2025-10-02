@@ -114,12 +114,12 @@ This document provides comprehensive guidance for AI agents working with Angular
 **AI Usage**: Generate contracts before refactoring to track breaking changes
 **Key Parameters**:
 - `saveLocation`: Path where to save the contract file (supports absolute and relative paths)
-- `templateFile`: Template file name (.html or .ts for inline)
-- `styleFile`: Style file name (.scss, .css, etc.)
-- `typescriptFile`: TypeScript component file (.ts)
-- `dsComponentName`: Optional design system component name
+- `typescriptFile`: **Required** TypeScript component file (.ts)
+- `templateFile`: *Optional* Template file name (.html). Omit for inline templates
+- `styleFile`: *Optional* Style file name (.scss, .css, etc.). Omit for inline styles or no styles
+- `dsComponentName`: *Optional* design system component name
 **Output**: Component contract file with API surface
-**Best Practice**: Create contracts before major refactoring for comparison
+**Best Practice**: Create contracts before major refactoring for comparison. Template and style files are optional—the tool will extract inline templates/styles from the TypeScript file when not provided
 
 #### `diff_component_contract`
 **Purpose**: Compares before/after contracts to identify breaking changes

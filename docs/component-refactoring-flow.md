@@ -155,9 +155,10 @@ At this point, all checklist items have been processed. You must review the refa
 ### Tools used
 
 - `build_component_contract` - Creates component contracts for safe refactoring
-  - Parameters: `componentFile`, `dsComponentName` (set to "AUTO")
+  - Parameters: `saveLocation`, `typescriptFile` (required), `templateFile` (optional), `styleFile` (optional), `dsComponentName` (optional, set to "AUTO")
   - Returns: contract path with component's public API, DOM structure, and styles
   - Purpose: Establish baseline for validation comparison
+  - Note: Template and style files are optional for components with inline templates/styles
 
 - `get-ds-component-data` - Retrieves Design System component information when needed
   - Parameters: `componentName`, `sections` (optional) - Array of sections to include: "implementation", "documentation", "stories", "all"
@@ -234,9 +235,10 @@ The rule implements a comprehensive validation process:
 ### Tools used
 
 - `build_component_contract` - Creates post-refactor component contract
-  - Parameters: `saveLocation`, `templateFile`, `styleFile`, `typescriptFile`, `dsComponentName`
+  - Parameters: `saveLocation`, `typescriptFile` (required), `templateFile` (optional), `styleFile` (optional), `dsComponentName` (optional)
   - Returns: updated contract path with refactored component state
   - Purpose: Capture final component state for comparison
+  - Note: Template and style files are optional for components with inline templates/styles
 
 - `diff_component_contract` - Compares baseline and updated contracts
   - Parameters: `saveLocation`, `contractBeforePath`, `contractAfterPath`, `dsComponentName`

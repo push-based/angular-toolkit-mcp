@@ -11,7 +11,8 @@ import type { ComponentContract } from '../../shared/models/types.js';
 import { relative } from 'node:path';
 
 /**
- * Build a complete component contract from template and style files
+ * Build a complete component contract from template and style files.
+ * Template and style paths can be the same as TypeScript path for inline templates/styles.
  */
 export async function buildComponentContract(
   templatePath: string,
@@ -19,32 +20,41 @@ export async function buildComponentContract(
   cwd: string,
   typescriptPath: string,
 ): Promise<ComponentContract> {
-  const resolvedScssPath = resolveCrossPlatformPathAndValidate(cwd, scssPath);
-  const resolvedTemplatePath = resolveCrossPlatformPathAndValidate(
-    cwd,
-    templatePath,
-  );
   const componentTsPath = resolveCrossPlatformPathAndValidate(
     cwd,
     typescriptPath,
   );
 
-  const requiredPaths = [
-    { path: resolvedScssPath, name: 'Style file' },
-    { path: resolvedTemplatePath, name: 'Template file' },
-    { path: componentTsPath, name: 'Component TypeScript file' },
-  ];
+  // Validate TypeScript file exists (required)
+  if (!existsSync(componentTsPath)) {
+    throw new Error(`Component TypeScript file not found: ${componentTsPath}`);
+  }
 
-  for (const { path, name } of requiredPaths) {
-    if (!existsSync(path)) {
-      throw new Error(`${name} not found: ${path}`);
-    }
+  // Resolve and validate template path
+  // If it's the same as TS path, it means inline template
+  const resolvedTemplatePath = resolveCrossPlatformPathAndValidate(
+    cwd,
+    templatePath,
+  );
+  const isInlineTemplate = resolvedTemplatePath === componentTsPath;
+
+  if (!isInlineTemplate && !existsSync(resolvedTemplatePath)) {
+    throw new Error(`Template file not found: ${resolvedTemplatePath}`);
+  }
+
+  // Resolve and validate style path
+  // If it's the same as TS path, it means inline styles or no external styles
+  const resolvedScssPath = resolveCrossPlatformPathAndValidate(cwd, scssPath);
+  const isInlineOrNoStyles = resolvedScssPath === componentTsPath;
+
+  if (!isInlineOrNoStyles && !existsSync(resolvedScssPath)) {
+    throw new Error(`Style file not found: ${resolvedScssPath}`);
   }
 
   const sources = {
     ts: readFileSync(componentTsPath, 'utf-8'),
-    scss: readFileSync(resolvedScssPath, 'utf-8'),
-    template: readFileSync(resolvedTemplatePath, 'utf-8'),
+    scss: isInlineOrNoStyles ? '' : readFileSync(resolvedScssPath, 'utf-8'),
+    template: isInlineTemplate ? '' : readFileSync(resolvedTemplatePath, 'utf-8'),
   };
 
   const [parsedComponent] = await parseComponents([componentTsPath]);
@@ -55,28 +65,22 @@ export async function buildComponentContract(
   const relativeTemplatePath = relative(cwd, resolvedTemplatePath);
   const relativeScssPath = relative(cwd, resolvedScssPath);
 
-  const meta = generateMeta(relativeTemplatePath, parsedComponent, false);
+  const meta = generateMeta(relativeTemplatePath, parsedComponent, isInlineTemplate);
   const publicApi = extractPublicApi(parsedComponent);
   const { slots, dom } = await extractSlotsAndDom(parsedComponent);
 
-  // -------------------------------------------------------------------------
-  // Collect styles from both external SCSS and inline `styles` array
-  // -------------------------------------------------------------------------
   const styleBuckets: import('../../shared/models/types.js').StyleDeclarations[] =
     [];
 
-  // External stylesheet – only if it is a real stylesheet different from the TS file
-  if (resolvedScssPath !== componentTsPath) {
+  if (!isInlineOrNoStyles) {
     const externalStyles = await collectStylesV2(resolvedScssPath, dom);
     externalStyles.sourceFile = relativeScssPath;
     styleBuckets.push(externalStyles);
   }
 
-  // Inline styles declared on the component decorator
   const inlineStyles = await collectInlineStyles(parsedComponent, dom);
   styleBuckets.push(inlineStyles);
 
-  // Merge collected buckets giving later buckets precedence on selector clashes
   const styles = styleBuckets.reduce<
     import('../../shared/models/types.js').StyleDeclarations
   >(

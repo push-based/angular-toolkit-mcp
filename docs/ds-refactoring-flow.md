@@ -479,9 +479,10 @@ At this point, initial refactoring is complete.
 ### Tools used
 
 - `build_component_contract` - Creates component contracts for safe refactoring
-  - Parameters: `directory`, `templateFile`, `styleFile`, `typescriptFile`, `dsComponentName`
+  - Parameters: `saveLocation`, `typescriptFile` (required), `templateFile` (optional), `styleFile` (optional), `dsComponentName` (optional)
   - Returns: contract with public API, DOM structure, styles, and metadata
   - Generates: JSON contract files with SHA-256 hashes for validation
+  - Note: Template and style files are optional—extracts inline templates/styles from TypeScript when not provided
 
 ### Flow
 
@@ -566,9 +567,10 @@ This is your last chance to make changes before opening the pull request.
   - Features: Automatic ESLint config resolution, comprehensive rule coverage
 
 - `build_component_contract` - Creates contracts for refactored components
-  - Parameters: `saveLocation`, `templateFile`, `styleFile`, `typescriptFile`, `dsComponentName`
+  - Parameters: `saveLocation`, `typescriptFile` (required), `templateFile` (optional), `styleFile` (optional), `dsComponentName` (optional)
   - Returns: JSON contract with public API, DOM structure, and styles
   - Purpose: Capture post-refactoring component state
+  - Note: Template and style files are optional for components with inline templates/styles
 
 - `list_component_contracts` - Lists available component contracts
   - Parameters: `directory`
