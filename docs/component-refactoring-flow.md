@@ -9,7 +9,7 @@ This document describes a 3-step AI-assisted component refactoring process for i
 2. **Refactor Component** → Execute approved checklist items and implement changes
 3. **Validate Component** → Verify improvements through contract comparison and scoring
 
-The process includes two quality gates where human review and approval are required.
+The process includes two quality gates where human review and approval are required. When refactoring involves Design System components, the process can leverage selective data retrieval to access only the specific component information needed (implementation, documentation, or stories).
 
 ## Prerequisites
 
@@ -155,9 +155,15 @@ At this point, all checklist items have been processed. You must review the refa
 ### Tools used
 
 - `build_component_contract` - Creates component contracts for safe refactoring
-  - Parameters: `componentFile`, `dsComponentName` (set to "AUTO")
+  - Parameters: `saveLocation`, `typescriptFile` (required), `templateFile` (optional), `styleFile` (optional), `dsComponentName` (optional, set to "AUTO")
   - Returns: contract path with component's public API, DOM structure, and styles
   - Purpose: Establish baseline for validation comparison
+  - Note: Template and style files are optional for components with inline templates/styles
+
+- `get-ds-component-data` - Retrieves Design System component information when needed
+  - Parameters: `componentName`, `sections` (optional) - Array of sections to include: "implementation", "documentation", "stories", "all"
+  - Returns: Selective component data based on refactoring needs
+  - Purpose: Access DS component documentation and examples for proper implementation patterns
 
 ### Flow
 
@@ -229,12 +235,13 @@ The rule implements a comprehensive validation process:
 ### Tools used
 
 - `build_component_contract` - Creates post-refactor component contract
-  - Parameters: `componentFile`, `dsComponentName` (set to "AUTO")
+  - Parameters: `saveLocation`, `typescriptFile` (required), `templateFile` (optional), `styleFile` (optional), `dsComponentName` (optional)
   - Returns: updated contract path with refactored component state
   - Purpose: Capture final component state for comparison
+  - Note: Template and style files are optional for components with inline templates/styles
 
 - `diff_component_contract` - Compares baseline and updated contracts
-  - Parameters: `contractBeforePath`, `contractAfterPath`, `dsComponentName` (set to "AUTO")
+  - Parameters: `saveLocation`, `contractBeforePath`, `contractAfterPath`, `dsComponentName`
   - Returns: detailed diff analysis showing specific changes
   - Purpose: Identify and analyze all modifications made during refactoring
 

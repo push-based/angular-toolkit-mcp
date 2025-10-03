@@ -25,8 +25,8 @@ import { validateDeprecatedCssClassesFile } from './validation/ds-components-fil
 export class AngularMcpServerWrapper {
   private readonly mcpServer: McpServer;
   private readonly workspaceRoot: string;
-  private readonly storybookDocsRoot: string;
-  private readonly deprecatedCssClassesPath: string;
+  private readonly storybookDocsRoot?: string;
+  private readonly deprecatedCssClassesPath?: string;
   private readonly uiRoot: string;
 
   /**
@@ -71,11 +71,13 @@ export class AngularMcpServerWrapper {
     // Validate config using the Zod schema - only once here
     const validatedConfig = AngularMcpServerOptionsSchema.parse(config);
 
-    // Validate file existence
+    // Validate file existence (optional keys are checked only when provided)
     validateAngularMcpServerFilesExist(validatedConfig);
 
-    // Load and validate deprecatedCssClassesPath content
-    await validateDeprecatedCssClassesFile(validatedConfig);
+    // Load and validate deprecatedCssClassesPath content only if provided
+    if (validatedConfig.ds.deprecatedCssClassesPath) {
+      await validateDeprecatedCssClassesFile(validatedConfig);
+    }
 
     return new AngularMcpServerWrapper(validatedConfig);
   }
@@ -140,6 +142,12 @@ export class AngularMcpServerWrapper {
 
           // Scan available design system components to add them as discoverable resources
           try {
+            if (!this.storybookDocsRoot) {
+              return {
+                resources,
+              };
+            }
+
             const dsUiPath = path.resolve(
               process.cwd(),
               this.storybookDocsRoot,

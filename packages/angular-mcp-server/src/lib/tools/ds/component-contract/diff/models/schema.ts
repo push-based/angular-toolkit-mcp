@@ -1,8 +1,5 @@
 import { ToolSchemaOptions } from '@push-based/models';
-import {
-  createProjectAnalysisSchema,
-  COMMON_ANNOTATIONS,
-} from '../../../shared/index.js';
+import { COMMON_ANNOTATIONS } from '../../../shared/index.js';
 
 /**
  * Schema for diffing component contracts
@@ -12,26 +9,30 @@ export const diffComponentContractSchema: ToolSchemaOptions = {
   description:
     'Compare before/after contracts for parity and surface breaking changes.',
   inputSchema: {
-    ...createProjectAnalysisSchema({
+    type: 'object',
+    properties: {
+      saveLocation: {
+        type: 'string',
+        description:
+          'Path where to save the diff result file. Supports both absolute and relative paths.',
+      },
       contractBeforePath: {
         type: 'string',
-        description: 'Path to the contract file before refactoring',
+        description:
+          'Path to the contract file before refactoring. Supports both absolute and relative paths.',
       },
       contractAfterPath: {
         type: 'string',
-        description: 'Path to the contract file after refactoring',
+        description:
+          'Path to the contract file after refactoring. Supports both absolute and relative paths.',
       },
       dsComponentName: {
         type: 'string',
         description: 'The name of the design system component being used',
+        default: '',
       },
-    }),
-    required: [
-      'directory',
-      'contractBeforePath',
-      'contractAfterPath',
-      'dsComponentName',
-    ],
+    },
+    required: ['saveLocation', 'contractBeforePath', 'contractAfterPath'],
   },
   annotations: {
     title: 'Diff Component Contract',

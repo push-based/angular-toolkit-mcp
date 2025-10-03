@@ -6,9 +6,14 @@ import { loadDefaultExport } from '@push-based/utils';
 export async function validateDeprecatedCssClassesFile(
   config: AngularMcpServerOptions,
 ): Promise<void> {
+  const relPath = config.ds.deprecatedCssClassesPath;
+  if (!relPath) {
+    // Optional parameter not provided; nothing to validate
+    return;
+  }
   const deprecatedCssClassesAbsPath = path.resolve(
     config.workspaceRoot,
-    config.ds.deprecatedCssClassesPath,
+    relPath,
   );
 
   const dsComponents = await loadDefaultExport(deprecatedCssClassesAbsPath);

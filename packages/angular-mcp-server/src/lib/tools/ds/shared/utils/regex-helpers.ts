@@ -60,10 +60,10 @@ export const COMPONENT_REGEXES = {
       .toLowerCase(),
 
   /**
-   * Validates DS component name format
+   * Validates DS component name format (accepts both "DsButton" and "Button" formats)
    */
   isValidDsComponent: (name: string): boolean =>
-    /^Ds[A-Z][a-zA-Z0-9]*$/.test(name),
+    /^(Ds)?[A-Z][a-zA-Z0-9]*$/.test(name),
 
   /**
    * Extracts component name from coverage titles

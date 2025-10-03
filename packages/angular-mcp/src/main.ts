@@ -60,8 +60,8 @@ const argv = yargs(hideBin(process.argv))
 const { workspaceRoot, ds } = argv as unknown as {
   workspaceRoot: string;
   ds: {
-    storybookDocsRoot: string;
-    deprecatedCssClassesPath: string;
+    storybookDocsRoot?: string;
+    deprecatedCssClassesPath?: string;
     uiRoot: string;
   };
 };

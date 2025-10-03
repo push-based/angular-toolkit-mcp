@@ -29,9 +29,15 @@ export async function analyzeViolationsBase<T extends BaseViolationResult>(
 
   process.chdir(cwd);
 
+  if (!deprecatedCssClassesPath) {
+    throw new Error(
+      'Missing ds.deprecatedCssClassesPath. Provide --ds.deprecatedCssClassesPath in mcp.json file.',
+    );
+  }
+
   const deprecatedCssClasses = await getDeprecatedCssClasses(
     componentName,
-    deprecatedCssClassesPath || '',
+    deprecatedCssClassesPath,
     cwd,
   );
 

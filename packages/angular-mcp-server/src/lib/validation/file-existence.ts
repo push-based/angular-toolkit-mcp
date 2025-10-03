@@ -13,14 +13,19 @@ export function validateAngularMcpServerFilesExist(
 
   const missingFiles: string[] = [];
 
+  // Always require uiRoot, optional: storybookDocsRoot, deprecatedCssClassesPath
   const dsPaths = [
-    { label: 'ds.storybookDocsRoot', relPath: config.ds.storybookDocsRoot },
-    {
-      label: 'ds.deprecatedCssClassesPath',
-      relPath: config.ds.deprecatedCssClassesPath,
-    },
+    config.ds.storybookDocsRoot
+      ? { label: 'ds.storybookDocsRoot', relPath: config.ds.storybookDocsRoot }
+      : null,
+    config.ds.deprecatedCssClassesPath
+      ? {
+          label: 'ds.deprecatedCssClassesPath',
+          relPath: config.ds.deprecatedCssClassesPath,
+        }
+      : null,
     { label: 'ds.uiRoot', relPath: config.ds.uiRoot },
-  ];
+  ].filter(Boolean) as { label: string; relPath: string }[];
 
   for (const { label, relPath } of dsPaths) {
     const absPath = path.resolve(root, relPath);

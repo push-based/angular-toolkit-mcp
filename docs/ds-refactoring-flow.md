@@ -199,7 +199,13 @@ Before proceeding to Phase 3, you must review the comprehensive migration plan.
 
 ### Tools used
 
+- `list-ds-components` - Lists all available Design System components in the project
+  - Parameters: `sections` (optional) - Array of sections to include: "implementation", "documentation", "stories", "all"
+  - Returns: Complete inventory of DS components with their file paths and metadata
+  - Provides: Overview of available components for comprehensive migration planning
+
 - `get-ds-component-data` - Retrieves comprehensive component information for all involved components
+  - Parameters: `componentName`, `sections` (optional) - Array of sections to include: "implementation", "documentation", "stories", "all"
   - Returns: Complete implementation files, documentation files, import paths for multiple components
   - Provides: Component source code, API documentation, usage examples across scope
 
@@ -285,7 +291,13 @@ Before proceeding to Phase 3, you must review the migration plan.
 
 ### Tools used
 
+- `list-ds-components` - Lists all available Design System components in the project
+  - Parameters: `sections` (optional) - Array of sections to include: "implementation", "documentation", "stories", "all"
+  - Returns: Complete inventory of DS components with their file paths and metadata
+  - Provides: Overview of available components for migration planning
+
 - `get-ds-component-data` - Retrieves comprehensive component information
+  - Parameters: `componentName`, `sections` (optional) - Array of sections to include: "implementation", "documentation", "stories", "all"
   - Returns: implementation files, documentation files, import paths
   - Provides: component source code, API documentation, usage examples
 
@@ -467,9 +479,10 @@ At this point, initial refactoring is complete.
 ### Tools used
 
 - `build_component_contract` - Creates component contracts for safe refactoring
-  - Parameters: `directory`, `templateFile`, `styleFile`, `typescriptFile`, `dsComponentName`
+  - Parameters: `saveLocation`, `typescriptFile` (required), `templateFile` (optional), `styleFile` (optional), `dsComponentName` (optional)
   - Returns: contract with public API, DOM structure, styles, and metadata
   - Generates: JSON contract files with SHA-256 hashes for validation
+  - Note: Template and style files are optional—extracts inline templates/styles from TypeScript when not provided
 
 ### Flow
 
@@ -554,9 +567,10 @@ This is your last chance to make changes before opening the pull request.
   - Features: Automatic ESLint config resolution, comprehensive rule coverage
 
 - `build_component_contract` - Creates contracts for refactored components
-  - Parameters: `directory`, `templateFile`, `styleFile`, `typescriptFile`, `dsComponentName`
+  - Parameters: `saveLocation`, `typescriptFile` (required), `templateFile` (optional), `styleFile` (optional), `dsComponentName` (optional)
   - Returns: JSON contract with public API, DOM structure, and styles
   - Purpose: Capture post-refactoring component state
+  - Note: Template and style files are optional for components with inline templates/styles
 
 - `list_component_contracts` - Lists available component contracts
   - Parameters: `directory`
@@ -564,9 +578,9 @@ This is your last chance to make changes before opening the pull request.
   - Purpose: Identify before/after contract pairs for comparison
 
 - `diff_component_contract` - Compares component contracts
-  - Parameters: `directory`, `contractBeforePath`, `contractAfterPath`, `dsComponentName`
+  - Parameters: `saveLocation`, `contractBeforePath`, `contractAfterPath`, `dsComponentName`
   - Returns: Detailed diff highlighting changes in API, DOM, and styles
-  - Saves: Diff files to `.cursor/tmp/contracts/<component>/diffs/`
+  - Saves: Diff files to the specified saveLocation path
 
 ### Flow
 

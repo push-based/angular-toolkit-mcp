@@ -2,6 +2,7 @@ import { COMPONENT_REGEXES } from './regex-helpers.js';
 
 /**
  * Validates that a component name is a valid Design System component name
+ * Accepts both formats: "Button" and "DsButton"
  * @param componentName The component name to validate
  * @throws Error if the component name is invalid
  */
@@ -14,14 +15,14 @@ export function validateComponentName(
     !COMPONENT_REGEXES.isValidDsComponent(componentName)
   ) {
     throw new Error(
-      'Invalid component name. Must be a string starting with "Ds".',
+      'Invalid component name. Must be a valid PascalCase string (e.g., "Button" or "DsButton").',
     );
   }
 }
 
 /**
  * Converts a Design System component name to kebab case
- * @param componentName The component name (e.g., "DsButton")
+ * @param componentName The component name (e.g., "DsButton" or "Button")
  * @returns The kebab case name (e.g., "button")
  */
 export function componentNameToKebabCase(componentName: string): string {
@@ -29,7 +30,7 @@ export function componentNameToKebabCase(componentName: string): string {
 
   if (!kebabCase?.trim()?.length) {
     throw new Error(
-      'Invalid component name. Must be a string starting with "Ds".',
+      'Invalid component name. Must be a valid PascalCase string (e.g., "Button" or "DsButton").',
     );
   }
 
@@ -38,7 +39,7 @@ export function componentNameToKebabCase(componentName: string): string {
 
 /**
  * Creates a tag name from a component name
- * @param componentName The component name (e.g., "DsButton")
+ * @param componentName The component name (e.g., "DsButton" or "Button")
  * @returns The tag name (e.g., "ds-button")
  */
 export function componentNameToTagName(componentName: string): string {
