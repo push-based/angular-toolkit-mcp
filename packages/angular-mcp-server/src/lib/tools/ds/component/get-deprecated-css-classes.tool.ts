@@ -33,7 +33,7 @@ export const getDeprecatedCssClassesHandler = createHandler<
         'Missing ds.deprecatedCssClassesPath. Provide --ds.deprecatedCssClassesPath in mcp.json file.',
       );
     }
-    return getDeprecatedCssClasses(
+    return await getDeprecatedCssClasses(
       componentName,
       deprecatedCssClassesPath,
       cwd,

@@ -1,7 +1,7 @@
-import { validateComponentName } from '../../shared/utils/component-validation';
-import { getDeprecatedCssClasses } from './deprecated-css-helpers';
-import { getComponentDocs } from './doc-helpers';
-import { getComponentPathsInfo } from './paths-helpers';
+import { validateComponentName } from '../../shared/utils/component-validation.js';
+import { getDeprecatedCssClasses } from './deprecated-css-helpers.js';
+import { getComponentDocs } from './doc-helpers.js';
+import { getComponentPathsInfo } from './paths-helpers.js';
 
 export interface ComponentMetadataParams {
   componentName: string;
@@ -35,7 +35,7 @@ export async function analyzeComponentMetadata(
     params.componentName,
     storybookDocsRoot,
   );
-  const deprecatedCssClassesList = getDeprecatedCssClasses(
+  const deprecatedCssClassesList = await getDeprecatedCssClasses(
     params.componentName,
     deprecatedCssClassesPath,
     cwd,

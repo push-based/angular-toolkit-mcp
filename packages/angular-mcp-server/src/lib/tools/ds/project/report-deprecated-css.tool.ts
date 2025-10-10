@@ -48,7 +48,7 @@ export const reportDeprecatedCssHandler = createHandler<
       );
     }
 
-    const deprecated = getDeprecatedCssClasses(
+    const deprecated = await getDeprecatedCssClasses(
       componentName,
       deprecatedCssClassesPath,
       cwd,

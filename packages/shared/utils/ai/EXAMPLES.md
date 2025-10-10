@@ -95,43 +95,61 @@ if (componentFiles.length > 0) {
 
 ---
 
-## 3 — String utilities and transformations
+## 3 — Command formatting and logging
 
-> Transform and manipulate strings for various use cases.
+> Format commands with colors and context for better development experience.
 
 ```ts
-import { slugify, pluralize, toUnixPath } from '@push-based/utils';
+import { formatCommandLog, isVerbose, calcDuration } from '@push-based/utils';
 
-// Slugify text for URLs
-const title = 'Hello World! This is a Test';
-const slug = slugify(title);
-console.log(`Title: "${title}"`);
-console.log(`Slug: "${slug}"`);
-// → Title: "Hello World! This is a Test"
-// → Slug: "hello-world-this-is-a-test"
+// Set verbose mode for demonstration
+process.env['NG_MCP_VERBOSE'] = 'true';
 
-// Smart pluralization
-const words = ['cat', 'dog', 'baby', 'box', 'mouse'];
-words.forEach((word) => {
-  console.log(`${word} → ${pluralize(word)}`);
+// Format commands with different contexts
+const commands = [
+  { cmd: 'npm', args: ['install'], cwd: undefined },
+  { cmd: 'npx', args: ['eslint', '--fix', 'src/'], cwd: './packages/app' },
+  { cmd: 'node', args: ['build.js', '--prod'], cwd: '../tools' },
+  {
+    cmd: 'git',
+    args: ['commit', '-m', 'feat: add new feature'],
+    cwd: process.cwd(),
+  },
+];
+
+console.log('Formatted commands:');
+commands.forEach(({ cmd, args, cwd }) => {
+  const formatted = formatCommandLog(cmd, args, cwd);
+  console.log(formatted);
 });
-// → cat → cats
-// → dog → dogs
-// → baby → babies
-// → box → boxes
-// → mouse → mouses
 
-// Conditional pluralization based on count
-console.log(`1 ${pluralize('item', 1)}`); // → 1 item
-console.log(`5 ${pluralize('item', 5)}`); // → 5 items
+// Performance timing example
+async function timedOperation() {
+  const start = performance.now();
 
-// Path normalization
-const windowsPath = 'C:\\Users\\John\\Documents\\file.txt';
-const unixPath = toUnixPath(windowsPath);
-console.log(`Windows: ${windowsPath}`);
-console.log(`Unix: ${unixPath}`);
-// → Windows: C:\Users\John\Documents\file.txt
-// → Unix: C:/Users/John/Documents/file.txt
+  // Simulate some work
+  await new Promise((resolve) => setTimeout(resolve, 150));
+
+  const duration = calcDuration(start);
+  console.log(`Operation completed in ${duration}ms`);
+}
+
+// Verbose logging check
+if (isVerbose()) {
+  console.log('🔍 Verbose logging is enabled');
+  await timedOperation();
+} else {
+  console.log('🔇 Verbose logging is disabled');
+}
+
+// Output (with ANSI colors in terminal):
+// → Formatted commands:
+// → $ npm install
+// → packages/app $ npx eslint --fix src/
+// → .. $ node build.js --prod
+// → $ git commit -m feat: add new feature
+// → 🔍 Verbose logging is enabled
+// → Operation completed in 152ms
 ```
 
 ---
@@ -203,7 +221,105 @@ complexArgs.forEach((arg) => console.log(`  ${arg}`));
 
 ---
 
-## 5 — Advanced file operations with generators
+## 5 — Error handling and process management
+
+> Handle process errors gracefully with comprehensive error information.
+
+```ts
+import { executeProcess, ProcessError } from '@push-based/utils';
+
+async function robustProcessExecution() {
+  const commands = [
+    { command: 'node', args: ['--version'] }, // ✅ Should succeed
+    { command: 'nonexistent-command', args: [] }, // ❌ Should fail
+    { command: 'node', args: ['-e', 'process.exit(1)'] }, // ❌ Should fail with exit code 1
+  ];
+
+  for (const config of commands) {
+    try {
+      console.log(
+        `\n🚀 Executing: ${config.command} ${config.args?.join(' ') || ''}`
+      );
+
+      const result = await executeProcess({
+        ...config,
+        observer: {
+          onStdout: (data) => console.log(`  📤 ${data.trim()}`),
+          onStderr: (data) => console.error(`  ❌ ${data.trim()}`),
+          onComplete: () => console.log('  ✅ Process completed'),
+        },
+      });
+
+      console.log(
+        `  ✅ Success! Exit code: ${result.code}, Duration: ${result.duration}ms`
+      );
+    } catch (error) {
+      if (error instanceof ProcessError) {
+        console.error(`  ❌ Process failed:`);
+        console.error(`     Exit code: ${error.code}`);
+        console.error(
+          `     Error output: ${error.stderr.trim() || 'No stderr'}`
+        );
+        console.error(
+          `     Standard output: ${error.stdout.trim() || 'No stdout'}`
+        );
+      } else {
+        console.error(`  ❌ Unexpected error: ${error}`);
+      }
+    }
+  }
+
+  // Example with ignoreExitCode option
+  console.log('\n🔄 Executing command with ignoreExitCode=true:');
+  try {
+    const result = await executeProcess({
+      command: 'node',
+      args: ['-e', 'console.log("Hello"); process.exit(1)'],
+      ignoreExitCode: true,
+      observer: {
+        onStdout: (data) => console.log(`  📤 ${data.trim()}`),
+        onComplete: () =>
+          console.log('  ✅ Process completed (exit code ignored)'),
+      },
+    });
+
+    console.log(`  ✅ Completed with exit code ${result.code} (ignored)`);
+    console.log(`  📝 Output: ${result.stdout.trim()}`);
+  } catch (error) {
+    console.error(`  ❌ This shouldn't happen with ignoreExitCode=true`);
+  }
+}
+
+await robustProcessExecution();
+
+// Output:
+// → 🚀 Executing: node --version
+// →   📤 v18.17.0
+// →   ✅ Process completed
+// →   ✅ Success! Exit code: 0, Duration: 42ms
+// →
+// → 🚀 Executing: nonexistent-command
+// →   ❌ Process failed:
+// →      Exit code: null
+// →      Error output: spawn nonexistent-command ENOENT
+// →      Standard output: No stdout
+// →
+// → 🚀 Executing: node -e process.exit(1)
+// →   ❌ Process failed:
+// →      Exit code: 1
+// →      Error output: No stderr
+// →      Standard output: No stdout
+// →
+// → 🔄 Executing command with ignoreExitCode=true:
+// →   📤 Hello
+// →   ✅ Process completed (exit code ignored)
+// →   ✅ Completed with exit code 1 (ignored)
+// →   📝 Output: Hello
+```
+
+---
+
+## 6 — Advanced file operations with generators
 
 > Use async generators for efficient file processing.
 
@@ -310,172 +426,55 @@ if (largeFiles.length > 0) {
 // → Total lines: 88
 // → Lines with 'export': 5
 // → First few matches:
-// →   Line 2 (1 hits): export function toUnixPath(path: string): string {
-// →   Line 6 (1 hits): export function slugify(text: string): string {
-// →   Line 14 (1 hits): export function pluralize(text: string, amount?: number): string {
+// →   Line 2 (1 hits): export function calcDuration(start: number, stop?: number): number {
+// →   Line 6 (1 hits): export function isVerbose(): boolean {
+// →   Line 14 (1 hits): export function formatCommandLog(command: string, args?: string[], cwd?: string): string {
 ```
 
 ---
 
-## 6 — Command formatting and logging
+## 7 — ES Module loading and dynamic imports
 
-> Format commands with colors and context for better development experience.
-
-```ts
-import { formatCommandLog, isVerbose, calcDuration } from '@push-based/utils';
-
-// Set verbose mode for demonstration
-process.env['NG_MCP_VERBOSE'] = 'true';
-
-// Format commands with different contexts
-const commands = [
-  { cmd: 'npm', args: ['install'], cwd: undefined },
-  { cmd: 'npx', args: ['eslint', '--fix', 'src/'], cwd: './packages/app' },
-  { cmd: 'node', args: ['build.js', '--prod'], cwd: '../tools' },
-  {
-    cmd: 'git',
-    args: ['commit', '-m', 'feat: add new feature'],
-    cwd: process.cwd(),
-  },
-];
-
-console.log('Formatted commands:');
-commands.forEach(({ cmd, args, cwd }) => {
-  const formatted = formatCommandLog(cmd, args, cwd);
-  console.log(formatted);
-});
-
-// Performance timing example
-async function timedOperation() {
-  const start = performance.now();
-
-  // Simulate some work
-  await new Promise((resolve) => setTimeout(resolve, 150));
-
-  const duration = calcDuration(start);
-  console.log(`Operation completed in ${duration}ms`);
-
-  // You can also provide explicit end time
-  const explicitEnd = performance.now();
-  const explicitDuration = calcDuration(start, explicitEnd);
-  console.log(`Explicit timing: ${explicitDuration}ms`);
-}
-
-// Verbose logging check
-if (isVerbose()) {
-  console.log('🔍 Verbose logging is enabled');
-  await timedOperation();
-} else {
-  console.log('🔇 Verbose logging is disabled');
-}
-
-// Output (with ANSI colors in terminal):
-// → Formatted commands:
-// → $ npm install
-// → packages/app $ npx eslint --fix src/
-// → .. $ node build.js --prod
-// → $ git commit -m feat: add new feature
-// → 🔍 Verbose logging is enabled
-// → Operation completed in 152ms
-// → Explicit timing: 152ms
-```
-
----
-
-## 7 — Error handling and process management
-
-> Handle process errors gracefully with comprehensive error information.
+> Load ES modules dynamically and extract default exports safely.
 
 ```ts
-import { executeProcess, ProcessError } from '@push-based/utils';
+import { loadDefaultExport } from '@push-based/utils';
 
-async function robustProcessExecution() {
-  const commands = [
-    { command: 'node', args: ['--version'] }, // ✅ Should succeed
-    { command: 'nonexistent-command', args: [] }, // ❌ Should fail
-    { command: 'node', args: ['-e', 'process.exit(1)'] }, // ❌ Should fail with exit code 1
-  ];
+// Load configuration from ES module
+const config = await loadDefaultExport('./config/app.config.mjs');
+console.log(`API Port: ${config.port}`);
 
-  for (const config of commands) {
-    try {
-      console.log(
-        `\n🚀 Executing: ${config.command} ${config.args?.join(' ') || ''}`
-      );
-
-      const result = await executeProcess({
-        ...config,
-        observer: {
-          onStdout: (data) => console.log(`  📤 ${data.trim()}`),
-          onStderr: (data) => console.error(`  ❌ ${data.trim()}`),
-          onComplete: () => console.log('  ✅ Process completed'),
-        },
-      });
-
-      console.log(
-        `  ✅ Success! Exit code: ${result.code}, Duration: ${result.duration}ms`
-      );
-    } catch (error) {
-      if (error instanceof ProcessError) {
-        console.error(`  ❌ Process failed:`);
-        console.error(`     Exit code: ${error.code}`);
-        console.error(
-          `     Error output: ${error.stderr.trim() || 'No stderr'}`
-        );
-        console.error(
-          `     Standard output: ${error.stdout.trim() || 'No stdout'}`
-        );
-      } else {
-        console.error(`  ❌ Unexpected error: ${error}`);
-      }
-    }
-  }
-
-  // Example with ignoreExitCode option
-  console.log('\n🔄 Executing command with ignoreExitCode=true:');
-  try {
-    const result = await executeProcess({
-      command: 'node',
-      args: ['-e', 'console.log("Hello"); process.exit(1)'],
-      ignoreExitCode: true,
-      observer: {
-        onStdout: (data) => console.log(`  📤 ${data.trim()}`),
-        onComplete: () =>
-          console.log('  ✅ Process completed (exit code ignored)'),
-      },
-    });
-
-    console.log(`  ✅ Completed with exit code ${result.code} (ignored)`);
-    console.log(`  📝 Output: ${result.stdout.trim()}`);
-  } catch (error) {
-    console.error(`  ❌ This shouldn't happen with ignoreExitCode=true`);
-  }
+// Load with type safety
+interface AppData {
+  version: string;
+  features: string[];
 }
 
-await robustProcessExecution();
+const appData = await loadDefaultExport<AppData>('./data/app.mjs');
+console.log(`App version: ${appData.version}`);
+console.log(`Features: ${appData.features.join(', ')}`);
+
+// Handle loading errors gracefully
+try {
+  const plugin = await loadDefaultExport('./plugins/optional.mjs');
+  console.log('✅ Plugin loaded');
+} catch (error) {
+  if (error.message.includes('No default export found')) {
+    console.warn('⚠️  Module missing default export');
+  } else {
+    console.warn('⚠️  Plugin not found, continuing without it');
+  }
+}
 
 // Output:
-// → 🚀 Executing: node --version
-// →   📤 v18.17.0
-// →   ✅ Process completed
-// →   ✅ Success! Exit code: 0, Duration: 42ms
-// →
-// → 🚀 Executing: nonexistent-command
-// →   ❌ Process failed:
-// →      Exit code: null
-// →      Error output: spawn nonexistent-command ENOENT
-// →      Standard output: No stdout
-// →
-// → 🚀 Executing: node -e process.exit(1)
-// →   ❌ Process failed:
-// →      Exit code: 1
-// →      Error output: No stderr
-// →      Standard output: No stdout
-// →
-// → 🔄 Executing command with ignoreExitCode=true:
-// →   📤 Hello
-// →   ✅ Process completed (exit code ignored)
-// →   ✅ Completed with exit code 1 (ignored)
-// →   📝 Output: Hello
+// → API Port: 3000
+// → App version: 1.2.0  
+// → Features: auth, logging, metrics
+// → ⚠️  Plugin not found, continuing without it
 ```
+
+---
+
+
 
 These examples demonstrate the comprehensive capabilities of the `@push-based/utils` library for process execution, file operations, string manipulation, and development tooling in Node.js applications.

@@ -1,5 +1,5 @@
 import { ToolSchemaOptions } from '@push-based/models';
-import { COMMON_ANNOTATIONS } from '../../../shared';
+import { COMMON_ANNOTATIONS } from '../../../shared/index.js';
 
 /**
  * Schema for building component contracts

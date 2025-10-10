@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import { resolveCrossPlatformPath } from '../../shared/utils/cross-platform-path.js';
+import { loadDefaultExport } from '@push-based/utils';
 
 export interface DeprecatedCssComponent {
   componentName: string;
@@ -14,11 +15,11 @@ export interface DeprecatedCssComponent {
  * @returns Array of deprecated CSS classes for the component
  * @throws Error if file not found, invalid format, or component not found
  */
-export function getDeprecatedCssClasses(
+export async function getDeprecatedCssClasses(
   componentName: string,
   deprecatedCssClassesPath: string,
   cwd: string,
-): string[] {
+): Promise<string[]> {
   if (
     !deprecatedCssClassesPath ||
     typeof deprecatedCssClassesPath !== 'string'
@@ -31,11 +32,8 @@ export function getDeprecatedCssClasses(
     throw new Error(`File not found at deprecatedCssClassesPath: ${absPath}`);
   }
 
-  const module = require(absPath);
-
-  // Handle both ES modules (export default) and CommonJS (module.exports)
-  // Support: export default dsComponents, module.exports = { dsComponents }, or direct module.exports = dsComponents
-  const dsComponents = module.default || module.dsComponents || module;
+  const dsComponents =
+    await loadDefaultExport<DeprecatedCssComponent[]>(absPath);
 
   if (!Array.isArray(dsComponents)) {
     throw new Error('Invalid export: expected dsComponents to be an array');

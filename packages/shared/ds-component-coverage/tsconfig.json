@@ -4,16 +4,13 @@
   "include": [],
   "references": [
     {
-      "path": "../utils"
+      "path": "../models"
     },
     {
       "path": "../styles-ast-utils"
     },
     {
       "path": "../angular-ast-utils"
-    },
-    {
-      "path": "../models"
     },
     {
       "path": "./tsconfig.lib.json"

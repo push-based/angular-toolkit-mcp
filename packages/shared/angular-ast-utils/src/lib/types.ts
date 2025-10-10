@@ -1,7 +1,7 @@
 import { Root } from 'postcss';
 import type { ParsedTemplate } from '@angular/compiler' with { 'resolution-mode': 'import' };
 import { z } from 'zod';
-import { AngularUnitSchema } from './schema';
+import { AngularUnitSchema } from './schema.js';
 
 export type Asset<T> = SourceLink & {
   parse: () => Promise<T>;

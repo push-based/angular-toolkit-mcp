@@ -7,6 +7,7 @@ import { buildComponentContract } from './utils/build-contract.js';
 import { generateContractSummary } from '../shared/utils/contract-file-ops.js';
 import { ContractResult } from './models/types.js';
 import { resolveCrossPlatformPath } from '../../shared/utils/cross-platform-path.js';
+import { createHash } from 'node:crypto';
 
 interface BuildComponentContractOptions extends BaseHandlerOptions {
   saveLocation: string;
@@ -52,10 +53,7 @@ export const buildComponentContractHandler = createHandler<
     );
 
     const contractString = JSON.stringify(contract, null, 2);
-    const hash = require('node:crypto')
-      .createHash('sha256')
-      .update(contractString)
-      .digest('hex');
+    const hash = createHash('sha256').update(contractString).digest('hex');
 
     const effectiveSaveLocation = resolveCrossPlatformPath(cwd, saveLocation);
 

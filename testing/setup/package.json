@@ -1,6 +1,6 @@
 {
   "name": "@push-based/testing-setup",
-  "type": "commonjs",
+  "type": "module",
   "version": "0.0.1",
   "main": "./src/index.mjs",
   "types": "./src/index.d.ts",

@@ -35,9 +35,9 @@ export async function analyzeViolationsBase<T extends BaseViolationResult>(
     );
   }
 
-  const deprecatedCssClasses = getDeprecatedCssClasses(
+  const deprecatedCssClasses = await getDeprecatedCssClasses(
     componentName,
-    deprecatedCssClassesPath || '',
+    deprecatedCssClassesPath,
     cwd,
   );
 
