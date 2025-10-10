@@ -1,8 +1,31 @@
 {
-  "name": "@push-based/angular-mcp",
-  "version": "0.0.1",
-  "private": true,
-  "bin": "main.js",
+  "name": "@push-based/angular-toolkit-mcp",
+  "version": "0.1.0",
+  "description": "A Model Context Protocol server for Angular project analysis and refactoring",
+  "keywords": [
+    "mcp",
+    "angular",
+    "refactoring",
+    "analysis",
+    "model-context-protocol"
+  ],
+  "author": "Push-Based",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/push-based/angular-toolkit-mcp.git"
+  },
+  "homepage": "https://github.com/push-based/angular-toolkit-mcp",
+  "bugs": "https://github.com/push-based/angular-toolkit-mcp/issues",
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "bin": {
+    "angular-toolkit-mcp": "main.js"
+  },
   "files": [
     "main.js",
     "README.md"

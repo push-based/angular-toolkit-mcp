@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "type": "module",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "publish:mcp": "nx build @push-based/angular-toolkit-mcp && cd packages/angular-mcp/dist && npm publish"
+  },
   "private": true,
   "devDependencies": {
     "@eslint/js": "^9.28.0",
