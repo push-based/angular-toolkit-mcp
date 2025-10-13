@@ -17,10 +17,18 @@ export async function loadDefaultExport<T = unknown>(
 ): Promise<T> {
   try {
     const fileUrl = pathToFileURL(filePath).toString();
-    // Use indirect eval to prevent webpack from replacing dynamic import with its own context
-    // This ensures the import() call works at runtime for external user files
-    const dynamicImport = new Function('url', 'return import(url)');
-    const module = await dynamicImport(fileUrl);
+
+    // In test environments (Vitest), use native import to avoid transformation issues
+    // In production (webpack/bundled), use Function constructor to preserve dynamic import
+    const isTestEnv =
+      typeof process !== 'undefined' &&
+      (process.env.NODE_ENV === 'test' ||
+        process.env.VITEST === 'true' ||
+        typeof (globalThis as Record<string, unknown>).vitest !== 'undefined');
+
+    const module = isTestEnv
+      ? await import(fileUrl)
+      : await new Function('url', 'return import(url)')(fileUrl);
 
     if (!('default' in module)) {
       throw new Error(
