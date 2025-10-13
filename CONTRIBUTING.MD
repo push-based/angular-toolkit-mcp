@@ -13,6 +13,7 @@ Thank you for your interest in contributing to the Angular Toolkit MCP! This doc
 - [Submitting Changes](#submitting-changes)
 - [Documentation](#documentation)
 - [Debugging](#debugging)
+- [Release Process](#release-process)
 
 ## 🚀 Getting Started
 
@@ -38,7 +39,7 @@ Thank you for your interest in contributing to the Angular Toolkit MCP! This doc
 
 2. **Build the project:**
    ```bash
-   npx nx build angular-mcp
+   npx nx build angular-toolkit-mcp
    ```
 
 ### Nx Workspace Commands
@@ -209,7 +210,7 @@ Before committing, ensure:
 Start the MCP server in debug mode:
 
 ```bash
-npx nx run angular-mcp:debug
+npx nx run angular-toolkit-mcp:debug
 ```
 
 This starts the server with the MCP Inspector for debugging.
@@ -221,6 +222,78 @@ This starts the server with the MCP Inspector for debugging.
 - Check server logs for detailed error information
 - Use `console.log` or debugger statements in development
 - Test with the minimal-repo examples
+
+## 📦 Release Process
+
+### Publishing to npm
+
+The Angular Toolkit MCP is published to npm as `@push-based/angular-toolkit-mcp`. Only maintainers with appropriate permissions can publish new versions.
+
+### Release Steps
+
+1. **Update Version**
+   
+   Update the version in `packages/angular-mcp/package.json` following semantic versioning:
+   - **Patch** (0.1.0 → 0.1.1): Bug fixes
+   - **Minor** (0.1.0 → 0.2.0): New features (backwards compatible)
+   - **Major** (0.1.0 → 1.0.0): Breaking changes
+
+2. **Build the Package**
+   ```bash
+   npx nx build angular-toolkit-mcp
+   ```
+
+3. **Test the Package**
+   ```bash
+   cd packages/angular-mcp/dist
+   npm pack
+   # Test the generated .tgz file
+   node main.js --help
+   ```
+
+4. **Authenticate with npm**
+   ```bash
+   npm login
+   ```
+   Ensure you have access to the `@push-based` scope.
+
+5. **Publish to npm**
+   ```bash
+   npm run publish:mcp
+   ```
+   Or manually:
+   ```bash
+   npx nx build angular-toolkit-mcp
+   cd packages/angular-mcp/dist
+   npm publish
+   ```
+
+6. **Verify Publication**
+   ```bash
+   npm view @push-based/angular-toolkit-mcp
+   npx @push-based/angular-toolkit-mcp@latest --help
+   ```
+
+7. **Tag the Release**
+   ```bash
+   git tag v0.1.0
+   git push origin v0.1.0
+   ```
+
+8. **Update Documentation**
+   - Update CHANGELOG.md with release notes
+   - Update any version references in documentation
+
+### Pre-release Checklist
+
+Before publishing a new version:
+- [ ] All tests pass (`npx nx run-many --target=test --all`)
+- [ ] No linting errors (`npx nx run-many --target=lint --all`)
+- [ ] Build succeeds (`npx nx build angular-toolkit-mcp`)
+- [ ] Version number updated in package.json
+- [ ] CHANGELOG.md updated with changes
+- [ ] Documentation updated as needed
+- [ ] Local npm pack test successful
 
 ## 📄 License
 

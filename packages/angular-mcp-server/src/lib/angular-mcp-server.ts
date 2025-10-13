@@ -90,64 +90,71 @@ export class AngularMcpServerWrapper {
     this.mcpServer.server.setRequestHandler(
       ListResourcesRequestSchema,
       async (): Promise<ListResourcesResult> => {
+        const resources = [];
+
+        // Try to read the llms.txt file from the package root (optional)
         try {
-          // Read the llms.txt file from the package root
           const filePath = path.resolve(__dirname, '../../llms.txt');
-          console.log('Attempting to read file from:', filePath);
-          const content = fs.readFileSync(filePath, 'utf-8');
-          const lines = content.split('\n');
 
-          const resources = [];
-          let currentSection = '';
+          // Only attempt to read if file exists
+          if (fs.existsSync(filePath)) {
+            console.log('Reading llms.txt from:', filePath);
+            const content = fs.readFileSync(filePath, 'utf-8');
+            const lines = content.split('\n');
 
-          for (let i = 0; i < lines.length; i++) {
-            const line = lines[i].trim();
+            let currentSection = '';
 
-            // Skip empty lines and comments that don't start with #
-            if (!line || (line.startsWith('#') && !line.includes(':'))) {
-              continue;
+            for (let i = 0; i < lines.length; i++) {
+              const line = lines[i].trim();
+
+              // Skip empty lines and comments that don't start with #
+              if (!line || (line.startsWith('#') && !line.includes(':'))) {
+                continue;
+              }
+
+              // Update section if line starts with #
+              if (line.startsWith('# ')) {
+                currentSection = line.substring(2).replace(':', '').trim();
+                continue;
+              }
+
+              // Parse markdown links: [name](url)
+              const linkMatch = line.match(/- \[(.*?)\]\((.*?)\):(.*)/);
+              if (linkMatch) {
+                const [, name, uri, description = ''] = linkMatch;
+                resources.push({
+                  uri,
+                  name: name.trim(),
+                  type: currentSection.toLowerCase(),
+                  content: description.trim() || name.trim(),
+                });
+                continue;
+              }
+
+              // Parse simple links: - [name](url)
+              const simpleLinkMatch = line.match(/- \[(.*?)\]\((.*?)\)/);
+              if (simpleLinkMatch) {
+                const [, name, uri] = simpleLinkMatch;
+                resources.push({
+                  uri,
+                  name: name.trim(),
+                  type: currentSection.toLowerCase(),
+                  content: name.trim(),
+                });
+              }
             }
-
-            // Update section if line starts with #
-            if (line.startsWith('# ')) {
-              currentSection = line.substring(2).replace(':', '').trim();
-              continue;
-            }
-
-            // Parse markdown links: [name](url)
-            const linkMatch = line.match(/- \[(.*?)\]\((.*?)\):(.*)/);
-            if (linkMatch) {
-              const [, name, uri, description = ''] = linkMatch;
-              resources.push({
-                uri,
-                name: name.trim(),
-                type: currentSection.toLowerCase(),
-                content: description.trim() || name.trim(),
-              });
-              continue;
-            }
-
-            // Parse simple links: - [name](url)
-            const simpleLinkMatch = line.match(/- \[(.*?)\]\((.*?)\)/);
-            if (simpleLinkMatch) {
-              const [, name, uri] = simpleLinkMatch;
-              resources.push({
-                uri,
-                name: name.trim(),
-                type: currentSection.toLowerCase(),
-                content: name.trim(),
-              });
-            }
+          } else {
+            console.log('llms.txt not found at:', filePath, '(skipping)');
           }
+        } catch (ctx: unknown) {
+          if (ctx instanceof Error) {
+            console.error('Error reading llms.txt (non-fatal):', ctx.message);
+          }
+        }
 
-          // Scan available design system components to add them as discoverable resources
-          try {
-            if (!this.storybookDocsRoot) {
-              return {
-                resources,
-              };
-            }
-
+        // Scan available design system components to add them as discoverable resources
+        try {
+          if (this.storybookDocsRoot) {
             const dsUiPath = path.resolve(
               process.cwd(),
               this.storybookDocsRoot,
@@ -175,46 +182,19 @@ export class AngularMcpServerWrapper {
                 });
               }
             }
-          } catch (ctx: unknown) {
-            if (ctx instanceof Error) {
-              console.error('Error scanning DS components:', ctx);
-            }
           }
-
-          return {
-            resources,
-          };
         } catch (ctx: unknown) {
           if (ctx instanceof Error) {
-            console.error('Error reading llms.txt:', ctx);
-            // Return a more informative error message
-            return {
-              resources: [
-                {
-                  uri: 'error://file-not-found',
-                  name: 'Error Reading Resources',
-                  type: 'error',
-                  content: `Failed to read llms.txt: ${
-                    ctx.message
-                  }. Attempted path: ${path.resolve(
-                    __dirname,
-                    '../../llms.txt',
-                  )}`,
-                },
-              ],
-            };
+            console.error(
+              'Error scanning DS components (non-fatal):',
+              ctx.message,
+            );
           }
-          return {
-            resources: [
-              {
-                uri: 'error://unknown',
-                name: 'Unknown Error',
-                type: 'error',
-                content: 'An unknown error occurred while reading resources',
-              },
-            ],
-          };
         }
+
+        return {
+          resources,
+        };
       },
     );
   }

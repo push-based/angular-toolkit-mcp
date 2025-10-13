@@ -44,7 +44,7 @@ Instead of the palette-based flow, copy the manual configuration from your works
         "./packages/angular-mcp/dist/main.js",
         "--workspaceRoot=/absolute/path/to/angular-toolkit-mcp",
         "--ds.storybookDocsRoot=packages/minimal-repo/packages/design-system/storybook-host-app/src/components",
-        "--ds.deprecatedCssClassesPath=packages/minimal-repo/packages/design-system/component-options.js",
+        "--ds.deprecatedCssClassesPath=packages/minimal-repo/packages/design-system/component-options.mjs",
         "--ds.uiRoot=packages/minimal-repo/packages/design-system/ui"
       ]
     }

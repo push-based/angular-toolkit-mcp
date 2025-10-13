@@ -17,7 +17,18 @@ export async function loadDefaultExport<T = unknown>(
 ): Promise<T> {
   try {
     const fileUrl = pathToFileURL(filePath).toString();
-    const module = await import(fileUrl);
+
+    // In test environments (Vitest), use native import to avoid transformation issues
+    // In production (webpack/bundled), use Function constructor to preserve dynamic import
+    const isTestEnv =
+      typeof process !== 'undefined' &&
+      (process.env.NODE_ENV === 'test' ||
+        process.env.VITEST === 'true' ||
+        typeof (globalThis as Record<string, unknown>).vitest !== 'undefined');
+
+    const module = isTestEnv
+      ? await import(fileUrl)
+      : await new Function('url', 'return import(url)')(fileUrl);
 
     if (!('default' in module)) {
       throw new Error(

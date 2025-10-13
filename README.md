@@ -20,6 +20,27 @@ A Model Context Protocol (MCP) server that provides Angular project analysis and
 - Breaking change detection during component updates
 - Code quality analysis and improvement
 
+## Quick Start
+
+Install and run via npx (no manual build required):
+
+```json
+{
+  "mcpServers": {
+    "angular-toolkit": {
+      "command": "npx",
+      "args": [
+        "@push-based/angular-toolkit-mcp@latest",
+        "--workspaceRoot=/absolute/path/to/your/angular/workspace",
+        "--ds.uiRoot=packages/ui"
+      ]
+    }
+  }
+}
+```
+
+**Required Node.js version:** 18 or higher
+
 ## Configuration
 
 ### Prerequisites
@@ -28,16 +49,22 @@ A Model Context Protocol (MCP) server that provides Angular project analysis and
 
 ### Installation & Setup
 
+#### For Users
+
+Simply use npx as shown in the Quick Start section above. No installation or build required.
+
+#### For Contributors (Local Development)
+
 1. Clone the repository
 
-2. Build the MCP
+2. Install dependencies and build the MCP
 
-  ```bash
+   ```bash
    npm install
    npx nx build angular-mcp
-  ```
+   ```
 
-2. Locate the built server
+3. Locate the built server
 
    After building, the server will be available at `packages/angular-mcp/dist/main.js`
 
@@ -45,22 +72,40 @@ A Model Context Protocol (MCP) server that provides Angular project analysis and
 
 Add the server to your MCP client configuration (e.g., Claude Desktop, Cursor, Copilot, Windsurf or other MCP-compatible clients):
 
-#### For Cursor (`.cursor/mcp.json` or MCP settings):
-
-Copy `.cursor/mcp.json.example` to the project you're working on. Copied file should be: `.cursor/mcp.json` and update `angular-toolkit-mcp` values accordingly:
+#### For Users (npx - Recommended)
 
 ```json
 {
   "mcpServers": {
-     ...(other servers)...
+    "angular-toolkit": {
+      "command": "npx",
+      "args": [
+        "@push-based/angular-toolkit-mcp@latest",
+        "--workspaceRoot=/absolute/path/to/your/angular/workspace",
+        "--ds.uiRoot=relative/path/to/ui/components",
+        "--ds.storybookDocsRoot=relative/path/to/storybook/docs",
+        "--ds.deprecatedCssClassesPath=relative/path/to/component-options.mjs"
+      ]
+    }
+  }
+}
+```
+
+#### For Contributors (Local Development)
+
+When developing locally, point to the built server:
+
+```json
+{
+  "mcpServers": {
     "angular-toolkit-mcp": {
       "command": "node",
       "args": [
-        "/absolute/path/to/angular-mcp-server/packages/angular-mcp-server/dist/index.js",
+        "/absolute/path/to/angular-toolkit-mcp/packages/angular-mcp/dist/main.js",
         "--workspaceRoot=/absolute/path/to/your/angular/workspace",
+        "--ds.uiRoot=relative/path/to/ui/components",
         "--ds.storybookDocsRoot=relative/path/to/storybook/docs",
-        "--ds.deprecatedCssClassesPath=relative/path/to/component-options.js",
-        "--ds.uiRoot=relative/path/to/ui/components"
+        "--ds.deprecatedCssClassesPath=relative/path/to/component-options.mjs"
       ]
     }
   }
@@ -85,7 +130,7 @@ Copy `.cursor/mcp.json.example` to the project you're working on. Copied file sh
 | Parameter | Type | Description | Example |
 |-----------|------|-------------|---------|
 | `ds.storybookDocsRoot` | Relative path | Root directory containing Storybook documentation used by documentation-related tools | `storybook/docs` |
-| `ds.deprecatedCssClassesPath` | Relative path | JavaScript file mapping deprecated CSS classes used by violation and deprecated CSS tools | `design-system/component-options.js` |
+| `ds.deprecatedCssClassesPath` | Relative path | JavaScript file mapping deprecated CSS classes used by violation and deprecated CSS tools | `design-system/component-options.mjs` |
 
 When optional parameters are omitted:
 
@@ -94,7 +139,7 @@ When optional parameters are omitted:
 
 #### Deprecated CSS Classes File Format
 
-The `component-options.js` file should export an array of component configurations:
+The `component-options.mjs` file should export an array of component configurations:
 
 ```javascript
 const dsComponents = [
@@ -121,7 +166,7 @@ my-angular-workspace/
 │   │   ├── modal/
 │   │   └── ...
 │   └── design-system/
-│       └── component-options.js      # ds.deprecatedCssClassesPath
+│       └── component-options.mjs     # ds.deprecatedCssClassesPath
 ├── storybook/
 │   └── docs/                         # ds.storybookDocsRoot
 └── apps/
@@ -132,7 +177,7 @@ my-angular-workspace/
 
 - **Server not starting**: Ensure all paths are correct and the server is built
 - **Permission errors**: Check that the Node.js process has read access to all specified directories
-- **Component not found**: Verify that component names in `component-options.js` match your actual component class names
+- **Component not found**: Verify that component names in `component-options.mjs` match your actual component class names
 - **Path resolution issues**: Use absolute paths for `workspaceRoot` and relative paths (from workspace root) for other parameters
 
 ## Available Tools

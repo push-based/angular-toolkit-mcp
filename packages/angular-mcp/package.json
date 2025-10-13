@@ -1,10 +1,34 @@
 {
-  "name": "@push-based/angular-mcp",
-  "version": "0.0.1",
-  "private": true,
-  "bin": "main.js",
+  "name": "@push-based/angular-toolkit-mcp",
+  "version": "0.2.0",
+  "description": "A Model Context Protocol server for Angular project analysis and refactoring",
+  "keywords": [
+    "mcp",
+    "angular",
+    "refactoring",
+    "analysis",
+    "model-context-protocol"
+  ],
+  "author": "Push-Based",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/push-based/angular-toolkit-mcp.git"
+  },
+  "homepage": "https://github.com/push-based/angular-toolkit-mcp",
+  "bugs": "https://github.com/push-based/angular-toolkit-mcp/issues",
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "bin": {
+    "angular-toolkit-mcp": "main.js"
+  },
   "files": [
     "main.js",
+    "*.js",
     "README.md"
   ],
   "nx": {
@@ -41,7 +65,7 @@
         "dependsOn": [
           "build"
         ],
-        "command": "npx @modelcontextprotocol/inspector node packages/angular-mcp/dist/main.js --workspaceRoot=/root/path/to/workspace   --ds.uiRoot=packages/minimal-repo/packages/design-system/ui --ds.storybookDocsRoot=packages/minimal-repo/packages/design-system/storybook-host-app/src/components --ds.deprecatedCssClassesPath=packages/minimal-repo/packages/design-system/component-options.js"
+        "command": "npx @modelcontextprotocol/inspector node packages/angular-mcp/dist/main.js --workspaceRoot=/root/path/to/workspace   --ds.uiRoot=packages/minimal-repo/packages/design-system/ui --ds.storybookDocsRoot=packages/minimal-repo/packages/design-system/storybook-host-app/src/components --ds.deprecatedCssClassesPath=packages/minimal-repo/packages/design-system/component-options.mjs"
       }
     }
   }
