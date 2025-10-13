@@ -84,7 +84,7 @@ Add the server to your MCP client configuration (e.g., Claude Desktop, Cursor, C
         "--workspaceRoot=/absolute/path/to/your/angular/workspace",
         "--ds.uiRoot=relative/path/to/ui/components",
         "--ds.storybookDocsRoot=relative/path/to/storybook/docs",
-        "--ds.deprecatedCssClassesPath=relative/path/to/component-options.js"
+        "--ds.deprecatedCssClassesPath=relative/path/to/component-options.mjs"
       ]
     }
   }
@@ -105,7 +105,7 @@ When developing locally, point to the built server:
         "--workspaceRoot=/absolute/path/to/your/angular/workspace",
         "--ds.uiRoot=relative/path/to/ui/components",
         "--ds.storybookDocsRoot=relative/path/to/storybook/docs",
-        "--ds.deprecatedCssClassesPath=relative/path/to/component-options.js"
+        "--ds.deprecatedCssClassesPath=relative/path/to/component-options.mjs"
       ]
     }
   }
@@ -130,7 +130,7 @@ When developing locally, point to the built server:
 | Parameter | Type | Description | Example |
 |-----------|------|-------------|---------|
 | `ds.storybookDocsRoot` | Relative path | Root directory containing Storybook documentation used by documentation-related tools | `storybook/docs` |
-| `ds.deprecatedCssClassesPath` | Relative path | JavaScript file mapping deprecated CSS classes used by violation and deprecated CSS tools | `design-system/component-options.js` |
+| `ds.deprecatedCssClassesPath` | Relative path | JavaScript file mapping deprecated CSS classes used by violation and deprecated CSS tools | `design-system/component-options.mjs` |
 
 When optional parameters are omitted:
 
@@ -139,7 +139,7 @@ When optional parameters are omitted:
 
 #### Deprecated CSS Classes File Format
 
-The `component-options.js` file should export an array of component configurations:
+The `component-options.mjs` file should export an array of component configurations:
 
 ```javascript
 const dsComponents = [
@@ -166,7 +166,7 @@ my-angular-workspace/
 │   │   ├── modal/
 │   │   └── ...
 │   └── design-system/
-│       └── component-options.js      # ds.deprecatedCssClassesPath
+│       └── component-options.mjs     # ds.deprecatedCssClassesPath
 ├── storybook/
 │   └── docs/                         # ds.storybookDocsRoot
 └── apps/
@@ -177,7 +177,7 @@ my-angular-workspace/
 
 - **Server not starting**: Ensure all paths are correct and the server is built
 - **Permission errors**: Check that the Node.js process has read access to all specified directories
-- **Component not found**: Verify that component names in `component-options.js` match your actual component class names
+- **Component not found**: Verify that component names in `component-options.mjs` match your actual component class names
 - **Path resolution issues**: Use absolute paths for `workspaceRoot` and relative paths (from workspace root) for other parameters
 
 ## Available Tools

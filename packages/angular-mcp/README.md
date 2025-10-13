@@ -24,7 +24,7 @@ Add the server to your MCP client configuration (e.g., Claude Desktop, Cursor, C
         "--workspaceRoot=/absolute/path/to/your/angular/workspace",
         "--ds.uiRoot=packages/ui",
         "--ds.storybookDocsRoot=storybook/docs",
-        "--ds.deprecatedCssClassesPath=design-system/component-options.js"
+        "--ds.deprecatedCssClassesPath=design-system/component-options.mjs"
       ]
     }
   }
@@ -45,7 +45,7 @@ Add the server to your MCP client configuration (e.g., Claude Desktop, Cursor, C
 | Parameter | Type | Description | Example |
 |-----------|------|-------------|---------|
 | `ds.storybookDocsRoot` | Relative path | Root directory containing Storybook documentation | `storybook/docs` |
-| `ds.deprecatedCssClassesPath` | Relative path | JavaScript file mapping deprecated CSS classes | `design-system/component-options.js` |
+| `ds.deprecatedCssClassesPath` | Relative path | JavaScript file mapping deprecated CSS classes | `design-system/component-options.mjs` |
 
 ## Key Features
 
