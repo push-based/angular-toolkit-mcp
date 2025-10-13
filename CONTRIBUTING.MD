@@ -39,7 +39,7 @@ Thank you for your interest in contributing to the Angular Toolkit MCP! This doc
 
 2. **Build the project:**
    ```bash
-   npx nx build @push-based/angular-toolkit-mcp
+   npx nx build angular-toolkit-mcp
    ```
 
 ### Nx Workspace Commands
@@ -210,7 +210,7 @@ Before committing, ensure:
 Start the MCP server in debug mode:
 
 ```bash
-npx nx run @push-based/angular-toolkit-mcp:debug
+npx nx run angular-toolkit-mcp:debug
 ```
 
 This starts the server with the MCP Inspector for debugging.
@@ -240,7 +240,7 @@ The Angular Toolkit MCP is published to npm as `@push-based/angular-toolkit-mcp`
 
 2. **Build the Package**
    ```bash
-   npx nx build @push-based/angular-toolkit-mcp
+   npx nx build angular-toolkit-mcp
    ```
 
 3. **Test the Package**
@@ -263,7 +263,7 @@ The Angular Toolkit MCP is published to npm as `@push-based/angular-toolkit-mcp`
    ```
    Or manually:
    ```bash
-   npx nx build @push-based/angular-toolkit-mcp
+   npx nx build angular-toolkit-mcp
    cd packages/angular-mcp/dist
    npm publish
    ```
@@ -289,7 +289,7 @@ The Angular Toolkit MCP is published to npm as `@push-based/angular-toolkit-mcp`
 Before publishing a new version:
 - [ ] All tests pass (`npx nx run-many --target=test --all`)
 - [ ] No linting errors (`npx nx run-many --target=lint --all`)
-- [ ] Build succeeds (`npx nx build @push-based/angular-toolkit-mcp`)
+- [ ] Build succeeds (`npx nx build angular-toolkit-mcp`)
 - [ ] Version number updated in package.json
 - [ ] CHANGELOG.md updated with changes
 - [ ] Documentation updated as needed
