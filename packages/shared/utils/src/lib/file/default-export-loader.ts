@@ -17,7 +17,10 @@ export async function loadDefaultExport<T = unknown>(
 ): Promise<T> {
   try {
     const fileUrl = pathToFileURL(filePath).toString();
-    const module = await import(fileUrl);
+    // Use indirect eval to prevent webpack from replacing dynamic import with its own context
+    // This ensures the import() call works at runtime for external user files
+    const dynamicImport = new Function('url', 'return import(url)');
+    const module = await dynamicImport(fileUrl);
 
     if (!('default' in module)) {
       throw new Error(
