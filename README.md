@@ -1,5 +1,7 @@
 # Angular Toolkit MCP
 
+[![npm version](https://badge.fury.io/js/@push-based%2Fangular-toolkit-mcp.svg)](https://www.npmjs.com/package/@push-based/angular-toolkit-mcp)
+
 A Model Context Protocol (MCP) server that provides Angular project analysis and refactoring capabilities. This server enables LLMs to analyze Angular projects for component usage patterns, dependency analysis, code quality issues, and provides automated refactoring assistance.
 
 ## Key Features
