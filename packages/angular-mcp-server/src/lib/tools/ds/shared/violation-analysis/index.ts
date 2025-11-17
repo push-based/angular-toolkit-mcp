@@ -2,7 +2,7 @@
  * Shared violation analysis utilities
  *
  * This module provides shared functionality for analyzing design system violations
- * across different reporting formats (file and folder-based).
+ * across different reporting formats.
  */
 
 // Core analysis
@@ -11,24 +11,14 @@ export { analyzeViolationsBase } from './base-analyzer.js';
 // Coverage analysis
 export {
   analyzeProjectCoverage,
-  validateReportInput,
-  executeCoveragePlugin,
   extractComponentName,
-  formatCoverageResult,
 } from './coverage-analyzer.js';
 
 // Formatting utilities
 export {
   filterFailedAudits,
-  createNoViolationsContent,
-  extractIssuesFromAudits,
-  hasViolations,
   normalizeFilePath,
-  normalizeMessage,
   groupIssuesByFile,
-  extractUniqueFilePaths,
-  clearPathCache,
-  formatViolations,
 } from './formatters.js';
 
 // Types

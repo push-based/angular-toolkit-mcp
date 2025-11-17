@@ -125,4 +125,9 @@ export const RESULT_FORMATTERS = {
    * Formats empty results
    */
   empty: (entityType: string): string[] => [`No ${entityType} found`],
+
+  /**
+   * Formats result as JSON
+   */
+  json: (result: any): string[] => [JSON.stringify(result, null, 2)],
 } as const;

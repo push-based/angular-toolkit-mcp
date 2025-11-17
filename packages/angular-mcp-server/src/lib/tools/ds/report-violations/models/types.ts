@@ -1,40 +1,33 @@
-import {
-  BaseViolationOptions,
-  BaseViolationResult,
-  BaseViolationIssue,
-  BaseViolationAudit,
-} from '../../shared/violation-analysis/types.js';
-
-export interface ReportViolationsOptions extends BaseViolationOptions {
-  groupBy?: 'file' | 'folder';
-}
-
-export type ViolationResult = BaseViolationResult;
-export type ViolationIssue = BaseViolationIssue;
-export type ViolationAudit = BaseViolationAudit;
-
-// File-specific types (when groupBy: 'file')
-export interface FileViolation {
-  fileName: string;
-  message: string;
+// JSON output types
+export interface ViolationEntry {
+  file: string;
   lines: number[];
+  violation: string;
+  replacement: string;
 }
 
-export interface FileViolationGroup {
-  message: string;
+export interface ComponentViolationReport {
+  component: string;
+  violations: ViolationEntry[];
+}
+
+export interface AllViolationsReport {
+  components: ComponentViolationReport[];
+}
+
+// File-grouped output types
+export interface ComponentViolationInFile {
+  component: string;
   lines: number[];
+  violation: string;
+  replacement: string;
 }
 
-export interface FileViolationGroups {
-  [fileName: string]: FileViolationGroup;
+export interface FileViolationReport {
+  file: string;
+  components: ComponentViolationInFile[];
 }
 
-// Folder-specific types (when groupBy: 'folder')
-export interface FolderViolationSummary {
-  violations: number;
-  files: string[];
-}
-
-export interface FolderViolationGroups {
-  [folderPath: string]: FolderViolationSummary;
+export interface AllViolationsReportByFile {
+  files: FileViolationReport[];
 }

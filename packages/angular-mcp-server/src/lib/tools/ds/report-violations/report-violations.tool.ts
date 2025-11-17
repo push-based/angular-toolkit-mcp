@@ -8,8 +8,9 @@ import {
   COMMON_ANNOTATIONS,
 } from '../shared/models/schema-helpers.js';
 import { analyzeViolationsBase } from '../shared/violation-analysis/base-analyzer.js';
-import { formatViolations } from '../shared/violation-analysis/formatters.js';
-import { ViolationResult } from './models/types.js';
+import { groupIssuesByFile, filterFailedAudits } from '../shared/violation-analysis/formatters.js';
+import { BaseViolationResult } from '../shared/violation-analysis/types.js';
+import { ComponentViolationReport, ViolationEntry } from './models/types.js';
 
 interface ReportViolationsOptions extends BaseHandlerOptions {
   directory: string;
@@ -27,32 +28,67 @@ export const reportViolationsSchema = {
   },
 };
 
+/**
+ * Extracts deprecated class and replacement from violation message
+ */
+function parseViolationMessage(message: string): { violation: string; replacement: string } {
+  // Clean up HTML tags
+  const cleanMessage = message.replace(/<code>/g, '`').replace(/<\/code>/g, '`');
+  
+  // Extract deprecated class - look for patterns like "class `offer-badge`" or "class `btn, btn-primary`"
+  const classMatch = cleanMessage.match(/class `([^`]+)`/);
+  const violation = classMatch ? classMatch[1] : 'unknown';
+  
+  // Extract replacement component - look for "Use `ComponentName`"
+  const replacementMatch = cleanMessage.match(/Use `([^`]+)`/);
+  const replacement = replacementMatch ? replacementMatch[1] : 'unknown';
+  
+  return { violation, replacement };
+}
+
 export const reportViolationsHandler = createHandler<
   ReportViolationsOptions,
-  string[]
+  ComponentViolationReport
 >(
   reportViolationsSchema.name,
   async (params) => {
-    // Default to 'file' grouping if not specified
-    const groupBy = params.groupBy || 'file';
+    const result = await analyzeViolationsBase<BaseViolationResult>(params);
+    const failedAudits = filterFailedAudits(result);
 
-    const result = await analyzeViolationsBase<ViolationResult>(params);
+    if (failedAudits.length === 0) {
+      return {
+        component: params.componentName,
+        violations: [],
+      };
+    }
 
-    const formattedContent = formatViolations(result, params.directory, {
-      groupBy,
-    });
+    const violations: ViolationEntry[] = [];
 
-    // Extract text content from the formatted violations
-    const violationLines = formattedContent.map((item) => {
-      if (item.type === 'text') {
-        return item.text;
+    // Process all issues from all audits
+    for (const audit of failedAudits) {
+      const fileGroups = groupIssuesByFile(
+        audit.details?.issues ?? [],
+        params.directory,
+      );
+
+      for (const [fileName, { lines, message }] of Object.entries(fileGroups)) {
+        const { violation, replacement } = parseViolationMessage(message);
+        
+        violations.push({
+          file: fileName,
+          lines: lines.sort((a, b) => a - b),
+          violation,
+          replacement,
+        });
       }
-      return String(item);
-    });
+    }
 
-    return violationLines;
+    return {
+      component: params.componentName,
+      violations,
+    };
   },
-  (result) => RESULT_FORMATTERS.list(result, 'Design System Violations:'),
+  (result) => RESULT_FORMATTERS.json(result),
 );
 
 export const reportViolationsTools = [
