@@ -16,13 +16,13 @@ import {
 } from '../shared/violation-analysis/formatters.js';
 import type { BaseViolationAudit } from '../shared/violation-analysis/types.js';
 import { loadAndValidateDsComponentsFile } from '../../../validation/ds-components-file-loader.validation.js';
-import { 
+import {
   AllViolationsReport,
   AllViolationsComponentReport,
   AllViolationsEntry,
   AllViolationsReportByFile,
   FileViolationReport,
-  ComponentViolationInFile
+  ComponentViolationInFile,
 } from './models/types.js';
 
 interface ReportAllViolationsOptions extends BaseHandlerOptions {
@@ -38,7 +38,8 @@ export const reportAllViolationsSchema = {
     groupBy: {
       type: 'string',
       enum: ['component', 'file'],
-      description: 'How to group the results: "component" (default) groups by design system component showing all files affected by each component, "file" groups by file path showing all components violated in each file',
+      description:
+        'How to group the results: "component" (default) groups by design system component showing all files affected by each component, "file" groups by file path showing all components violated in each file',
       default: 'component',
     },
   }),
@@ -52,9 +53,15 @@ export const reportAllViolationsSchema = {
  * Extracts deprecated class and replacement from violation message
  * Performance optimized with caching to avoid repeated regex operations
  */
-const messageParsingCache = new Map<string, { violation: string; replacement: string }>();
+const messageParsingCache = new Map<
+  string,
+  { violation: string; replacement: string }
+>();
 
-function parseViolationMessage(message: string): { violation: string; replacement: string } {
+function parseViolationMessage(message: string): {
+  violation: string;
+  replacement: string;
+} {
   // Check cache first
   const cached = messageParsingCache.get(message);
   if (cached) {
@@ -62,16 +69,18 @@ function parseViolationMessage(message: string): { violation: string; replacemen
   }
 
   // Clean up HTML tags
-  const cleanMessage = message.replace(/<code>/g, '`').replace(/<\/code>/g, '`');
-  
+  const cleanMessage = message
+    .replace(/<code>/g, '`')
+    .replace(/<\/code>/g, '`');
+
   // Extract deprecated class - look for patterns like "class `offer-badge`" or "class `btn, btn-primary`"
   const classMatch = cleanMessage.match(/class `([^`]+)`/);
   const violation = classMatch ? classMatch[1] : 'unknown';
-  
+
   // Extract replacement component - look for "Use `ComponentName`"
   const replacementMatch = cleanMessage.match(/Use `([^`]+)`/);
   const replacement = replacementMatch ? replacementMatch[1] : 'unknown';
-  
+
   const result = { violation, replacement };
   messageParsingCache.set(message, result);
   return result;
@@ -216,8 +225,8 @@ export const reportAllViolationsHandler = createHandler<
   },
   (result) => {
     const isFileGrouping = 'files' in result;
-    const isEmpty = isFileGrouping 
-      ? result.files.length === 0 
+    const isEmpty = isFileGrouping
+      ? result.files.length === 0
       : result.components.length === 0;
 
     if (isEmpty) {

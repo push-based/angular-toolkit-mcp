@@ -87,7 +87,9 @@ export function groupIssuesByFile(
 
     if (!fileGroups[fileName]) {
       // Normalize message inline (remove directory prefix)
-      const directoryPrefix = directory.endsWith('/') ? directory : directory + '/';
+      const directoryPrefix = directory.endsWith('/')
+        ? directory
+        : directory + '/';
       const normalizedMessage = message.includes(directoryPrefix)
         ? message.replace(directoryPrefix, '')
         : message;
@@ -111,4 +113,3 @@ export function groupIssuesByFile(
 
   return fileGroups;
 }
-

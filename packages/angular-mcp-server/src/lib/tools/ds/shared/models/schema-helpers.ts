@@ -13,13 +13,15 @@ export const COMMON_SCHEMA_PROPERTIES = {
 
   componentName: {
     type: 'string' as const,
-    description: 'The class name of the design system component to check for violations (e.g., DsButton, DsBadge, DsCard). This should be the TypeScript class name, not the selector.',
+    description:
+      'The class name of the design system component to check for violations (e.g., DsButton, DsBadge, DsCard). This should be the TypeScript class name, not the selector.',
   },
 
   groupBy: {
     type: 'string' as const,
     enum: ['file', 'folder'] as const,
-    description: 'How to group the violation results in the output. "file" groups violations by individual file paths, "folder" groups by directory structure.',
+    description:
+      'How to group the violation results in the output. "file" groups violations by individual file paths, "folder" groups by directory structure.',
     default: 'file' as const,
   },
 } as const;
