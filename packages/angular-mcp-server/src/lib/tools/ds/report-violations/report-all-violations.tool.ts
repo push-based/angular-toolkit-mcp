@@ -14,6 +14,7 @@ import {
   filterFailedAudits,
   groupIssuesByFile,
 } from '../shared/violation-analysis/formatters.js';
+import type { BaseViolationAudit } from '../shared/violation-analysis/types.js';
 import { loadAndValidateDsComponentsFile } from '../../../validation/ds-components-file-loader.validation.js';
 import { 
   AllViolationsReport, 
@@ -49,8 +50,17 @@ export const reportAllViolationsSchema = {
 
 /**
  * Extracts deprecated class and replacement from violation message
+ * Performance optimized with caching to avoid repeated regex operations
  */
+const messageParsingCache = new Map<string, { violation: string; replacement: string }>();
+
 function parseViolationMessage(message: string): { violation: string; replacement: string } {
+  // Check cache first
+  const cached = messageParsingCache.get(message);
+  if (cached) {
+    return cached;
+  }
+
   // Clean up HTML tags
   const cleanMessage = message.replace(/<code>/g, '`').replace(/<\/code>/g, '`');
   
@@ -62,7 +72,56 @@ function parseViolationMessage(message: string): { violation: string; replacemen
   const replacementMatch = cleanMessage.match(/Use `([^`]+)`/);
   const replacement = replacementMatch ? replacementMatch[1] : 'unknown';
   
-  return { violation, replacement };
+  const result = { violation, replacement };
+  messageParsingCache.set(message, result);
+  return result;
+}
+
+/**
+ * Processed violation data structure used internally for both grouping modes
+ */
+interface ProcessedViolation {
+  component: string;
+  fileName: string;
+  lines: number[];
+  violation: string;
+  replacement: string;
+}
+
+/**
+ * Processes all failed audits into a unified structure
+ * This eliminates code duplication between component and file grouping modes
+ */
+function processAudits(
+  failedAudits: BaseViolationAudit[],
+  directory: string,
+): ProcessedViolation[] {
+  const processed: ProcessedViolation[] = [];
+
+  for (const audit of failedAudits) {
+    const componentName = extractComponentName(audit.title);
+    const fileGroups = groupIssuesByFile(
+      audit.details?.issues ?? [],
+      directory,
+    );
+
+    for (const [fileName, { lines: fileLines, message }] of Object.entries(
+      fileGroups,
+    )) {
+      // Lines are already sorted by groupIssuesByFile, so we can use them directly
+      const { violation, replacement } = parseViolationMessage(message);
+
+      processed.push({
+        component: componentName,
+        fileName,
+        lines: fileLines, // Already sorted
+        violation,
+        replacement,
+      });
+    }
+  }
+
+  return processed;
 }
 
 export const reportAllViolationsHandler = createHandler<
@@ -90,51 +149,40 @@ export const reportAllViolationsHandler = createHandler<
     });
 
     const raw = coverageResult.rawData?.rawPluginResult;
-    if (!raw) {
-      return params.groupBy === 'file' ? { files: [] } : { components: [] };
-    }
+    const failedAudits = raw ? filterFailedAudits(raw) : [];
 
-    const failedAudits = filterFailedAudits(raw);
+    // Early exit for empty results
     if (failedAudits.length === 0) {
       return params.groupBy === 'file' ? { files: [] } : { components: [] };
     }
 
+    // Process all audits into unified structure (eliminates code duplication)
+    const processed = processAudits(failedAudits, params.directory);
+
     // Group by component (default behavior)
     if (params.groupBy !== 'file') {
-      const components: ComponentViolationReport[] = [];
+      const componentMap = new Map<string, ViolationEntry[]>();
 
-      for (const audit of failedAudits) {
-        const componentName = extractComponentName(audit.title);
-        const violations: ViolationEntry[] = [];
-
-        const fileGroups = groupIssuesByFile(
-          audit.details?.issues ?? [],
-          params.directory,
-        );
-
-        for (const [fileName, { lines: fileLines, message }] of Object.entries(
-          fileGroups,
-        )) {
-          const sorted =
-            fileLines.length > 1
-              ? [...fileLines].sort((a, b) => a - b)
-              : fileLines;
-
-          const { violation, replacement } = parseViolationMessage(message);
-
-          violations.push({
-            file: fileName,
-            lines: sorted,
-            violation,
-            replacement,
-          });
+      for (const item of processed) {
+        if (!componentMap.has(item.component)) {
+          componentMap.set(item.component, []);
         }
 
-        components.push({
-          component: componentName,
-          violations,
-        });
+        const violations = componentMap.get(item.component);
+        if (violations) {
+          violations.push({
+            file: item.fileName,
+            lines: item.lines,
+            violation: item.violation,
+            replacement: item.replacement,
+          });
+        }
       }
+
+      const components: ComponentViolationReport[] = Array.from(
+        componentMap.entries(),
+        ([component, violations]) => ({ component, violations }),
+      );
 
       return { components };
     }
@@ -142,49 +190,54 @@ export const reportAllViolationsHandler = createHandler<
     // Group by file
     const fileMap = new Map<string, ComponentViolationInFile[]>();
 
-    for (const audit of failedAudits) {
-      const componentName = extractComponentName(audit.title);
+    for (const item of processed) {
+      if (!fileMap.has(item.fileName)) {
+        fileMap.set(item.fileName, []);
+      }
 
-      const fileGroups = groupIssuesByFile(
-        audit.details?.issues ?? [],
-        params.directory,
-      );
-
-      for (const [fileName, { lines: fileLines, message }] of Object.entries(
-        fileGroups,
-      )) {
-        const sorted =
-          fileLines.length > 1
-            ? [...fileLines].sort((a, b) => a - b)
-            : fileLines;
-
-        const { violation, replacement } = parseViolationMessage(message);
-
-        if (!fileMap.has(fileName)) {
-          fileMap.set(fileName, []);
-        }
-
-        const fileComponents = fileMap.get(fileName);
-        if (fileComponents) {
-          fileComponents.push({
-            component: componentName,
-            lines: sorted,
-            violation,
-            replacement,
-          });
-        }
+      const components = fileMap.get(item.fileName);
+      if (components) {
+        components.push({
+          component: item.component,
+          lines: item.lines,
+          violation: item.violation,
+          replacement: item.replacement,
+        });
       }
     }
 
-    const files: FileViolationReport[] = Array.from(fileMap.entries())
-      .map(([file, components]) => ({ file, components }))
-      .sort((a, b) => a.file.localeCompare(b.file));
+    // Optimized conversion: build array directly and sort once
+    const files: FileViolationReport[] = Array.from(
+      fileMap.entries(),
+      ([file, components]) => ({ file, components }),
+    ).sort((a, b) => a.file.localeCompare(b.file));
 
     return { files };
   },
   (result) => {
-    // Return structured JSON for token efficiency
-    return [JSON.stringify(result, null, 2)];
+    const isFileGrouping = 'files' in result;
+    const isEmpty = isFileGrouping 
+      ? result.files.length === 0 
+      : result.components.length === 0;
+
+    if (isEmpty) {
+      return ['No violations found in the specified directory.'];
+    }
+
+    const groupingType = isFileGrouping ? 'file' : 'component';
+    const message = [
+      `Found violations grouped by ${groupingType}.`,
+      'Use this output to identify:',
+      '  - Which files contain violations',
+      '  - The specific line numbers where violations occur',
+      '  - What is being used that violates the rules (violation field)',
+      '  - What should be used instead (replacement field)',
+      '',
+      'Violation Report:',
+      JSON.stringify(result, null, 2),
+    ];
+
+    return message;
   },
 );
 

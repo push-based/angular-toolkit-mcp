@@ -70,6 +70,7 @@ export function normalizeFilePath(filePath: string, directory: string): string {
 /**
  * Groups violation issues by file name - consolidated from multiple modules
  * Performance optimized with Set for duplicate checking and cached normalizations
+ * Lines are sorted inline for efficiency
  */
 export function groupIssuesByFile(
   issues: BaseViolationIssue[],
@@ -99,6 +100,13 @@ export function groupIssuesByFile(
     }
 
     fileGroups[fileName].lines.push(lineNumber);
+  }
+
+  // Sort lines inline for each file (single sort operation per file)
+  for (const fileGroup of Object.values(fileGroups)) {
+    if (fileGroup.lines.length > 1) {
+      fileGroup.lines.sort((a, b) => a - b);
+    }
   }
 
   return fileGroups;
