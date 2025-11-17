@@ -4,6 +4,8 @@ export { reportAllViolationsTools } from './report-all-violations.tool.js';
 export type {
   ViolationEntry,
   ComponentViolationReport,
+  AllViolationsEntry,
+  AllViolationsComponentReport,
   AllViolationsReport,
   ComponentViolationInFile,
   FileViolationReport,

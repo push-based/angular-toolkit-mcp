@@ -1,9 +1,8 @@
-// JSON output types
+// Types for report-violations (single component, no replacement field needed)
 export interface ViolationEntry {
   file: string;
   lines: number[];
   violation: string;
-  replacement: string;
 }
 
 export interface ComponentViolationReport {
@@ -11,11 +10,24 @@ export interface ComponentViolationReport {
   violations: ViolationEntry[];
 }
 
-export interface AllViolationsReport {
-  components: ComponentViolationReport[];
+// Types for report-all-violations (multiple components, replacement field needed)
+export interface AllViolationsEntry {
+  file: string;
+  lines: number[];
+  violation: string;
+  replacement: string;
 }
 
-// File-grouped output types
+export interface AllViolationsComponentReport {
+  component: string;
+  violations: AllViolationsEntry[];
+}
+
+export interface AllViolationsReport {
+  components: AllViolationsComponentReport[];
+}
+
+// File-grouped output types for report-all-violations
 export interface ComponentViolationInFile {
   component: string;
   lines: number[];

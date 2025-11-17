@@ -17,9 +17,9 @@ import {
 import type { BaseViolationAudit } from '../shared/violation-analysis/types.js';
 import { loadAndValidateDsComponentsFile } from '../../../validation/ds-components-file-loader.validation.js';
 import { 
-  AllViolationsReport, 
-  ComponentViolationReport, 
-  ViolationEntry,
+  AllViolationsReport,
+  AllViolationsComponentReport,
+  AllViolationsEntry,
   AllViolationsReportByFile,
   FileViolationReport,
   ComponentViolationInFile
@@ -161,7 +161,7 @@ export const reportAllViolationsHandler = createHandler<
 
     // Group by component (default behavior)
     if (params.groupBy !== 'file') {
-      const componentMap = new Map<string, ViolationEntry[]>();
+      const componentMap = new Map<string, AllViolationsEntry[]>();
 
       for (const item of processed) {
         if (!componentMap.has(item.component)) {
@@ -179,7 +179,7 @@ export const reportAllViolationsHandler = createHandler<
         }
       }
 
-      const components: ComponentViolationReport[] = Array.from(
+      const components: AllViolationsComponentReport[] = Array.from(
         componentMap.entries(),
         ([component, violations]) => ({ component, violations }),
       );
