@@ -33,12 +33,12 @@ interface ReportAllViolationsOptions extends BaseHandlerOptions {
 export const reportAllViolationsSchema = {
   name: 'report-all-violations',
   description:
-    'Scan a directory for deprecated design system CSS classes defined in the config at `deprecatedCssClassesPath`, and output a usage report',
+    'Scan a directory for all deprecated design system CSS classes and output a comprehensive violation report. Use this to discover all violations across multiple components. Output can be grouped by component (default) or by file, and includes: file paths, line numbers, violation details, and replacement suggestions (which component should be used instead). This is ideal for getting an overview of all violations in a directory.',
   inputSchema: createProjectAnalysisSchema({
     groupBy: {
       type: 'string',
       enum: ['component', 'file'],
-      description: 'How to group the results: "component" groups by design system component, "file" groups by file path',
+      description: 'How to group the results: "component" (default) groups by design system component showing all files affected by each component, "file" groups by file path showing all components violated in each file',
       default: 'component',
     },
   }),

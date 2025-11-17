@@ -8,18 +8,18 @@ export const COMMON_SCHEMA_PROPERTIES = {
   directory: {
     type: 'string' as const,
     description:
-      'The relative path to the directory (starting with "./path/to/dir") to scan. Respect the OS specifics.',
+      'The relative path to the directory (starting with "./path/to/dir") to scan. Respect the OS specifics. Should point to the directory containing the files you want to analyze for violations.',
   },
 
   componentName: {
     type: 'string' as const,
-    description: 'The class name of the component (e.g., DsButton)',
+    description: 'The class name of the design system component to check for violations (e.g., DsButton, DsBadge, DsCard). This should be the TypeScript class name, not the selector.',
   },
 
   groupBy: {
     type: 'string' as const,
     enum: ['file', 'folder'] as const,
-    description: 'How to group the results',
+    description: 'How to group the violation results in the output. "file" groups violations by individual file paths, "folder" groups by directory structure.',
     default: 'file' as const,
   },
 } as const;

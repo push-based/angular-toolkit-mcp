@@ -19,7 +19,7 @@ interface ReportViolationsOptions extends BaseHandlerOptions {
 
 export const reportViolationsSchema = {
   name: 'report-violations',
-  description: `Report deprecated DS CSS usage in a directory with configurable grouping format.`,
+  description: `Report deprecated CSS usage for a specific design system component in a directory. Returns violations grouped by file, showing which deprecated classes are used and where. Use this when you know which component you're checking for. Output includes: file paths, line numbers, and violation details (but not replacement suggestions since the component is already known).`,
   inputSchema: createViolationReportingSchema(),
   annotations: {
     title: 'Report Violations',
