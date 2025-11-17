@@ -1,15 +1,18 @@
 import {
   createHandler,
   BaseHandlerOptions,
-  RESULT_FORMATTERS,
 } from '../shared/utils/handler-helpers.js';
 import {
   createViolationReportingSchema,
   COMMON_ANNOTATIONS,
 } from '../shared/models/schema-helpers.js';
 import { analyzeViolationsBase } from '../shared/violation-analysis/base-analyzer.js';
-import { formatViolations } from '../shared/violation-analysis/formatters.js';
-import { ViolationResult } from './models/types.js';
+import {
+  groupIssuesByFile,
+  filterFailedAudits,
+} from '../shared/violation-analysis/formatters.js';
+import { BaseViolationResult } from '../shared/violation-analysis/types.js';
+import { ComponentViolationReport, ViolationEntry } from './models/types.js';
 
 interface ReportViolationsOptions extends BaseHandlerOptions {
   directory: string;
@@ -19,7 +22,7 @@ interface ReportViolationsOptions extends BaseHandlerOptions {
 
 export const reportViolationsSchema = {
   name: 'report-violations',
-  description: `Report deprecated DS CSS usage in a directory with configurable grouping format.`,
+  description: `Report deprecated CSS usage for a specific design system component in a directory. Returns violations grouped by file, showing which deprecated classes are used and where. Use this when you know which component you're checking for. Output includes: file paths, line numbers, and violation details (but not replacement suggestions since the component is already known).`,
   inputSchema: createViolationReportingSchema(),
   annotations: {
     title: 'Report Violations',
@@ -27,32 +30,80 @@ export const reportViolationsSchema = {
   },
 };
 
+/**
+ * Extracts deprecated class from violation message
+ */
+function parseViolationMessage(message: string): string {
+  // Clean up HTML tags
+  const cleanMessage = message
+    .replace(/<code>/g, '`')
+    .replace(/<\/code>/g, '`');
+
+  // Extract deprecated class - look for patterns like "class `offer-badge`" or "class `btn, btn-primary`"
+  const classMatch = cleanMessage.match(/class `([^`]+)`/);
+  return classMatch ? classMatch[1] : 'unknown';
+}
+
 export const reportViolationsHandler = createHandler<
   ReportViolationsOptions,
-  string[]
+  ComponentViolationReport
 >(
   reportViolationsSchema.name,
   async (params) => {
-    // Default to 'file' grouping if not specified
-    const groupBy = params.groupBy || 'file';
+    const result = await analyzeViolationsBase<BaseViolationResult>(params);
+    const failedAudits = filterFailedAudits(result);
 
-    const result = await analyzeViolationsBase<ViolationResult>(params);
+    if (failedAudits.length === 0) {
+      return {
+        component: params.componentName,
+        violations: [],
+      };
+    }
 
-    const formattedContent = formatViolations(result, params.directory, {
-      groupBy,
-    });
+    const violations: ViolationEntry[] = [];
 
-    // Extract text content from the formatted violations
-    const violationLines = formattedContent.map((item) => {
-      if (item.type === 'text') {
-        return item.text;
+    // Process all issues from all audits
+    for (const audit of failedAudits) {
+      const fileGroups = groupIssuesByFile(
+        audit.details?.issues ?? [],
+        params.directory,
+      );
+
+      for (const [fileName, { lines, message }] of Object.entries(fileGroups)) {
+        const violation = parseViolationMessage(message);
+
+        violations.push({
+          file: fileName,
+          lines: lines.sort((a, b) => a - b),
+          violation,
+        });
       }
-      return String(item);
-    });
+    }
 
-    return violationLines;
+    return {
+      component: params.componentName,
+      violations,
+    };
   },
-  (result) => RESULT_FORMATTERS.list(result, 'Design System Violations:'),
+  (result) => {
+    if (result.violations.length === 0) {
+      return [`No violations found for component: ${result.component}`];
+    }
+
+    const message = [
+      `Found violations for component: ${result.component}`,
+      'Use this output to identify:',
+      '  - Which files contain violations',
+      '  - The specific line numbers where violations occur',
+      '  - What is being used that violates the rules (violation field)',
+      '',
+      'Violation Report:',
+      '',
+      JSON.stringify(result, null, 2),
+    ];
+
+    return [message.join('\n')];
+  },
 );
 
 export const reportViolationsTools = [

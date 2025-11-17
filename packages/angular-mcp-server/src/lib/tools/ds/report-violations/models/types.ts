@@ -1,40 +1,45 @@
-import {
-  BaseViolationOptions,
-  BaseViolationResult,
-  BaseViolationIssue,
-  BaseViolationAudit,
-} from '../../shared/violation-analysis/types.js';
-
-export interface ReportViolationsOptions extends BaseViolationOptions {
-  groupBy?: 'file' | 'folder';
-}
-
-export type ViolationResult = BaseViolationResult;
-export type ViolationIssue = BaseViolationIssue;
-export type ViolationAudit = BaseViolationAudit;
-
-// File-specific types (when groupBy: 'file')
-export interface FileViolation {
-  fileName: string;
-  message: string;
+// Types for report-violations (single component, no replacement field needed)
+export interface ViolationEntry {
+  file: string;
   lines: number[];
+  violation: string;
 }
 
-export interface FileViolationGroup {
-  message: string;
+export interface ComponentViolationReport {
+  component: string;
+  violations: ViolationEntry[];
+}
+
+// Types for report-all-violations (multiple components, replacement field needed)
+export interface AllViolationsEntry {
+  file: string;
   lines: number[];
+  violation: string;
+  replacement: string;
 }
 
-export interface FileViolationGroups {
-  [fileName: string]: FileViolationGroup;
+export interface AllViolationsComponentReport {
+  component: string;
+  violations: AllViolationsEntry[];
 }
 
-// Folder-specific types (when groupBy: 'folder')
-export interface FolderViolationSummary {
-  violations: number;
-  files: string[];
+export interface AllViolationsReport {
+  components: AllViolationsComponentReport[];
 }
 
-export interface FolderViolationGroups {
-  [folderPath: string]: FolderViolationSummary;
+// File-grouped output types for report-all-violations
+export interface ComponentViolationInFile {
+  component: string;
+  lines: number[];
+  violation: string;
+  replacement: string;
+}
+
+export interface FileViolationReport {
+  file: string;
+  components: ComponentViolationInFile[];
+}
+
+export interface AllViolationsReportByFile {
+  files: FileViolationReport[];
 }

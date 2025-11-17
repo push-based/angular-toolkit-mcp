@@ -15,6 +15,7 @@ import { TOOLS } from './tools/tools.js';
 import { toolNotFound } from './tools/utils.js';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import {
   AngularMcpServerOptionsSchema,
   AngularMcpServerOptions,
@@ -94,11 +95,11 @@ export class AngularMcpServerWrapper {
 
         // Try to read the llms.txt file from the package root (optional)
         try {
-          const filePath = path.resolve(__dirname, '../../llms.txt');
+          const currentDir = path.dirname(fileURLToPath(import.meta.url));
+          const filePath = path.resolve(currentDir, '../../llms.txt');
 
           // Only attempt to read if file exists
           if (fs.existsSync(filePath)) {
-            console.log('Reading llms.txt from:', filePath);
             const content = fs.readFileSync(filePath, 'utf-8');
             const lines = content.split('\n');
 
@@ -143,13 +144,9 @@ export class AngularMcpServerWrapper {
                 });
               }
             }
-          } else {
-            console.log('llms.txt not found at:', filePath, '(skipping)');
           }
-        } catch (ctx: unknown) {
-          if (ctx instanceof Error) {
-            console.error('Error reading llms.txt (non-fatal):', ctx.message);
-          }
+        } catch {
+          // Silently ignore errors reading llms.txt (non-fatal)
         }
 
         // Scan available design system components to add them as discoverable resources
@@ -183,13 +180,8 @@ export class AngularMcpServerWrapper {
               }
             }
           }
-        } catch (ctx: unknown) {
-          if (ctx instanceof Error) {
-            console.error(
-              'Error scanning DS components (non-fatal):',
-              ctx.message,
-            );
-          }
+        } catch {
+          // Silently ignore errors scanning DS components (non-fatal)
         }
 
         return {

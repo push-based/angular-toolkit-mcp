@@ -1,5 +1,3 @@
-import { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
-import { buildText } from '../utils/output.utils.js';
 import {
   BaseViolationResult,
   BaseViolationAudit,
@@ -18,33 +16,6 @@ export function filterFailedAudits(
   result: BaseViolationResult,
 ): BaseViolationAudit[] {
   return result.audits.filter(({ score }) => score < 1);
-}
-
-/**
- * Creates standard "no violations found" content
- */
-export function createNoViolationsContent(): CallToolResult['content'] {
-  return [
-    buildText(
-      '✅ No violations found! All files are compliant with the design system.',
-    ),
-  ];
-}
-
-/**
- * Extracts all issues from failed audits
- */
-export function extractIssuesFromAudits(
-  audits: BaseViolationAudit[],
-): BaseViolationIssue[] {
-  return audits.flatMap(({ details }) => details?.issues ?? []);
-}
-
-/**
- * Checks if a violation result has any failures
- */
-export function hasViolations(result: BaseViolationResult): boolean {
-  return filterFailedAudits(result).length > 0;
 }
 
 /**
@@ -97,27 +68,9 @@ export function normalizeFilePath(filePath: string, directory: string): string {
 }
 
 /**
- * Performance-optimized message normalization with caching
- */
-export function normalizeMessage(message: string, directory: string): string {
-  const cacheKey = `msg::${message}::${directory}`;
-
-  if (pathCache[cacheKey]) {
-    return pathCache[cacheKey];
-  }
-
-  const directoryPrefix = directory.endsWith('/') ? directory : directory + '/';
-  const normalized = message.includes(directoryPrefix)
-    ? message.replace(directoryPrefix, '')
-    : message;
-
-  pathCache[cacheKey] = normalized;
-  return normalized;
-}
-
-/**
  * Groups violation issues by file name - consolidated from multiple modules
  * Performance optimized with Set for duplicate checking and cached normalizations
+ * Lines are sorted inline for efficiency
  */
 export function groupIssuesByFile(
   issues: BaseViolationIssue[],
@@ -133,8 +86,16 @@ export function groupIssuesByFile(
     const lineNumber = source.position?.startLine || 0;
 
     if (!fileGroups[fileName]) {
+      // Normalize message inline (remove directory prefix)
+      const directoryPrefix = directory.endsWith('/')
+        ? directory
+        : directory + '/';
+      const normalizedMessage = message.includes(directoryPrefix)
+        ? message.replace(directoryPrefix, '')
+        : message;
+
       fileGroups[fileName] = {
-        message: normalizeMessage(message, directory),
+        message: normalizedMessage,
         lines: [],
       };
       processedFiles.add(fileName);
@@ -143,101 +104,12 @@ export function groupIssuesByFile(
     fileGroups[fileName].lines.push(lineNumber);
   }
 
+  // Sort lines inline for each file (single sort operation per file)
+  for (const fileGroup of Object.values(fileGroups)) {
+    if (fileGroup.lines.length > 1) {
+      fileGroup.lines.sort((a, b) => a - b);
+    }
+  }
+
   return fileGroups;
-}
-
-/**
- * Extracts unique file paths from violation issues - performance optimized
- */
-export function extractUniqueFilePaths(
-  issues: BaseViolationIssue[],
-  directory: string,
-): string[] {
-  const filePathSet = new Set<string>(); // Eliminate O(n) includes() calls
-
-  for (const { source } of issues) {
-    if (source?.file) {
-      filePathSet.add(normalizeFilePath(source.file, directory));
-    }
-  }
-
-  return Array.from(filePathSet);
-}
-
-/**
- * Clears the path cache - useful for testing or memory management
- */
-export function clearPathCache(): void {
-  Object.keys(pathCache).forEach((key) => delete pathCache[key]);
-}
-
-/**
- * Unified formatter for violations - supports both file and folder grouping with minimal output
- */
-export function formatViolations(
-  result: BaseViolationResult,
-  directory: string,
-  options: {
-    groupBy: 'file' | 'folder';
-  } = { groupBy: 'file' },
-): CallToolResult['content'] {
-  const failedAudits = filterFailedAudits(result);
-
-  if (failedAudits.length === 0) {
-    return [buildText('No violations found.')];
-  }
-
-  const allIssues = extractIssuesFromAudits(failedAudits);
-  const content: CallToolResult['content'] = [];
-
-  if (options.groupBy === 'file') {
-    // Group by individual files - minimal format
-    const fileGroups = groupIssuesByFile(allIssues, directory);
-
-    for (const [fileName, { message, lines }] of Object.entries(fileGroups)) {
-      const sortedLines = lines.sort((a, b) => a - b);
-      const lineInfo =
-        sortedLines.length > 1
-          ? `lines ${sortedLines.join(', ')}`
-          : `line ${sortedLines[0]}`;
-
-      content.push(buildText(`${fileName} (${lineInfo}): ${message}`));
-    }
-  } else {
-    // Group by folders - minimal format
-    const folderGroups: Record<
-      string,
-      { violations: number; files: Set<string> }
-    > = {};
-
-    for (const { source } of allIssues) {
-      if (!source?.file) continue;
-
-      const normalizedPath = normalizeFilePath(source.file, directory);
-      const folderPath = normalizedPath.includes('/')
-        ? normalizedPath.substring(0, normalizedPath.lastIndexOf('/'))
-        : '.';
-
-      if (!folderGroups[folderPath]) {
-        folderGroups[folderPath] = { violations: 0, files: new Set() };
-      }
-
-      folderGroups[folderPath].violations++;
-      folderGroups[folderPath].files.add(normalizedPath);
-    }
-
-    // Sort folders for consistent output
-    for (const [folder, { violations, files }] of Object.entries(
-      folderGroups,
-    ).sort()) {
-      const displayPath = folder === '.' ? directory : `${directory}/${folder}`;
-      content.push(
-        buildText(
-          `${displayPath}: ${violations} violations in ${files.size} files`,
-        ),
-      );
-    }
-  }
-
-  return content;
 }
