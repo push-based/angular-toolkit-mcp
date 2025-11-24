@@ -7,23 +7,29 @@ This document provides comprehensive guidance for AI agents working with Angular
 ### 🔍 Project Analysis Tools
 
 #### `report-violations`
-**Purpose**: Identifies deprecated DS CSS usage patterns in Angular projects
-**AI Usage**: Use as the first step in migration workflows to identify all violations before planning refactoring
+**Purpose**: Identifies deprecated DS CSS usage patterns for a specific DS component in Angular projects
+**AI Usage**: Use when you need to analyze violations for a specific component before planning refactoring
 **Key Parameters**:
 - `directory`: Target analysis directory (use relative paths like `./src/app`)
 - `componentName`: DS component class name (e.g., `DsButton`)
 - `groupBy`: `"file"` or `"folder"` for result organization
-**Output**: Structured violation reports grouped by file or folder
-**Best Practice**: Always run this before other migration tools to establish baseline
+- `saveAsFile`: Optional boolean - if `true`, saves report to `tmp/.angular-toolkit-mcp/violations-report/<componentName>/<directory>-violations.json`
+**Output**: 
+- Default: Structured violation reports grouped by file or folder
+- With `saveAsFile: true`: File path and statistics (components, files, lines)
+**Best Practice**: Use `saveAsFile: true` when you need to persist results for later processing or grouping workflows
 
 #### `report-all-violations`
 **Purpose**: Reports all deprecated DS CSS usage for every DS component within a directory
 **AI Usage**: Use for a fast, global inventory of violations across the codebase before narrowing to specific components
 **Key Parameters**:
 - `directory`: Target analysis directory (use relative paths like `./src/app`)
-- `groupBy`: `"file"` or `"folder"` for result organization (default: `"file"`)
-**Output**: Structured violation reports grouped by file or folder covering all DS components
-**Best Practice**: Use to discover all violations and establish the baseline for subsequent refactoring.
+- `groupBy`: `"component"` or `"file"` for result organization (default: `"component"`)
+- `saveAsFile`: Optional boolean - if `true`, saves report to `tmp/.angular-toolkit-mcp/violations-report/<directory>-violations.json`
+**Output**: 
+- Default: Structured violation reports grouped by component or file covering all DS components
+- With `saveAsFile: true`: File path and statistics (components, files, lines)
+**Best Practice**: Use `saveAsFile: true` to persist results for grouping workflows or large-scale migration planning. The saved file can be used as input for work distribution grouping tools.
 
 #### `get-project-dependencies`
 **Purpose**: Analyzes project structure, dependencies, and buildability
@@ -33,6 +39,21 @@ This document provides comprehensive guidance for AI agents working with Angular
 - `componentName`: Optional DS component for import path validation
 **Output**: Dependency analysis, buildable/publishable status, peer dependencies
 **Best Practice**: Use to understand project constraints before recommending changes
+
+#### `group-violations`
+**Purpose**: Creates balanced work distribution groups from violations reports for parallel development
+**AI Usage**: Use after `report-all-violations` to organize violations into balanced work groups for team distribution
+**Key Parameters**:
+- `fileName`: Name of violations JSON file in `tmp/.angular-toolkit-mcp/violations-report/` (e.g., `"packages-poker-core-lib-violations.json"`)
+- `minGroups`: Minimum number of groups (default: 3)
+- `maxGroups`: Maximum number of groups (default: 5)
+- `variance`: Acceptable variance percentage for balance (default: 20)
+**Output**: 
+- Work groups with balanced violation counts
+- Individual JSON and Markdown files per group
+- Metadata with validation results
+- Saved to `tmp/.angular-toolkit-mcp/violation-groups/<reportName>/`
+**Best Practice**: Use after saving violations with `saveAsFile: true`. The tool accepts both component-grouped and file-grouped reports. Groups maintain path exclusivity (each file in exactly one group) and preserve directory boundaries to enable parallel development without merge conflicts.
 
 #### `report-deprecated-css`
 **Purpose**: Scans styling files for deprecated CSS classes
@@ -147,8 +168,9 @@ This document provides comprehensive guidance for AI agents working with Angular
 ### 1. Discovery & Analysis Workflow
 ```
 1. list-ds-components → Discover available DS components
-2. report-violations → Identify all violations
-3. get-project-dependencies → Analyze project structure
+2. report-all-violations (saveAsFile: true) → Identify all violations and save to file
+3. group-violations → Create balanced work distribution groups
+4. get-project-dependencies → Analyze project structure
 ```
 
 ### 2. Planning & Preparation Workflow

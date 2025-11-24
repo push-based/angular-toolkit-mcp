@@ -4,4 +4,5 @@ export * from './utils/handler-helpers.js';
 export * from './utils/component-validation.js';
 export * from './utils/output.utils.js';
 export * from './utils/cross-platform-path.js';
+export * from './utils/path-helpers.js';
 export * from './models/schema-helpers.js';

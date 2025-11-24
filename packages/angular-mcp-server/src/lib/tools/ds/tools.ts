@@ -2,6 +2,7 @@ import { ToolsConfig } from '@push-based/models';
 import {
   reportViolationsTools,
   reportAllViolationsTools,
+  groupViolationsTools,
 } from './report-violations/index.js';
 import { getProjectDependenciesTools } from './project/get-project-dependencies.tool.js';
 import { reportDeprecatedCssTools } from './project/report-deprecated-css.tool.js';
@@ -19,6 +20,7 @@ export const dsTools: ToolsConfig[] = [
   // Project tools
   ...reportViolationsTools,
   ...reportAllViolationsTools,
+  ...groupViolationsTools,
   ...getProjectDependenciesTools,
   ...reportDeprecatedCssTools,
   ...buildComponentUsageGraphTools,

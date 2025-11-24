@@ -1,5 +1,6 @@
 export { reportViolationsTools } from './report-violations.tool.js';
 export { reportAllViolationsTools } from './report-all-violations.tool.js';
+export { groupViolationsTools } from './group-violations.tool.js';
 
 export type {
   ViolationEntry,

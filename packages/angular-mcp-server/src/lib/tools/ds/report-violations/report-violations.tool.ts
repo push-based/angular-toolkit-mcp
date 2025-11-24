@@ -1,63 +1,67 @@
-import {
-  createHandler,
-  BaseHandlerOptions,
-} from '../shared/utils/handler-helpers.js';
-import {
-  createViolationReportingSchema,
-  COMMON_ANNOTATIONS,
-} from '../shared/models/schema-helpers.js';
+import { createHandler } from '../shared/utils/handler-helpers.js';
+import { toWorkspaceRelativePath } from '../shared/utils/path-helpers.js';
 import { analyzeViolationsBase } from '../shared/violation-analysis/base-analyzer.js';
 import {
   groupIssuesByFile,
   filterFailedAudits,
 } from '../shared/violation-analysis/formatters.js';
 import { BaseViolationResult } from '../shared/violation-analysis/types.js';
-import { ComponentViolationReport, ViolationEntry } from './models/types.js';
+import {
+  ComponentViolationReport,
+  ViolationEntry,
+  ReportViolationsOptions,
+  ReportViolationsResult,
+} from './models/types.js';
+import { reportViolationsSchema } from './models/schema.js';
+import { writeFile, mkdir } from 'fs/promises';
+import { join } from 'path';
+import {
+  generateFilename,
+  parseViolationMessage,
+  calculateSingleComponentStats,
+} from './utils/index.js';
 
-interface ReportViolationsOptions extends BaseHandlerOptions {
-  directory: string;
-  componentName: string;
-  groupBy?: 'file' | 'folder';
-}
-
-export const reportViolationsSchema = {
-  name: 'report-violations',
-  description: `Report deprecated CSS usage for a specific design system component in a directory. Returns violations grouped by file, showing which deprecated classes are used and where. Use this when you know which component you're checking for. Output includes: file paths, line numbers, and violation details (but not replacement suggestions since the component is already known).`,
-  inputSchema: createViolationReportingSchema(),
-  annotations: {
-    title: 'Report Violations',
-    ...COMMON_ANNOTATIONS.readOnly,
-  },
-};
-
-/**
- * Extracts deprecated class from violation message
- */
-function parseViolationMessage(message: string): string {
-  // Clean up HTML tags
-  const cleanMessage = message
-    .replace(/<code>/g, '`')
-    .replace(/<\/code>/g, '`');
-
-  // Extract deprecated class - look for patterns like "class `offer-badge`" or "class `btn, btn-primary`"
-  const classMatch = cleanMessage.match(/class `([^`]+)`/);
-  return classMatch ? classMatch[1] : 'unknown';
-}
+export { reportViolationsSchema };
 
 export const reportViolationsHandler = createHandler<
   ReportViolationsOptions,
-  ComponentViolationReport
+  ReportViolationsResult
 >(
   reportViolationsSchema.name,
-  async (params) => {
+  async (params, { cwd, workspaceRoot }) => {
     const result = await analyzeViolationsBase<BaseViolationResult>(params);
     const failedAudits = filterFailedAudits(result);
 
     if (failedAudits.length === 0) {
-      return {
+      const report = {
         component: params.componentName,
         violations: [],
       };
+
+      if (params.saveAsFile) {
+        const outputDir = join(
+          cwd,
+          'tmp',
+          '.angular-toolkit-mcp',
+          'violations-report',
+          params.componentName,
+        );
+        const filename = generateFilename(params.directory);
+        const filePath = join(outputDir, filename);
+        await mkdir(outputDir, { recursive: true });
+        await writeFile(filePath, JSON.stringify(report, null, 2), 'utf-8');
+        return {
+          message: 'Violations report saved',
+          filePath: toWorkspaceRelativePath(filePath, workspaceRoot),
+          stats: {
+            components: 1,
+            files: 0,
+            lines: 0,
+          },
+        };
+      }
+
+      return report;
     }
 
     const violations: ViolationEntry[] = [];
@@ -80,18 +84,52 @@ export const reportViolationsHandler = createHandler<
       }
     }
 
-    return {
+    const report = {
       component: params.componentName,
       violations,
     };
+
+    if (params.saveAsFile) {
+      const outputDir = join(
+        cwd,
+        'tmp',
+        '.angular-toolkit-mcp',
+        'violations-report',
+        params.componentName,
+      );
+      const filename = generateFilename(params.directory);
+      const filePath = join(outputDir, filename);
+      await mkdir(outputDir, { recursive: true });
+      await writeFile(filePath, JSON.stringify(report, null, 2), 'utf-8');
+      
+      const stats = calculateSingleComponentStats(violations);
+      
+      return {
+        message: 'Violations report saved',
+        filePath: toWorkspaceRelativePath(filePath, workspaceRoot),
+        stats,
+      };
+    }
+
+    return report;
   },
   (result) => {
-    if (result.violations.length === 0) {
-      return [`No violations found for component: ${result.component}`];
+    // Check if this is a file output response
+    if ('message' in result && 'filePath' in result) {
+      const stats = 'stats' in result ? result.stats : null;
+      const statsMessage = stats 
+        ? ` (${stats.components} component, ${stats.files} files, ${stats.lines} lines)`
+        : '';
+      return [`Violations report saved to ${result.filePath}${statsMessage}`];
+    }
+
+    const report = result as ComponentViolationReport;
+    if (report.violations.length === 0) {
+      return [`No violations found for component: ${report.component}`];
     }
 
     const message = [
-      `Found violations for component: ${result.component}`,
+      `Found violations for component: ${report.component}`,
       'Use this output to identify:',
       '  - Which files contain violations',
       '  - The specific line numbers where violations occur',
@@ -99,7 +137,7 @@ export const reportViolationsHandler = createHandler<
       '',
       'Violation Report:',
       '',
-      JSON.stringify(result, null, 2),
+      JSON.stringify(report, null, 2),
     ];
 
     return [message.join('\n')];

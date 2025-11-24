@@ -186,7 +186,11 @@ my-angular-workspace/
 
 ### Component Analysis
 
-- **`report-violations`**: Report deprecated CSS usage in a directory with configurable grouping format
+- **`report-violations`**: Report deprecated CSS usage for a specific DS component in a directory. Supports optional file output with statistics (components, files, lines).
+
+- **`report-all-violations`**: Report all deprecated CSS usage across all DS components in a directory. Supports optional file output with statistics (components, files, lines).
+
+- **`group-violations`**: Creates balanced work distribution groups from violations reports using bin-packing algorithm. Maintains path exclusivity and directory boundaries for parallel development.
 
 - **`report-deprecated-css`**: Report deprecated CSS classes found in styling files
 
