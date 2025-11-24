@@ -75,6 +75,9 @@ export const groupViolationsHandler = createHandler<
       throw new Error('No violations found in the input file');
     }
 
+    // Extract rootPath from the violations data
+    const rootPath = violationsData.rootPath || '';
+
     // Enrich files with metadata
     const enrichedFiles = enrichFiles(violationsData.files);
     const totalViolations = enrichedFiles.reduce(
@@ -123,6 +126,7 @@ export const groupViolationsHandler = createHandler<
       metadata: {
         generatedAt: new Date().toISOString(),
         inputFile: params.fileName,
+        rootPath,
         totalFiles,
         totalViolations,
         groupCount: optimalGroups,
@@ -133,6 +137,7 @@ export const groupViolationsHandler = createHandler<
       groups: groups.map((g) => ({
         id: g.id,
         name: g.name,
+        rootPath,
         directories: g.directories,
         files: g.files.map((f) => ({
           file: f.file,

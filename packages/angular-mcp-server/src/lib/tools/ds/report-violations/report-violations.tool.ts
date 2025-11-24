@@ -36,6 +36,7 @@ export const reportViolationsHandler = createHandler<
       const report = {
         component: params.componentName,
         violations: [],
+        rootPath: params.directory,
       };
 
       if (params.saveAsFile) {
@@ -76,13 +77,8 @@ export const reportViolationsHandler = createHandler<
       for (const [fileName, { lines, message }] of Object.entries(fileGroups)) {
         const violation = parseViolationMessage(message);
 
-        // Construct full path: directory + normalized file path
-        const fullPath = params.directory.endsWith('/')
-          ? `${params.directory}${fileName}`
-          : `${params.directory}/${fileName}`;
-
         violations.push({
-          file: fullPath,
+          file: fileName,
           lines: lines.sort((a, b) => a - b),
           violation,
         });
@@ -92,6 +88,7 @@ export const reportViolationsHandler = createHandler<
     const report = {
       component: params.componentName,
       violations,
+      rootPath: params.directory,
     };
 
     if (params.saveAsFile) {

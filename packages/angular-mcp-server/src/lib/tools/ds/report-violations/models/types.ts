@@ -20,6 +20,7 @@ export interface ViolationEntry {
 export interface ComponentViolationReport {
   component: string;
   violations: ViolationEntry[];
+  rootPath: string;
 }
 
 export interface ViolationFileOutput {
@@ -60,6 +61,7 @@ export interface AllViolationsComponentReport {
 
 export interface AllViolationsReport {
   components: AllViolationsComponentReport[];
+  rootPath: string;
 }
 
 export interface ComponentViolationInFile {
@@ -76,6 +78,7 @@ export interface FileViolationReport {
 
 export interface AllViolationsReportByFile {
   files: FileViolationReport[];
+  rootPath: string;
 }
 
 export interface ProcessedViolation {
@@ -106,6 +109,7 @@ export interface GroupViolationsReport {
   metadata: {
     generatedAt: string;
     inputFile: string;
+    rootPath: string;
     totalFiles: number;
     totalViolations: number;
     groupCount: number;
@@ -116,6 +120,7 @@ export interface GroupViolationsReport {
   groups: Array<{
     id: number;
     name: string;
+    rootPath: string;
     directories: string[];
     files: Array<{
       file: string;

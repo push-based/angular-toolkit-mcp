@@ -55,14 +55,9 @@ function processAudits(
       const { violation, replacement } =
         parseViolationMessageWithReplacement(message);
 
-      // Construct full path: directory + normalized file path
-      const fullPath = directory.endsWith('/')
-        ? `${directory}${fileName}`
-        : `${directory}/${fileName}`;
-
       processed.push({
         component: componentName,
-        fileName: fullPath,
+        fileName: fileName,
         lines: fileLines, // Already sorted
         violation,
         replacement,
@@ -103,7 +98,9 @@ export const reportAllViolationsHandler = createHandler<
     // Early exit for empty results
     if (failedAudits.length === 0) {
       const report =
-        params.groupBy === 'file' ? { files: [] } : { components: [] };
+        params.groupBy === 'file' 
+          ? { files: [], rootPath: params.directory } 
+          : { components: [], rootPath: params.directory };
 
       if (params.saveAsFile) {
         const outputDir = join(
@@ -158,7 +155,7 @@ export const reportAllViolationsHandler = createHandler<
         ([component, violations]) => ({ component, violations }),
       );
 
-      const report = { components };
+      const report = { components, rootPath: params.directory };
 
       if (params.saveAsFile) {
         const outputDir = join(
@@ -209,7 +206,7 @@ export const reportAllViolationsHandler = createHandler<
       ([file, components]) => ({ file, components }),
     ).sort((a, b) => a.file.localeCompare(b.file));
 
-    const report = { files };
+    const report = { files, rootPath: params.directory };
 
     if (params.saveAsFile) {
       const outputDir = join(

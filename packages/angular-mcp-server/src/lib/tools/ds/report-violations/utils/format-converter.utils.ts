@@ -47,5 +47,5 @@ export function convertComponentToFileFormat(
     ([file, components]) => ({ file, components }),
   ).sort((a, b) => a.file.localeCompare(b.file));
 
-  return { files };
+  return { files, rootPath: report.rootPath };
 }
