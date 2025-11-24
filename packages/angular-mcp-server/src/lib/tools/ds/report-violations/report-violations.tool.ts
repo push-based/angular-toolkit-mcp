@@ -1,5 +1,5 @@
 import { createHandler } from '../shared/utils/handler-helpers.js';
-import { toWorkspaceRelativePath } from '../shared/utils/path-helpers.js';
+import { normalizeAbsolutePathToRelative } from '../shared/utils/cross-platform-path.js';
 import { analyzeViolationsBase } from '../shared/violation-analysis/base-analyzer.js';
 import {
   groupIssuesByFile,
@@ -52,7 +52,7 @@ export const reportViolationsHandler = createHandler<
         await writeFile(filePath, JSON.stringify(report, null, 2), 'utf-8');
         return {
           message: 'Violations report saved',
-          filePath: toWorkspaceRelativePath(filePath, workspaceRoot),
+          filePath: normalizeAbsolutePathToRelative(filePath, workspaceRoot),
           stats: {
             components: 1,
             files: 0,
@@ -76,8 +76,13 @@ export const reportViolationsHandler = createHandler<
       for (const [fileName, { lines, message }] of Object.entries(fileGroups)) {
         const violation = parseViolationMessage(message);
 
+        // Construct full path: directory + normalized file path
+        const fullPath = params.directory.endsWith('/')
+          ? `${params.directory}${fileName}`
+          : `${params.directory}/${fileName}`;
+
         violations.push({
-          file: fileName,
+          file: fullPath,
           lines: lines.sort((a, b) => a - b),
           violation,
         });
@@ -106,7 +111,7 @@ export const reportViolationsHandler = createHandler<
 
       return {
         message: 'Violations report saved',
-        filePath: toWorkspaceRelativePath(filePath, workspaceRoot),
+        filePath: normalizeAbsolutePathToRelative(filePath, workspaceRoot),
         stats,
       };
     }

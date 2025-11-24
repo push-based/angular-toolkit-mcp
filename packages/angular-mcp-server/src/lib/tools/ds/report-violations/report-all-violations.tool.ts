@@ -1,5 +1,5 @@
 import { createHandler } from '../shared/utils/handler-helpers.js';
-import { toWorkspaceRelativePath } from '../shared/utils/path-helpers.js';
+import { normalizeAbsolutePathToRelative } from '../shared/utils/cross-platform-path.js';
 import {
   analyzeProjectCoverage,
   extractComponentName,
@@ -55,9 +55,14 @@ function processAudits(
       const { violation, replacement } =
         parseViolationMessageWithReplacement(message);
 
+      // Construct full path: directory + normalized file path
+      const fullPath = directory.endsWith('/')
+        ? `${directory}${fileName}`
+        : `${directory}/${fileName}`;
+
       processed.push({
         component: componentName,
-        fileName,
+        fileName: fullPath,
         lines: fileLines, // Already sorted
         violation,
         replacement,
@@ -113,7 +118,7 @@ export const reportAllViolationsHandler = createHandler<
         await writeFile(filePath, JSON.stringify(report, null, 2), 'utf-8');
         return {
           message: 'Violations report saved',
-          filePath: toWorkspaceRelativePath(filePath, workspaceRoot),
+          filePath: normalizeAbsolutePathToRelative(filePath, workspaceRoot),
           stats: {
             components: 0,
             files: 0,
@@ -171,7 +176,7 @@ export const reportAllViolationsHandler = createHandler<
 
         return {
           message: 'Violations report saved',
-          filePath: toWorkspaceRelativePath(filePath, workspaceRoot),
+          filePath: normalizeAbsolutePathToRelative(filePath, workspaceRoot),
           stats,
         };
       }
@@ -222,7 +227,7 @@ export const reportAllViolationsHandler = createHandler<
 
       return {
         message: 'Violations report saved',
-        filePath: toWorkspaceRelativePath(filePath, workspaceRoot),
+        filePath: normalizeAbsolutePathToRelative(filePath, workspaceRoot),
         stats,
       };
     }

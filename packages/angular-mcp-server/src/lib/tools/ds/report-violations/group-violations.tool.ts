@@ -1,5 +1,5 @@
 import { createHandler } from '../shared/utils/handler-helpers.js';
-import { toWorkspaceRelativePath } from '../shared/utils/path-helpers.js';
+import { normalizeAbsolutePathToRelative } from '../shared/utils/cross-platform-path.js';
 import { readFile, writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 import type {
@@ -195,7 +195,7 @@ export const groupViolationsHandler = createHandler<
 
     return {
       ...report,
-      outputDir: toWorkspaceRelativePath(outputDir, workspaceRoot),
+      outputDir: normalizeAbsolutePathToRelative(outputDir, workspaceRoot),
     };
   },
   (result) => {
