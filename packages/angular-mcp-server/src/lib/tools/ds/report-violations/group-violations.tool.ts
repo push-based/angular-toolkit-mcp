@@ -53,7 +53,7 @@ export const groupViolationsHandler = createHandler<
 
     // Detect format and convert if necessary
     const format = detectReportFormat(rawData);
-    
+
     if (format === 'unknown') {
       throw new Error(
         'Invalid violations report format. Expected either { files: [...] } or { components: [...] }',
@@ -61,10 +61,12 @@ export const groupViolationsHandler = createHandler<
     }
 
     let violationsData: AllViolationsReportByFile;
-    
+
     if (format === 'component') {
       // Convert component-grouped to file-grouped format
-      violationsData = convertComponentToFileFormat(rawData as AllViolationsReport);
+      violationsData = convertComponentToFileFormat(
+        rawData as AllViolationsReport,
+      );
     } else {
       violationsData = rawData as AllViolationsReportByFile;
     }
@@ -94,12 +96,8 @@ export const groupViolationsHandler = createHandler<
     );
 
     const targetPerGroup = totalViolations / optimalGroups;
-    const minAcceptable = Math.floor(
-      targetPerGroup * (1 - variance / 100),
-    );
-    const maxAcceptable = Math.ceil(
-      targetPerGroup * (1 + variance / 100),
-    );
+    const minAcceptable = Math.floor(targetPerGroup * (1 - variance / 100));
+    const maxAcceptable = Math.ceil(targetPerGroup * (1 + variance / 100));
 
     // Create work groups
     const groups = createWorkGroups(

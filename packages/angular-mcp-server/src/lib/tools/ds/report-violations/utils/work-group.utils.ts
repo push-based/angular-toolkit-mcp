@@ -13,7 +13,10 @@ export interface WorkGroup {
 /**
  * Assign group name based on primary directory
  */
-export function assignGroupName(directories: string[], groupId: number): string {
+export function assignGroupName(
+  directories: string[],
+  groupId: number,
+): string {
   const primaryDir = directories[0] || 'misc';
   return `Group ${groupId} - ${primaryDir}`;
 }
@@ -66,7 +69,8 @@ export function createWorkGroups(
       .filter((g) => g.violations + dir.violations <= maxAcceptable)
       .sort((a, b) => a.violations - b.violations)[0];
 
-    const selectedGroup = targetGroup || groups.sort((a, b) => a.violations - b.violations)[0];
+    const selectedGroup =
+      targetGroup || groups.sort((a, b) => a.violations - b.violations)[0];
 
     selectedGroup.directories.push(dir.directory);
     selectedGroup.files.push(...dir.files);

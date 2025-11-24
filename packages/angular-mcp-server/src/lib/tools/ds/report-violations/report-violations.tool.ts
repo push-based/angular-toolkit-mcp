@@ -101,9 +101,9 @@ export const reportViolationsHandler = createHandler<
       const filePath = join(outputDir, filename);
       await mkdir(outputDir, { recursive: true });
       await writeFile(filePath, JSON.stringify(report, null, 2), 'utf-8');
-      
+
       const stats = calculateSingleComponentStats(violations);
-      
+
       return {
         message: 'Violations report saved',
         filePath: toWorkspaceRelativePath(filePath, workspaceRoot),
@@ -117,7 +117,7 @@ export const reportViolationsHandler = createHandler<
     // Check if this is a file output response
     if ('message' in result && 'filePath' in result) {
       const stats = 'stats' in result ? result.stats : null;
-      const statsMessage = stats 
+      const statsMessage = stats
         ? ` (${stats.components} component, ${stats.files} files, ${stats.lines} lines)`
         : '';
       return [`Violations report saved to ${result.filePath}${statsMessage}`];

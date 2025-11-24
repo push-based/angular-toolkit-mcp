@@ -52,7 +52,8 @@ function processAudits(
       fileGroups,
     )) {
       // Lines are already sorted by groupIssuesByFile, so we can use them directly
-      const { violation, replacement } = parseViolationMessageWithReplacement(message);
+      const { violation, replacement } =
+        parseViolationMessageWithReplacement(message);
 
       processed.push({
         component: componentName,
@@ -96,10 +97,16 @@ export const reportAllViolationsHandler = createHandler<
 
     // Early exit for empty results
     if (failedAudits.length === 0) {
-      const report = params.groupBy === 'file' ? { files: [] } : { components: [] };
-      
+      const report =
+        params.groupBy === 'file' ? { files: [] } : { components: [] };
+
       if (params.saveAsFile) {
-        const outputDir = join(cwd, 'tmp', '.angular-toolkit-mcp', 'violations-report');
+        const outputDir = join(
+          cwd,
+          'tmp',
+          '.angular-toolkit-mcp',
+          'violations-report',
+        );
         const filename = generateFilename(params.directory);
         const filePath = join(outputDir, filename);
         await mkdir(outputDir, { recursive: true });
@@ -114,7 +121,7 @@ export const reportAllViolationsHandler = createHandler<
           },
         };
       }
-      
+
       return report;
     }
 
@@ -149,14 +156,19 @@ export const reportAllViolationsHandler = createHandler<
       const report = { components };
 
       if (params.saveAsFile) {
-        const outputDir = join(cwd, 'tmp', '.angular-toolkit-mcp', 'violations-report');
+        const outputDir = join(
+          cwd,
+          'tmp',
+          '.angular-toolkit-mcp',
+          'violations-report',
+        );
         const filename = generateFilename(params.directory);
         const filePath = join(outputDir, filename);
         await mkdir(outputDir, { recursive: true });
         await writeFile(filePath, JSON.stringify(report, null, 2), 'utf-8');
-        
+
         const stats = calculateComponentGroupedStats(components);
-        
+
         return {
           message: 'Violations report saved',
           filePath: toWorkspaceRelativePath(filePath, workspaceRoot),
@@ -195,14 +207,19 @@ export const reportAllViolationsHandler = createHandler<
     const report = { files };
 
     if (params.saveAsFile) {
-      const outputDir = join(cwd, 'tmp', '.angular-toolkit-mcp', 'violations-report');
+      const outputDir = join(
+        cwd,
+        'tmp',
+        '.angular-toolkit-mcp',
+        'violations-report',
+      );
       const filename = generateFilename(params.directory);
       const filePath = join(outputDir, filename);
       await mkdir(outputDir, { recursive: true });
       await writeFile(filePath, JSON.stringify(report, null, 2), 'utf-8');
-      
+
       const stats = calculateFileGroupedStats(files);
-      
+
       return {
         message: 'Violations report saved',
         filePath: toWorkspaceRelativePath(filePath, workspaceRoot),
@@ -216,7 +233,7 @@ export const reportAllViolationsHandler = createHandler<
     // Check if this is a file output response
     if ('message' in result && 'filePath' in result) {
       const stats = 'stats' in result && result.stats ? result.stats : null;
-      const statsMessage = stats 
+      const statsMessage = stats
         ? ` (${stats.components} components, ${stats.files} files, ${stats.lines} lines)`
         : '';
       return [`Violations report saved to ${result.filePath}${statsMessage}`];

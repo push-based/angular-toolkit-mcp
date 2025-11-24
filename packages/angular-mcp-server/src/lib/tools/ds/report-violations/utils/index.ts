@@ -13,10 +13,7 @@ export {
   detectReportFormat,
   convertComponentToFileFormat,
 } from './format-converter.utils.js';
-export {
-  calculateViolations,
-  enrichFiles,
-} from './file-enrichment.utils.js';
+export { calculateViolations, enrichFiles } from './file-enrichment.utils.js';
 export type { EnrichedFile } from './file-enrichment.utils.js';
 export {
   groupByDirectory,
