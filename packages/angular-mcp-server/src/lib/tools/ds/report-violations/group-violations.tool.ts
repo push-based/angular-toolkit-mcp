@@ -45,9 +45,9 @@ export const groupViolationsHandler = createHandler<
     try {
       const fileContent = await readFile(inputPath, 'utf-8');
       rawData = JSON.parse(fileContent);
-    } catch (error) {
+    } catch (ctx) {
       throw new Error(
-        `Failed to read violations file at ${inputPath}: ${error instanceof Error ? error.message : String(error)}`,
+        `Failed to read violations file at ${inputPath}: ${ctx instanceof Error ? ctx.message : String(ctx)}`,
       );
     }
 
