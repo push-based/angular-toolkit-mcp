@@ -98,8 +98,8 @@ export const reportAllViolationsHandler = createHandler<
     // Early exit for empty results
     if (failedAudits.length === 0) {
       const report =
-        params.groupBy === 'file' 
-          ? { files: [], rootPath: params.directory } 
+        params.groupBy === 'file'
+          ? { files: [], rootPath: params.directory }
           : { components: [], rootPath: params.directory };
 
       if (params.saveAsFile) {
