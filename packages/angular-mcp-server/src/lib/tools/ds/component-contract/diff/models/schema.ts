@@ -14,7 +14,7 @@ export const diffComponentContractSchema: ToolSchemaOptions = {
       saveLocation: {
         type: 'string',
         description:
-          'Path where to save the diff result file. Supports both absolute and relative paths.',
+          'Path where to save the diff result file. Supports both absolute and relative paths. If not provided, defaults to tmp/.angular-toolkit-mcp/contracts/diffs/<component-name>-diff.json',
       },
       contractBeforePath: {
         type: 'string',
@@ -32,7 +32,7 @@ export const diffComponentContractSchema: ToolSchemaOptions = {
         default: '',
       },
     },
-    required: ['saveLocation', 'contractBeforePath', 'contractAfterPath'],
+    required: ['contractBeforePath', 'contractAfterPath'],
   },
   annotations: {
     title: 'Diff Component Contract',

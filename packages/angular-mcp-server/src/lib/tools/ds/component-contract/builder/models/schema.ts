@@ -14,7 +14,7 @@ export const buildComponentContractSchema: ToolSchemaOptions = {
       saveLocation: {
         type: 'string',
         description:
-          'Path where to save the contract file. Supports both absolute and relative paths.',
+          'Path where to save the contract file. Supports both absolute and relative paths. If not provided, defaults to tmp/.angular-toolkit-mcp/contracts/<component-name>-contract.json',
       },
       templateFile: {
         type: 'string',
@@ -37,7 +37,7 @@ export const buildComponentContractSchema: ToolSchemaOptions = {
         default: '',
       },
     },
-    required: ['saveLocation', 'typescriptFile'],
+    required: ['typescriptFile'],
   },
   annotations: {
     title: 'Build Component Contract',

@@ -10,7 +10,7 @@ import { resolveCrossPlatformPath } from '../../shared/utils/cross-platform-path
 import { createHash } from 'node:crypto';
 
 interface BuildComponentContractOptions extends BaseHandlerOptions {
-  saveLocation: string;
+  saveLocation?: string;
   templateFile?: string;
   styleFile?: string;
   typescriptFile: string;
@@ -36,6 +36,18 @@ export const buildComponentContractHandler = createHandler<
       typescriptFile,
     );
 
+    // Generate default save location if not provided
+    const { join } = await import('node:path');
+    const { basename } = await import('node:path');
+    const defaultSaveLocation = saveLocation
+      ? saveLocation
+      : join(
+          'tmp',
+          '.angular-toolkit-mcp',
+          'contracts',
+          `${basename(typescriptFile, '.ts')}-contract.json`,
+        );
+
     // If templateFile or styleFile are not provided, use the TypeScript file path
     // This indicates inline template/styles
     const effectiveTemplatePath = templateFile
@@ -55,7 +67,10 @@ export const buildComponentContractHandler = createHandler<
     const contractString = JSON.stringify(contract, null, 2);
     const hash = createHash('sha256').update(contractString).digest('hex');
 
-    const effectiveSaveLocation = resolveCrossPlatformPath(cwd, saveLocation);
+    const effectiveSaveLocation = resolveCrossPlatformPath(
+      cwd,
+      defaultSaveLocation,
+    );
 
     const { mkdir, writeFile } = await import('node:fs/promises');
     const { dirname } = await import('node:path');

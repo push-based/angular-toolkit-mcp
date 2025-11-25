@@ -18,7 +18,7 @@ import { writeFile, mkdir } from 'node:fs/promises';
 import diff from 'microdiff';
 
 interface DiffComponentContractOptions extends BaseHandlerOptions {
-  saveLocation: string;
+  saveLocation?: string;
   contractBeforePath: string;
   contractAfterPath: string;
   dsComponentName?: string;
@@ -46,6 +46,18 @@ export const diffComponentContractHandler = createHandler<
     );
     const effectiveAfterPath = resolveCrossPlatformPath(cwd, contractAfterPath);
 
+    // Generate default save location if not provided
+    const { join, basename } = await import('node:path');
+    const defaultSaveLocation = saveLocation
+      ? saveLocation
+      : join(
+          'tmp',
+          '.angular-toolkit-mcp',
+          'contracts',
+          'diffs',
+          `${basename(contractBeforePath, '-contract.json')}-diff.json`,
+        );
+
     const contractBefore = await loadContract(effectiveBeforePath);
     const contractAfter = await loadContract(effectiveAfterPath);
 
@@ -68,7 +80,10 @@ export const diffComponentContractHandler = createHandler<
 
     const normalizedDiffData = normalizePathsInObject(diffData, workspaceRoot);
 
-    const effectiveSaveLocation = resolveCrossPlatformPath(cwd, saveLocation);
+    const effectiveSaveLocation = resolveCrossPlatformPath(
+      cwd,
+      defaultSaveLocation,
+    );
 
     const { dirname } = await import('node:path');
     await mkdir(dirname(effectiveSaveLocation), { recursive: true });
