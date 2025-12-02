@@ -25,22 +25,19 @@ export function detectReportFormat(
 export function convertComponentToFileFormat(
   report: AllViolationsReport,
 ): AllViolationsReportByFile {
-  const fileMap = new Map<string, FileViolationReport['components']>();
-
-  report.components.forEach((componentReport) => {
-    componentReport.violations.forEach((violation) => {
-      if (!fileMap.has(violation.file)) {
-        fileMap.set(violation.file, []);
-      }
-
-      fileMap.get(violation.file)!.push({
+  const fileMap = report.components.reduce((map, componentReport) => {
+    return componentReport.violations.reduce((m, violation) => {
+      const existing = m.get(violation.file) ?? [];
+      existing.push({
         component: componentReport.component,
         lines: violation.lines,
         violation: violation.violation,
         replacement: violation.replacement,
       });
-    });
-  });
+      m.set(violation.file, existing);
+      return m;
+    }, map);
+  }, new Map<string, FileViolationReport['components']>());
 
   const files: FileViolationReport[] = Array.from(
     fileMap.entries(),

@@ -24,7 +24,8 @@ export {
   assignGroupName,
   calculateComponentDistribution,
   createWorkGroups,
+  mapWorkGroupToReportGroup,
 } from './work-group.utils.js';
-export type { WorkGroup } from './work-group.utils.js';
+export type { WorkGroup, ReportGroup } from './work-group.utils.js';
 export { generateGroupMarkdown } from './markdown-generator.utils.js';
 export type { GroupForMarkdown } from './markdown-generator.utils.js';

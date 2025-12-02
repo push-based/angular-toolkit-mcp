@@ -1,5 +1,6 @@
 import type { EnrichedFile } from './file-enrichment.utils.js';
 import type { DirectorySummary } from './directory-grouping.utils.js';
+import type { FileViolationReport } from '../models/types.js';
 
 export interface WorkGroup {
   id: number;
@@ -8,6 +9,48 @@ export interface WorkGroup {
   files: EnrichedFile[];
   violations: number;
   componentDistribution: Record<string, number>;
+}
+
+export interface ReportGroup {
+  id: number;
+  name: string;
+  rootPath: string;
+  directories: string[];
+  files: Array<{
+    file: string;
+    violations: number;
+    components: FileViolationReport['components'];
+  }>;
+  statistics: {
+    fileCount: number;
+    violationCount: number;
+  };
+  componentDistribution: Record<string, number>;
+}
+
+/**
+ * Map a WorkGroup to the report group format
+ */
+export function mapWorkGroupToReportGroup(
+  group: WorkGroup,
+  rootPath: string,
+): ReportGroup {
+  return {
+    id: group.id,
+    name: group.name,
+    rootPath,
+    directories: group.directories,
+    files: group.files.map((f) => ({
+      file: f.file,
+      violations: f.violations,
+      components: f.components,
+    })),
+    statistics: {
+      fileCount: group.files.length,
+      violationCount: group.violations,
+    },
+    componentDistribution: group.componentDistribution,
+  };
 }
 
 /**
@@ -27,18 +70,12 @@ export function assignGroupName(
 export function calculateComponentDistribution(
   files: EnrichedFile[],
 ): Record<string, number> {
-  const distribution: Record<string, number> = {};
-
-  files.forEach((file) => {
-    file.components.forEach((comp) => {
-      if (!distribution[comp.component]) {
-        distribution[comp.component] = 0;
-      }
-      distribution[comp.component] += comp.lines.length;
-    });
-  });
-
-  return distribution;
+  return files.reduce<Record<string, number>>((distribution, file) => {
+    return file.components.reduce((dist, comp) => {
+      dist[comp.component] = (dist[comp.component] || 0) + comp.lines.length;
+      return dist;
+    }, distribution);
+  }, {});
 }
 
 /**

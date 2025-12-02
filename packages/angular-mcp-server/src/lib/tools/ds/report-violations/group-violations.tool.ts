@@ -19,6 +19,7 @@ import {
   determineOptimalGroups,
   createWorkGroups,
   generateGroupMarkdown,
+  mapWorkGroupToReportGroup,
 } from './utils/index.js';
 
 export { groupViolationsSchema };
@@ -33,7 +34,6 @@ export const groupViolationsHandler = createHandler<
     const maxGroups = params.maxGroups ?? 5;
     const variance = params.variance ?? 20;
 
-    // Read violations file
     const inputPath = join(
       cwd,
       DEFAULT_OUTPUT_BASE,
@@ -51,7 +51,6 @@ export const groupViolationsHandler = createHandler<
       );
     }
 
-    // Detect format and convert if necessary
     const format = detectReportFormat(rawData);
 
     if (format === 'unknown') {
@@ -75,10 +74,8 @@ export const groupViolationsHandler = createHandler<
       throw new Error('No violations found in the input file');
     }
 
-    // Extract rootPath from the violations data
     const rootPath = violationsData.rootPath || '';
 
-    // Enrich files with metadata
     const enrichedFiles = enrichFiles(violationsData.files);
     const totalViolations = enrichedFiles.reduce(
       (sum, f) => sum + f.violations,
@@ -86,10 +83,8 @@ export const groupViolationsHandler = createHandler<
     );
     const totalFiles = enrichedFiles.length;
 
-    // Group by directory
     const directorySummary = groupByDirectory(enrichedFiles);
 
-    // Determine optimal number of groups
     const optimalGroups = determineOptimalGroups(
       totalViolations,
       directorySummary,
@@ -102,14 +97,12 @@ export const groupViolationsHandler = createHandler<
     const minAcceptable = Math.floor(targetPerGroup * (1 - variance / 100));
     const maxAcceptable = Math.ceil(targetPerGroup * (1 + variance / 100));
 
-    // Create work groups
     const groups = createWorkGroups(
       directorySummary,
       optimalGroups,
       maxAcceptable,
     );
 
-    // Validation
     const totalGroupViolations = groups.reduce(
       (sum, g) => sum + g.violations,
       0,
@@ -121,7 +114,6 @@ export const groupViolationsHandler = createHandler<
       (g) => g.violations >= minAcceptable && g.violations <= maxAcceptable,
     );
 
-    // Create output structure
     const report: GroupViolationsReport = {
       metadata: {
         generatedAt: new Date().toISOString(),
@@ -134,22 +126,7 @@ export const groupViolationsHandler = createHandler<
         acceptableRange: { min: minAcceptable, max: maxAcceptable },
         variance,
       },
-      groups: groups.map((g) => ({
-        id: g.id,
-        name: g.name,
-        rootPath,
-        directories: g.directories,
-        files: g.files.map((f) => ({
-          file: f.file,
-          violations: f.violations,
-          components: f.components,
-        })),
-        statistics: {
-          fileCount: g.files.length,
-          violationCount: g.violations,
-        },
-        componentDistribution: g.componentDistribution,
-      })),
+      groups: groups.map((g) => mapWorkGroupToReportGroup(g, rootPath)),
       validation: {
         totalViolations: totalGroupViolations,
         totalFiles: allFilesInGroups.length,
@@ -159,7 +136,6 @@ export const groupViolationsHandler = createHandler<
       },
     };
 
-    // Save each group as individual file
     const reportName = params.fileName.replace('.json', '');
     const outputDir = join(
       cwd,
@@ -170,7 +146,6 @@ export const groupViolationsHandler = createHandler<
 
     await mkdir(outputDir, { recursive: true });
 
-    // Save metadata file
     const metadataPath = join(outputDir, 'metadata.json');
     await writeFile(
       metadataPath,
@@ -185,13 +160,10 @@ export const groupViolationsHandler = createHandler<
       'utf-8',
     );
 
-    // Save each group as separate file (JSON + Markdown)
     for (const group of report.groups) {
-      // Save JSON
       const groupPath = join(outputDir, `group-${group.id}.json`);
       await writeFile(groupPath, JSON.stringify(group, null, 2), 'utf-8');
 
-      // Save Markdown report
       const markdownPath = join(outputDir, `group-${group.id}.md`);
       const markdown = generateGroupMarkdown(group);
       await writeFile(markdownPath, markdown, 'utf-8');
