@@ -1,10 +1,5 @@
 import type { FileViolationReport } from '../models/types.js';
-
-export interface EnrichedFile extends FileViolationReport {
-  violations: number;
-  directory: string;
-  subdirectory: string;
-}
+import type { EnrichedFile } from './types.js';
 
 /**
  * Calculate total violations for a file

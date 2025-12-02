@@ -1,32 +1,9 @@
-import type { EnrichedFile } from './file-enrichment.utils.js';
-import type { DirectorySummary } from './directory-grouping.utils.js';
-import type { FileViolationReport } from '../models/types.js';
-
-export interface WorkGroup {
-  id: number;
-  name: string;
-  directories: string[];
-  files: EnrichedFile[];
-  violations: number;
-  componentDistribution: Record<string, number>;
-}
-
-export interface ReportGroup {
-  id: number;
-  name: string;
-  rootPath: string;
-  directories: string[];
-  files: Array<{
-    file: string;
-    violations: number;
-    components: FileViolationReport['components'];
-  }>;
-  statistics: {
-    fileCount: number;
-    violationCount: number;
-  };
-  componentDistribution: Record<string, number>;
-}
+import type {
+  DirectorySummary,
+  EnrichedFile,
+  ReportGroup,
+  WorkGroup,
+} from './types.js';
 
 /**
  * Map a WorkGroup to the report group format

@@ -1,11 +1,4 @@
-import type { EnrichedFile } from './file-enrichment.utils.js';
-
-export interface DirectorySummary {
-  directory: string;
-  files: EnrichedFile[];
-  fileCount: number;
-  violations: number;
-}
+import type { DirectorySummary, EnrichedFile } from './types.js';
 
 /**
  * Group files by directory hierarchy

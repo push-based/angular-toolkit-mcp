@@ -1,18 +1,4 @@
-import type { FileViolationReport } from '../models/types.js';
-
-export interface GroupForMarkdown {
-  name: string;
-  statistics: {
-    fileCount: number;
-    violationCount: number;
-  };
-  componentDistribution: Record<string, number>;
-  files: Array<{
-    file: string;
-    violations: number;
-    components: FileViolationReport['components'];
-  }>;
-}
+import type { GroupForMarkdown } from './types.js';
 
 /**
  * Generate markdown report for a group

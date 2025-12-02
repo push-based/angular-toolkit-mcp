@@ -3,12 +3,7 @@ import type {
   AllViolationsComponentReport,
   FileViolationReport,
 } from '../models/types.js';
-
-export interface ViolationStats {
-  components: number;
-  files: number;
-  lines: number;
-}
+import type { ViolationStats } from './types.js';
 
 /**
  * Calculate statistics for single component violations
