@@ -14,7 +14,7 @@ export const buildComponentContractSchema: ToolSchemaOptions = {
       saveLocation: {
         type: 'string',
         description:
-          'Path where to save the contract file. Supports both absolute and relative paths. If not provided, defaults to tmp/.angular-toolkit-mcp/contracts/<component-name>-contract.json',
+          'Path where to save the contract file. Supports both absolute and relative paths. If not provided, defaults to tmp/.angular-toolkit-mcp/contracts/<component-name>-contract.json. When building contracts for comparison, use descriptive names like <component-name>-before-contract.json or <component-name>-after-contract.json to distinguish between refactoring phases.',
       },
       templateFile: {
         type: 'string',
