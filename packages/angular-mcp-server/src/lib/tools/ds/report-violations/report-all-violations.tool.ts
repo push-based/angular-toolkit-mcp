@@ -1,5 +1,6 @@
 import { createHandler } from '../shared/utils/handler-helpers.js';
 import { normalizeAbsolutePathToRelative } from '../shared/utils/cross-platform-path.js';
+import { DEFAULT_OUTPUT_BASE, OUTPUT_SUBDIRS } from '../shared/constants.js';
 import {
   analyzeProjectCoverage,
   extractComponentName,
@@ -105,9 +106,8 @@ export const reportAllViolationsHandler = createHandler<
       if (params.saveAsFile) {
         const outputDir = join(
           cwd,
-          'tmp',
-          '.angular-toolkit-mcp',
-          'violations-report',
+          DEFAULT_OUTPUT_BASE,
+          OUTPUT_SUBDIRS.VIOLATIONS_REPORT,
         );
         const filename = generateFilename(params.directory);
         const filePath = join(outputDir, filename);
@@ -160,9 +160,8 @@ export const reportAllViolationsHandler = createHandler<
       if (params.saveAsFile) {
         const outputDir = join(
           cwd,
-          'tmp',
-          '.angular-toolkit-mcp',
-          'violations-report',
+          DEFAULT_OUTPUT_BASE,
+          OUTPUT_SUBDIRS.VIOLATIONS_REPORT,
         );
         const filename = generateFilename(params.directory);
         const filePath = join(outputDir, filename);
@@ -211,9 +210,8 @@ export const reportAllViolationsHandler = createHandler<
     if (params.saveAsFile) {
       const outputDir = join(
         cwd,
-        'tmp',
-        '.angular-toolkit-mcp',
-        'violations-report',
+        DEFAULT_OUTPUT_BASE,
+        OUTPUT_SUBDIRS.VIOLATIONS_REPORT,
       );
       const filename = generateFilename(params.directory);
       const filePath = join(outputDir, filename);

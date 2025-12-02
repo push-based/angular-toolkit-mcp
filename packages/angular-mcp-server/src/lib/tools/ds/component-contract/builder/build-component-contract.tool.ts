@@ -7,7 +7,10 @@ import { buildComponentContract } from './utils/build-contract.js';
 import { generateContractSummary } from '../shared/utils/contract-file-ops.js';
 import { ContractResult } from './models/types.js';
 import { resolveCrossPlatformPath } from '../../shared/utils/cross-platform-path.js';
+import { DEFAULT_OUTPUT_BASE, OUTPUT_SUBDIRS } from '../../shared/constants.js';
 import { createHash } from 'node:crypto';
+import { join, basename, dirname } from 'node:path';
+import { mkdir, writeFile } from 'node:fs/promises';
 
 interface BuildComponentContractOptions extends BaseHandlerOptions {
   saveLocation?: string;
@@ -36,15 +39,11 @@ export const buildComponentContractHandler = createHandler<
       typescriptFile,
     );
 
-    // Generate default save location if not provided
-    const { join } = await import('node:path');
-    const { basename } = await import('node:path');
     const defaultSaveLocation = saveLocation
       ? saveLocation
       : join(
-          'tmp',
-          '.angular-toolkit-mcp',
-          'contracts',
+          DEFAULT_OUTPUT_BASE,
+          OUTPUT_SUBDIRS.CONTRACTS,
           `${basename(typescriptFile, '.ts')}-contract.json`,
         );
 
@@ -72,8 +71,6 @@ export const buildComponentContractHandler = createHandler<
       defaultSaveLocation,
     );
 
-    const { mkdir, writeFile } = await import('node:fs/promises');
-    const { dirname } = await import('node:path');
     await mkdir(dirname(effectiveSaveLocation), { recursive: true });
 
     const contractData = {

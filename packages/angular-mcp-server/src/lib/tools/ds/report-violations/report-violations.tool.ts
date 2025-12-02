@@ -1,5 +1,6 @@
 import { createHandler } from '../shared/utils/handler-helpers.js';
 import { normalizeAbsolutePathToRelative } from '../shared/utils/cross-platform-path.js';
+import { DEFAULT_OUTPUT_BASE, OUTPUT_SUBDIRS } from '../shared/constants.js';
 import { analyzeViolationsBase } from '../shared/violation-analysis/base-analyzer.js';
 import {
   groupIssuesByFile,
@@ -42,9 +43,8 @@ export const reportViolationsHandler = createHandler<
       if (params.saveAsFile) {
         const outputDir = join(
           cwd,
-          'tmp',
-          '.angular-toolkit-mcp',
-          'violations-report',
+          DEFAULT_OUTPUT_BASE,
+          OUTPUT_SUBDIRS.VIOLATIONS_REPORT,
           params.componentName,
         );
         const filename = generateFilename(params.directory);
@@ -94,9 +94,8 @@ export const reportViolationsHandler = createHandler<
     if (params.saveAsFile) {
       const outputDir = join(
         cwd,
-        'tmp',
-        '.angular-toolkit-mcp',
-        'violations-report',
+        DEFAULT_OUTPUT_BASE,
+        OUTPUT_SUBDIRS.VIOLATIONS_REPORT,
         params.componentName,
       );
       const filename = generateFilename(params.directory);

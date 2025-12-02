@@ -1,5 +1,6 @@
 import { createHandler } from '../shared/utils/handler-helpers.js';
 import { normalizeAbsolutePathToRelative } from '../shared/utils/cross-platform-path.js';
+import { DEFAULT_OUTPUT_BASE, OUTPUT_SUBDIRS } from '../shared/constants.js';
 import { readFile, writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 import type {
@@ -35,9 +36,8 @@ export const groupViolationsHandler = createHandler<
     // Read violations file
     const inputPath = join(
       cwd,
-      'tmp',
-      '.angular-toolkit-mcp',
-      'violations-report',
+      DEFAULT_OUTPUT_BASE,
+      OUTPUT_SUBDIRS.VIOLATIONS_REPORT,
       params.fileName,
     );
 
@@ -163,9 +163,8 @@ export const groupViolationsHandler = createHandler<
     const reportName = params.fileName.replace('.json', '');
     const outputDir = join(
       cwd,
-      'tmp',
-      '.angular-toolkit-mcp',
-      'violation-groups',
+      DEFAULT_OUTPUT_BASE,
+      OUTPUT_SUBDIRS.VIOLATION_GROUPS,
       reportName,
     );
 
