@@ -1,5 +1,9 @@
 import { ToolSchemaOptions } from '@push-based/models';
-import { COMMON_ANNOTATIONS } from '../../../shared/index.js';
+import {
+  COMMON_ANNOTATIONS,
+  DEFAULT_OUTPUT_BASE,
+  OUTPUT_SUBDIRS,
+} from '../../../shared/index.js';
 
 /**
  * Schema for building component contracts
@@ -13,8 +17,7 @@ export const buildComponentContractSchema: ToolSchemaOptions = {
     properties: {
       saveLocation: {
         type: 'string',
-        description:
-          'Path where to save the contract file. Supports both absolute and relative paths. If not provided, defaults to tmp/.angular-toolkit-mcp/contracts/<component-name>-contract.json. When building contracts for comparison, use descriptive names like <component-name>-before-contract.json or <component-name>-after-contract.json to distinguish between refactoring phases.',
+        description: `Path where to save the contract file. Supports both absolute and relative paths. If not provided, defaults to ${DEFAULT_OUTPUT_BASE}/${OUTPUT_SUBDIRS.CONTRACTS}/<component-name>-contract.json. When building contracts for comparison, use descriptive names like <component-name>-before-contract.json or <component-name>-after-contract.json to distinguish between refactoring phases.`,
       },
       templateFile: {
         type: 'string',

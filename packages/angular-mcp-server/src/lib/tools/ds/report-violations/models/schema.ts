@@ -3,6 +3,10 @@ import {
   createProjectAnalysisSchema,
   COMMON_ANNOTATIONS,
 } from '../../shared/models/schema-helpers.js';
+import {
+  DEFAULT_OUTPUT_BASE,
+  OUTPUT_SUBDIRS,
+} from '../../shared/constants.js';
 
 export const reportViolationsSchema = {
   name: 'report-violations',
@@ -10,8 +14,7 @@ export const reportViolationsSchema = {
   inputSchema: createViolationReportingSchema({
     saveAsFile: {
       type: 'boolean',
-      description:
-        'If true, saves the violations report to <root>/tmp/.angular-toolkit-mcp/violations-report/<componentName>/ with filename pattern <directory>-violations.json (e.g., packages-poker-core-lib-violations.json). Overwrites if file exists.',
+      description: `If true, saves the violations report to <root>/${DEFAULT_OUTPUT_BASE}/${OUTPUT_SUBDIRS.VIOLATIONS_REPORT}/<componentName>/ with filename pattern <directory>-violations.json (e.g., packages-poker-core-lib-violations.json). Overwrites if file exists.`,
     },
   }),
   annotations: {
@@ -34,8 +37,7 @@ export const reportAllViolationsSchema = {
     },
     saveAsFile: {
       type: 'boolean',
-      description:
-        'If true, saves the violations report to <root>/tmp/.angular-toolkit-mcp/violations-report/ with filename pattern <directory>-violations.json (e.g., packages-poker-core-lib-violations.json). Overwrites if file exists.',
+      description: `If true, saves the violations report to <root>/${DEFAULT_OUTPUT_BASE}/${OUTPUT_SUBDIRS.VIOLATIONS_REPORT}/ with filename pattern <directory>-violations.json (e.g., packages-poker-core-lib-violations.json). Overwrites if file exists.`,
     },
   }),
   annotations: {
@@ -46,15 +48,13 @@ export const reportAllViolationsSchema = {
 
 export const groupViolationsSchema = {
   name: 'group-violations',
-  description:
-    'Creates work distribution groups from violations report. Reads a violations JSON file (e.g., packages-poker-violations.json) from tmp/.angular-toolkit-mcp/violations-report/ and creates balanced work groups using bin-packing algorithm. Accepts both file-grouped and component-grouped violation reports. Groups are balanced by violation count, maintain path exclusivity (each file in one group), and preserve directory boundaries for parallel development.',
+  description: `Creates work distribution groups from violations report. Reads a violations JSON file (e.g., packages-poker-violations.json) from ${DEFAULT_OUTPUT_BASE}/${OUTPUT_SUBDIRS.VIOLATIONS_REPORT}/ and creates balanced work groups using bin-packing algorithm. Accepts both file-grouped and component-grouped violation reports. Groups are balanced by violation count, maintain path exclusivity (each file in one group), and preserve directory boundaries for parallel development.`,
   inputSchema: {
     type: 'object' as const,
     properties: {
       fileName: {
         type: 'string',
-        description:
-          'Name of the violations JSON file (e.g., "packages-poker-violations.json"). File must exist in tmp/.angular-toolkit-mcp/violations-report/',
+        description: `Name of the violations JSON file (e.g., "packages-poker-violations.json"). File must exist in ${DEFAULT_OUTPUT_BASE}/${OUTPUT_SUBDIRS.VIOLATIONS_REPORT}/`,
       },
       minGroups: {
         type: 'number',
