@@ -1,17 +1,17 @@
-# Design System Tools for AI Agents
+# Angular MCP Tools for AI Agents
 
-This document provides comprehensive guidance for AI agents working with Angular Design System (DS) migration and analysis tools. Each tool is designed to support automated refactoring, validation, and analysis workflows.
+This document provides comprehensive guidance for AI agents working with Angular migration and analysis tools. Each tool is designed to support automated refactoring, validation, and analysis workflows.
 
 ## Tool Categories
 
 ### 🔍 Project Analysis Tools
 
 #### `report-violations`
-**Purpose**: Identifies deprecated DS CSS usage patterns for a specific DS component in Angular projects
+**Purpose**: Identifies deprecated CSS usage patterns for a specific component in Angular projects
 **AI Usage**: Use when you need to analyze violations for a specific component before planning refactoring
 **Key Parameters**:
 - `directory`: Target analysis directory (use relative paths like `./src/app`)
-- `componentName`: DS component class name (e.g., `DsButton`)
+- `componentName`: Component class name (e.g., `DsButton`)
 - `groupBy`: `"file"` or `"folder"` for result organization
 - `saveAsFile`: Optional boolean - if `true`, saves report to `tmp/.angular-toolkit-mcp/violations-report/<componentName>/<directory>-violations.json`
 **Output**: 
@@ -20,14 +20,14 @@ This document provides comprehensive guidance for AI agents working with Angular
 **Best Practice**: Use `saveAsFile: true` when you need to persist results for later processing or grouping workflows
 
 #### `report-all-violations`
-**Purpose**: Reports all deprecated DS CSS usage for every DS component within a directory
+**Purpose**: Reports all deprecated CSS usage for every component within a directory
 **AI Usage**: Use for a fast, global inventory of violations across the codebase before narrowing to specific components
 **Key Parameters**:
 - `directory`: Target analysis directory (use relative paths like `./src/app`)
 - `groupBy`: `"component"` or `"file"` for result organization (default: `"component"`)
 - `saveAsFile`: Optional boolean - if `true`, saves report to `tmp/.angular-toolkit-mcp/violations-report/<directory>-violations.json`
 **Output**: 
-- Default: Structured violation reports grouped by component or file covering all DS components
+- Default: Structured violation reports grouped by component or file covering all components
 - With `saveAsFile: true`: File path and statistics (components, files, lines)
 **Best Practice**: Use `saveAsFile: true` to persist results for grouping workflows or large-scale migration planning. The saved file can be used as input for work distribution grouping tools.
 

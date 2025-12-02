@@ -7,9 +7,12 @@ import { buildComponentContract } from './utils/build-contract.js';
 import { generateContractSummary } from '../shared/utils/contract-file-ops.js';
 import { ContractResult } from './models/types.js';
 import { resolveCrossPlatformPath } from '../../shared/utils/cross-platform-path.js';
-import { DEFAULT_OUTPUT_BASE, OUTPUT_SUBDIRS } from '../../shared/constants.js';
+import {
+  OUTPUT_SUBDIRS,
+  resolveDefaultSaveLocation,
+} from '../../shared/constants.js';
 import { createHash } from 'node:crypto';
-import { join, basename, dirname } from 'node:path';
+import { dirname } from 'node:path';
 import { mkdir, writeFile } from 'node:fs/promises';
 
 interface BuildComponentContractOptions extends BaseHandlerOptions {
@@ -39,13 +42,12 @@ export const buildComponentContractHandler = createHandler<
       typescriptFile,
     );
 
-    const defaultSaveLocation = saveLocation
-      ? saveLocation
-      : join(
-          DEFAULT_OUTPUT_BASE,
-          OUTPUT_SUBDIRS.CONTRACTS,
-          `${basename(typescriptFile, '.ts')}-contract.json`,
-        );
+    const defaultSaveLocation = resolveDefaultSaveLocation(
+      saveLocation,
+      OUTPUT_SUBDIRS.CONTRACTS,
+      typescriptFile,
+      '-contract.json',
+    );
 
     // If templateFile or styleFile are not provided, use the TypeScript file path
     // This indicates inline template/styles

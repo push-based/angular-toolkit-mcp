@@ -62,7 +62,6 @@ export const groupViolationsHandler = createHandler<
     let violationsData: AllViolationsReportByFile;
 
     if (format === 'component') {
-      // Convert component-grouped to file-grouped format
       violationsData = convertComponentToFileFormat(
         rawData as AllViolationsReport,
       );

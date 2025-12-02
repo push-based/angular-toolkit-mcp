@@ -10,7 +10,7 @@ import {
 
 export const reportViolationsSchema = {
   name: 'report-violations',
-  description: `Report deprecated CSS usage for a specific design system component in a directory. Returns violations grouped by file, showing which deprecated classes are used and where. Use this when you know which component you're checking for. Output includes: file paths, line numbers, and violation details (but not replacement suggestions since the component is already known).`,
+  description: `Report deprecated CSS usage for a specific component in a directory. Returns violations grouped by file, showing which deprecated classes are used and where. Use this when you know which component you're checking for. Output includes: file paths, line numbers, and violation details (but not replacement suggestions since the component is already known).`,
   inputSchema: createViolationReportingSchema({
     saveAsFile: {
       type: 'boolean',
@@ -26,13 +26,13 @@ export const reportViolationsSchema = {
 export const reportAllViolationsSchema = {
   name: 'report-all-violations',
   description:
-    'Scan a directory for all deprecated design system CSS classes and output a comprehensive violation report. Use this to discover all violations across multiple components. Output can be grouped by component (default) or by file, and includes: file paths, line numbers, violation details, and replacement suggestions (which component should be used instead). This is ideal for getting an overview of all violations in a directory.',
+    'Scan a directory for all deprecated CSS classes and output a comprehensive violation report. Use this to discover all violations across multiple components. Output can be grouped by component (default) or by file, and includes: file paths, line numbers, violation details, and replacement suggestions (which component should be used instead). This is ideal for getting an overview of all violations in a directory.',
   inputSchema: createProjectAnalysisSchema({
     groupBy: {
       type: 'string',
       enum: ['component', 'file'],
       description:
-        'How to group the results: "component" (default) groups by design system component showing all files affected by each component, "file" groups by file path showing all components violated in each file',
+        'How to group the results: "component" (default) groups by component showing all files affected by each component, "file" groups by file path showing all components violated in each file',
       default: 'component',
     },
     saveAsFile: {
