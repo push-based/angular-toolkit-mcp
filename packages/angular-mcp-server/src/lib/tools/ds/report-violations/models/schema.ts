@@ -3,10 +3,7 @@ import {
   createProjectAnalysisSchema,
   COMMON_ANNOTATIONS,
 } from '../../shared/models/schema-helpers.js';
-import {
-  DEFAULT_OUTPUT_BASE,
-  OUTPUT_SUBDIRS,
-} from '../../shared/constants.js';
+import { DEFAULT_OUTPUT_BASE, OUTPUT_SUBDIRS } from '../../shared/constants.js';
 
 export const reportViolationsSchema = {
   name: 'report-violations',

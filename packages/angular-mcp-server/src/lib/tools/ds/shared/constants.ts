@@ -16,7 +16,6 @@ export const OUTPUT_SUBDIRS = {
   VIOLATION_GROUPS: 'violation-groups',
 } as const;
 
-
 export function resolveDefaultSaveLocation(
   saveLocation: string | undefined,
   subdir: string,
