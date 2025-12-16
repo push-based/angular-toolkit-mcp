@@ -6,6 +6,10 @@ import {
   resolveCrossPlatformPath,
   normalizePathsInObject,
 } from '../../shared/utils/cross-platform-path.js';
+import {
+  OUTPUT_SUBDIRS,
+  resolveDefaultSaveLocation,
+} from '../../shared/constants.js';
 import { diffComponentContractSchema } from './models/schema.js';
 import type { DomPathDictionary } from '../shared/models/types.js';
 import { loadContract } from '../shared/utils/contract-file-ops.js';
@@ -15,10 +19,11 @@ import {
   generateDiffSummary,
 } from './utils/diff-utils.js';
 import { writeFile, mkdir } from 'node:fs/promises';
+import { dirname } from 'node:path';
 import diff from 'microdiff';
 
 interface DiffComponentContractOptions extends BaseHandlerOptions {
-  saveLocation: string;
+  saveLocation?: string;
   contractBeforePath: string;
   contractAfterPath: string;
   dsComponentName?: string;
@@ -46,6 +51,14 @@ export const diffComponentContractHandler = createHandler<
     );
     const effectiveAfterPath = resolveCrossPlatformPath(cwd, contractAfterPath);
 
+    const defaultSaveLocation = resolveDefaultSaveLocation(
+      saveLocation,
+      OUTPUT_SUBDIRS.CONTRACT_DIFFS,
+      contractBeforePath,
+      '-diff.json',
+      '-contract.json',
+    );
+
     const contractBefore = await loadContract(effectiveBeforePath);
     const contractAfter = await loadContract(effectiveAfterPath);
 
@@ -68,9 +81,11 @@ export const diffComponentContractHandler = createHandler<
 
     const normalizedDiffData = normalizePathsInObject(diffData, workspaceRoot);
 
-    const effectiveSaveLocation = resolveCrossPlatformPath(cwd, saveLocation);
+    const effectiveSaveLocation = resolveCrossPlatformPath(
+      cwd,
+      defaultSaveLocation,
+    );
 
-    const { dirname } = await import('node:path');
     await mkdir(dirname(effectiveSaveLocation), { recursive: true });
 
     const diffFilePath = effectiveSaveLocation;

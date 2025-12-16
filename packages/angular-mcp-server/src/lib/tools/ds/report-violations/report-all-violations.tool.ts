@@ -1,11 +1,6 @@
-import {
-  BaseHandlerOptions,
-  createHandler,
-} from '../shared/utils/handler-helpers.js';
-import {
-  COMMON_ANNOTATIONS,
-  createProjectAnalysisSchema,
-} from '../shared/models/schema-helpers.js';
+import { createHandler } from '../shared/utils/handler-helpers.js';
+import { normalizeAbsolutePathToRelative } from '../shared/utils/cross-platform-path.js';
+import { DEFAULT_OUTPUT_BASE, OUTPUT_SUBDIRS } from '../shared/constants.js';
 import {
   analyzeProjectCoverage,
   extractComponentName,
@@ -17,85 +12,25 @@ import {
 import type { BaseViolationAudit } from '../shared/violation-analysis/types.js';
 import { loadAndValidateDsComponentsFile } from '../../../validation/ds-components-file-loader.validation.js';
 import {
-  AllViolationsReport,
   AllViolationsComponentReport,
   AllViolationsEntry,
-  AllViolationsReportByFile,
   FileViolationReport,
   ComponentViolationInFile,
+  ReportAllViolationsOptions,
+  ReportAllViolationsResult,
+  ProcessedViolation,
 } from './models/types.js';
+import { reportAllViolationsSchema } from './models/schema.js';
+import { writeFile, mkdir } from 'fs/promises';
+import { join } from 'path';
+import {
+  generateFilename,
+  parseViolationMessageWithReplacement,
+  calculateComponentGroupedStats,
+  calculateFileGroupedStats,
+} from './utils/index.js';
 
-interface ReportAllViolationsOptions extends BaseHandlerOptions {
-  directory: string;
-  groupBy?: 'component' | 'file';
-}
-
-export const reportAllViolationsSchema = {
-  name: 'report-all-violations',
-  description:
-    'Scan a directory for all deprecated design system CSS classes and output a comprehensive violation report. Use this to discover all violations across multiple components. Output can be grouped by component (default) or by file, and includes: file paths, line numbers, violation details, and replacement suggestions (which component should be used instead). This is ideal for getting an overview of all violations in a directory.',
-  inputSchema: createProjectAnalysisSchema({
-    groupBy: {
-      type: 'string',
-      enum: ['component', 'file'],
-      description:
-        'How to group the results: "component" (default) groups by design system component showing all files affected by each component, "file" groups by file path showing all components violated in each file',
-      default: 'component',
-    },
-  }),
-  annotations: {
-    title: 'Report All Violations',
-    ...COMMON_ANNOTATIONS.readOnly,
-  },
-};
-
-/**
- * Extracts deprecated class and replacement from violation message
- * Performance optimized with caching to avoid repeated regex operations
- */
-const messageParsingCache = new Map<
-  string,
-  { violation: string; replacement: string }
->();
-
-function parseViolationMessage(message: string): {
-  violation: string;
-  replacement: string;
-} {
-  // Check cache first
-  const cached = messageParsingCache.get(message);
-  if (cached) {
-    return cached;
-  }
-
-  // Clean up HTML tags
-  const cleanMessage = message
-    .replace(/<code>/g, '`')
-    .replace(/<\/code>/g, '`');
-
-  // Extract deprecated class - look for patterns like "class `offer-badge`" or "class `btn, btn-primary`"
-  const classMatch = cleanMessage.match(/class `([^`]+)`/);
-  const violation = classMatch ? classMatch[1] : 'unknown';
-
-  // Extract replacement component - look for "Use `ComponentName`"
-  const replacementMatch = cleanMessage.match(/Use `([^`]+)`/);
-  const replacement = replacementMatch ? replacementMatch[1] : 'unknown';
-
-  const result = { violation, replacement };
-  messageParsingCache.set(message, result);
-  return result;
-}
-
-/**
- * Processed violation data structure used internally for both grouping modes
- */
-interface ProcessedViolation {
-  component: string;
-  fileName: string;
-  lines: number[];
-  violation: string;
-  replacement: string;
-}
+export { reportAllViolationsSchema };
 
 /**
  * Processes all failed audits into a unified structure
@@ -118,11 +53,12 @@ function processAudits(
       fileGroups,
     )) {
       // Lines are already sorted by groupIssuesByFile, so we can use them directly
-      const { violation, replacement } = parseViolationMessage(message);
+      const { violation, replacement } =
+        parseViolationMessageWithReplacement(message);
 
       processed.push({
         component: componentName,
-        fileName,
+        fileName: fileName,
         lines: fileLines, // Already sorted
         violation,
         replacement,
@@ -135,10 +71,10 @@ function processAudits(
 
 export const reportAllViolationsHandler = createHandler<
   ReportAllViolationsOptions,
-  AllViolationsReport | AllViolationsReportByFile
+  ReportAllViolationsResult
 >(
   reportAllViolationsSchema.name,
-  async (params, { cwd, deprecatedCssClassesPath }) => {
+  async (params, { cwd, workspaceRoot, deprecatedCssClassesPath }) => {
     if (!deprecatedCssClassesPath) {
       throw new Error(
         'Missing ds.deprecatedCssClassesPath. Provide --ds.deprecatedCssClassesPath in mcp.json file.',
@@ -162,7 +98,33 @@ export const reportAllViolationsHandler = createHandler<
 
     // Early exit for empty results
     if (failedAudits.length === 0) {
-      return params.groupBy === 'file' ? { files: [] } : { components: [] };
+      const report =
+        params.groupBy === 'file'
+          ? { files: [], rootPath: params.directory }
+          : { components: [], rootPath: params.directory };
+
+      if (params.saveAsFile) {
+        const outputDir = join(
+          cwd,
+          DEFAULT_OUTPUT_BASE,
+          OUTPUT_SUBDIRS.VIOLATIONS_REPORT,
+        );
+        const filename = generateFilename(params.directory);
+        const filePath = join(outputDir, filename);
+        await mkdir(outputDir, { recursive: true });
+        await writeFile(filePath, JSON.stringify(report, null, 2), 'utf-8');
+        return {
+          message: 'Violations report saved',
+          filePath: normalizeAbsolutePathToRelative(filePath, workspaceRoot),
+          stats: {
+            components: 0,
+            files: 0,
+            lines: 0,
+          },
+        };
+      }
+
+      return report;
     }
 
     // Process all audits into unified structure (eliminates code duplication)
@@ -193,7 +155,29 @@ export const reportAllViolationsHandler = createHandler<
         ([component, violations]) => ({ component, violations }),
       );
 
-      return { components };
+      const report = { components, rootPath: params.directory };
+
+      if (params.saveAsFile) {
+        const outputDir = join(
+          cwd,
+          DEFAULT_OUTPUT_BASE,
+          OUTPUT_SUBDIRS.VIOLATIONS_REPORT,
+        );
+        const filename = generateFilename(params.directory);
+        const filePath = join(outputDir, filename);
+        await mkdir(outputDir, { recursive: true });
+        await writeFile(filePath, JSON.stringify(report, null, 2), 'utf-8');
+
+        const stats = calculateComponentGroupedStats(components);
+
+        return {
+          message: 'Violations report saved',
+          filePath: normalizeAbsolutePathToRelative(filePath, workspaceRoot),
+          stats,
+        };
+      }
+
+      return report;
     }
 
     // Group by file
@@ -221,9 +205,40 @@ export const reportAllViolationsHandler = createHandler<
       ([file, components]) => ({ file, components }),
     ).sort((a, b) => a.file.localeCompare(b.file));
 
-    return { files };
+    const report = { files, rootPath: params.directory };
+
+    if (params.saveAsFile) {
+      const outputDir = join(
+        cwd,
+        DEFAULT_OUTPUT_BASE,
+        OUTPUT_SUBDIRS.VIOLATIONS_REPORT,
+      );
+      const filename = generateFilename(params.directory);
+      const filePath = join(outputDir, filename);
+      await mkdir(outputDir, { recursive: true });
+      await writeFile(filePath, JSON.stringify(report, null, 2), 'utf-8');
+
+      const stats = calculateFileGroupedStats(files);
+
+      return {
+        message: 'Violations report saved',
+        filePath: normalizeAbsolutePathToRelative(filePath, workspaceRoot),
+        stats,
+      };
+    }
+
+    return report;
   },
   (result) => {
+    // Check if this is a file output response
+    if ('message' in result && 'filePath' in result) {
+      const stats = 'stats' in result && result.stats ? result.stats : null;
+      const statsMessage = stats
+        ? ` (${stats.components} components, ${stats.files} files, ${stats.lines} lines)`
+        : '';
+      return [`Violations report saved to ${result.filePath}${statsMessage}`];
+    }
+
     const isFileGrouping = 'files' in result;
     const isEmpty = isFileGrouping
       ? result.files.length === 0

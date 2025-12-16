@@ -9,6 +9,7 @@ import { join } from 'node:path';
 import {
   reportViolationsTools,
   reportAllViolationsTools,
+  groupViolationsTools,
 } from './report-violations/index.js';
 
 export const componentCoverageToolsSchema: ToolSchemaOptions = {
@@ -137,4 +138,5 @@ export const dsTools = [
   ...componentCoverageTools,
   ...reportViolationsTools,
   ...reportAllViolationsTools,
+  ...groupViolationsTools,
 ];

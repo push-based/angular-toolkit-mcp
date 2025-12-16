@@ -7,10 +7,16 @@ import { buildComponentContract } from './utils/build-contract.js';
 import { generateContractSummary } from '../shared/utils/contract-file-ops.js';
 import { ContractResult } from './models/types.js';
 import { resolveCrossPlatformPath } from '../../shared/utils/cross-platform-path.js';
+import {
+  OUTPUT_SUBDIRS,
+  resolveDefaultSaveLocation,
+} from '../../shared/constants.js';
 import { createHash } from 'node:crypto';
+import { dirname } from 'node:path';
+import { mkdir, writeFile } from 'node:fs/promises';
 
 interface BuildComponentContractOptions extends BaseHandlerOptions {
-  saveLocation: string;
+  saveLocation?: string;
   templateFile?: string;
   styleFile?: string;
   typescriptFile: string;
@@ -36,6 +42,13 @@ export const buildComponentContractHandler = createHandler<
       typescriptFile,
     );
 
+    const defaultSaveLocation = resolveDefaultSaveLocation(
+      saveLocation,
+      OUTPUT_SUBDIRS.CONTRACTS,
+      typescriptFile,
+      '-contract.json',
+    );
+
     // If templateFile or styleFile are not provided, use the TypeScript file path
     // This indicates inline template/styles
     const effectiveTemplatePath = templateFile
@@ -55,10 +68,11 @@ export const buildComponentContractHandler = createHandler<
     const contractString = JSON.stringify(contract, null, 2);
     const hash = createHash('sha256').update(contractString).digest('hex');
 
-    const effectiveSaveLocation = resolveCrossPlatformPath(cwd, saveLocation);
+    const effectiveSaveLocation = resolveCrossPlatformPath(
+      cwd,
+      defaultSaveLocation,
+    );
 
-    const { mkdir, writeFile } = await import('node:fs/promises');
-    const { dirname } = await import('node:path');
     await mkdir(dirname(effectiveSaveLocation), { recursive: true });
 
     const contractData = {
