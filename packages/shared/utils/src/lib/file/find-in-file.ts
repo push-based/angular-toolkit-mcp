@@ -3,6 +3,47 @@ import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 
 /**
+ * Default concurrency limit for file operations.
+ * Set conservatively to avoid EMFILE errors on Windows.
+ */
+const DEFAULT_CONCURRENCY = 50;
+
+/**
+ * Process items with limited concurrency to avoid EMFILE errors.
+ * Uses a semaphore pattern to limit parallel file operations.
+ */
+async function processWithConcurrency<T, R>(
+  items: T[],
+  processor: (item: T) => Promise<R>,
+  concurrency: number = DEFAULT_CONCURRENCY,
+): Promise<R[]> {
+  const results: R[] = [];
+  let index = 0;
+
+  async function worker(): Promise<void> {
+    while (index < items.length) {
+      const currentIndex = index++;
+      const item = items[currentIndex];
+      try {
+        const result = await processor(item);
+        results[currentIndex] = result;
+      } catch {
+        // Errors are handled by the processor or ignored
+        results[currentIndex] = undefined as R;
+      }
+    }
+  }
+
+  // Create worker pool
+  const workers = Array(Math.min(concurrency, items.length))
+    .fill(null)
+    .map(() => worker());
+
+  await Promise.all(workers);
+  return results;
+}
+
+/**
  * Searches for `.ts` files containing the search pattern.
  * @param {string} baseDir - The directory to search. Should be absolute or resolved by the caller.
  * @param {RegExp | string} searchPattern - The pattern to match.
@@ -21,18 +62,21 @@ export async function findFilesWithPattern(
     tsFiles.push(file);
   }
 
-  const results: SourceLocation[] = [];
-  for (const file of tsFiles) {
-    try {
-      const hits = await findInFile(file, searchPattern);
-      if (hits.length > 0) {
-        results.push(...hits);
+  // Process files with limited concurrency to avoid EMFILE errors
+  const searchResults = await processWithConcurrency(
+    tsFiles,
+    async (file) => {
+      try {
+        return await findInFile(file, searchPattern);
+      } catch (ctx) {
+        console.error(`Error searching file ${file}:`, ctx);
+        return [];
       }
-    } catch (ctx) {
-      console.error(`Error searching file ${file}:`, ctx);
-    }
-  }
+    },
+    DEFAULT_CONCURRENCY,
+  );
 
+  const results: SourceLocation[] = searchResults.flat();
   return results.map((r: SourceLocation) => r.file);
 }
 
