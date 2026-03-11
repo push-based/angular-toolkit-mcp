@@ -30,7 +30,13 @@ export const reportViolationsHandler = createHandler<
 >(
   reportViolationsSchema.name,
   async (params, { cwd, workspaceRoot }) => {
-    const result = await analyzeViolationsBase<BaseViolationResult>(params);
+    const result = await analyzeViolationsBase<BaseViolationResult>({
+      cwd,
+      directory: params.directory,
+      componentName: params.componentName,
+      deprecatedCssClassesPath: params.deprecatedCssClassesPath,
+      excludePatterns: params.excludePatterns,
+    });
     const failedAudits = filterFailedAudits(result);
 
     if (failedAudits.length === 0) {

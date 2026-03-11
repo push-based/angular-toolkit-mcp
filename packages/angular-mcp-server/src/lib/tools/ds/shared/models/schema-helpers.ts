@@ -24,6 +24,19 @@ export const COMMON_SCHEMA_PROPERTIES = {
       'How to group the violation results in the output. "file" groups violations by individual file paths, "folder" groups by directory structure.',
     default: 'file' as const,
   },
+
+  excludePatterns: {
+    anyOf: [
+      { type: 'string' as const },
+      { type: 'array' as const, items: { type: 'string' as const } },
+    ],
+    description:
+      'Glob pattern(s) to exclude files/directories from scanning. ' +
+      'Supports standard glob syntax: * (any chars except /), ** (any chars including /), ' +
+      '? (single char), [...] (character class). ' +
+      'Examples: "node_modules/**", "**/dist/**", "**/*.spec.ts". ' +
+      'Can be a single string or array of strings.',
+  },
 } as const;
 
 /**
@@ -71,6 +84,7 @@ export const createProjectAnalysisSchema = (
   type: 'object',
   properties: {
     directory: COMMON_SCHEMA_PROPERTIES.directory,
+    excludePatterns: COMMON_SCHEMA_PROPERTIES.excludePatterns,
     ...additionalProperties,
   },
   required: ['directory'],
@@ -87,6 +101,7 @@ export const createViolationReportingSchema = (
     directory: COMMON_SCHEMA_PROPERTIES.directory,
     componentName: COMMON_SCHEMA_PROPERTIES.componentName,
     groupBy: COMMON_SCHEMA_PROPERTIES.groupBy,
+    excludePatterns: COMMON_SCHEMA_PROPERTIES.excludePatterns,
     ...additionalProperties,
   },
   required: ['directory', 'componentName'],

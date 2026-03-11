@@ -91,6 +91,7 @@ export const reportAllViolationsHandler = createHandler<
       returnRawData: true,
       directory: params.directory,
       dsComponents,
+      excludePatterns: params.excludePatterns,
     });
 
     const raw = coverageResult.rawData?.rawPluginResult;

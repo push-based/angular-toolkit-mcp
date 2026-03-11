@@ -19,6 +19,7 @@ export async function analyzeViolationsBase<T extends BaseViolationResult>(
     directory,
     componentName,
     deprecatedCssClassesPath,
+    excludePatterns,
   } = options;
 
   validateComponentName(componentName);
@@ -53,6 +54,7 @@ export async function analyzeViolationsBase<T extends BaseViolationResult>(
     returnRawData: true,
     directory,
     dsComponents,
+    excludePatterns,
   };
 
   const result = await collectFilesViolations(params);
