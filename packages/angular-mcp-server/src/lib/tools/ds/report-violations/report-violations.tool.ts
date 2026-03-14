@@ -37,6 +37,7 @@ export const reportViolationsHandler = createHandler<
       deprecatedCssClassesPath: params.deprecatedCssClassesPath,
       excludePatterns: params.excludePatterns,
     });
+
     const failedAudits = filterFailedAudits(result);
 
     if (failedAudits.length === 0) {
