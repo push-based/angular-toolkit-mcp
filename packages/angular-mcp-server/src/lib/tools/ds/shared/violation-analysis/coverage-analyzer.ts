@@ -53,7 +53,7 @@ function globToRegex(pattern: string): RegExp {
   // Handle leading **/ to match from start or middle of path
   if (regexPattern.startsWith('^.*\\/')) {
     // Make the leading .*/ optional to match paths starting with the pattern
-    regexPattern = '^(?:.*\\/)?'  + regexPattern.substring(6);
+    regexPattern = '^(?:.*\\/)?' + regexPattern.substring(6);
   }
 
   // Anchor the pattern if not already anchored
