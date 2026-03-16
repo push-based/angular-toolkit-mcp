@@ -14,47 +14,40 @@ import { analyzeProjectCoverage as collectFilesViolations } from './coverage-ana
 export async function analyzeViolationsBase<T extends BaseViolationResult>(
   options: BaseViolationOptions,
 ): Promise<T> {
-  const {
-    cwd = process.cwd(),
-    directory,
-    componentName,
-    deprecatedCssClassesPath,
-    excludePatterns,
-  } = options;
+  const cwd = options.cwd || process.cwd();
 
-  validateComponentName(componentName);
+  validateComponentName(options.componentName);
 
-  if (!directory || typeof directory !== 'string') {
+  if (!options.directory || typeof options.directory !== 'string') {
     throw new Error('Directory parameter is required and must be a string');
   }
 
   process.chdir(cwd);
 
-  if (!deprecatedCssClassesPath) {
+  if (!options.deprecatedCssClassesPath) {
     throw new Error(
       'Missing ds.deprecatedCssClassesPath. Provide --ds.deprecatedCssClassesPath in mcp.json file.',
     );
   }
 
   const deprecatedCssClasses = await getDeprecatedCssClasses(
-    componentName,
-    deprecatedCssClassesPath,
+    options.componentName,
+    options.deprecatedCssClassesPath,
     cwd,
   );
 
   const dsComponents = [
     {
-      componentName,
+      componentName: options.componentName,
       deprecatedCssClasses,
     },
   ];
 
   const params: ReportCoverageParams = {
+    ...options,
     cwd,
     returnRawData: true,
-    directory,
     dsComponents,
-    excludePatterns,
   };
 
   const result = await collectFilesViolations(params);

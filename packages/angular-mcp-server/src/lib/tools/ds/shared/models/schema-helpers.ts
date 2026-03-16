@@ -33,7 +33,7 @@ export const COMMON_SCHEMA_PROPERTIES = {
     description:
       'Glob pattern(s) to exclude files/directories from scanning. ' +
       'Supports standard glob syntax: * (any chars except /), ** (any chars including /), ' +
-      '? (single char), [...] (character class). ' +
+      '? (single char). ' +
       'Examples: "node_modules/**", "**/dist/**", "**/*.spec.ts". ' +
       'Can be a single string or array of strings.',
   },

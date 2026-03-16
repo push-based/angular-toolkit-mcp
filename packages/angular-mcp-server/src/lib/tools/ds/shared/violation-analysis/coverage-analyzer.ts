@@ -7,6 +7,7 @@ import {
   FormattedCoverageResult,
 } from './types.js';
 import { resolveCrossPlatformPath } from '../utils/cross-platform-path.js';
+import { normalizeFilePath } from './formatters.js';
 
 /**
  * Extracts component name from audit title - performance optimized with caching
@@ -84,18 +85,15 @@ function validateExcludePatterns(
 
 function shouldExcludeFile(
   filePath: string,
-  excludePatterns: string[],
+  excludeRegexes: RegExp[],
 ): boolean {
-  if (excludePatterns.length === 0) {
+  if (excludeRegexes.length === 0) {
     return false;
   }
 
   const normalizedPath = filePath.replace(/\\/g, '/');
 
-  return excludePatterns.some((pattern) => {
-    const regex = globToRegex(pattern);
-    return regex.test(normalizedPath);
-  });
+  return excludeRegexes.some((regex) => regex.test(normalizedPath));
 }
 
 /**
@@ -121,6 +119,7 @@ export async function analyzeProjectCoverage(
   }
 
   const normalizedPatterns = normalizeExcludePatterns(params.excludePatterns);
+  const excludeRegexes = normalizedPatterns.map(globToRegex);
 
   if (params.cwd) {
     process.chdir(params.cwd);
@@ -154,19 +153,19 @@ export async function analyzeProjectCoverage(
           return true;
         }
 
-        let relativePath = issue.source.file;
-        const dirPrefix = params.directory
-          .replace(/^\.\//, '')
-          .replace(/\\/g, '/');
-        if (relativePath.startsWith(dirPrefix + '/')) {
-          relativePath = relativePath.substring(dirPrefix.length + 1);
-        }
+        const relativePath = normalizeFilePath(
+          issue.source.file,
+          params.directory,
+        );
 
-        return !shouldExcludeFile(relativePath, normalizedPatterns);
+        return !shouldExcludeFile(relativePath, excludeRegexes);
       });
+
+      const score = filteredIssues.length === 0 ? 1 : audit.score;
 
       return {
         ...audit,
+        score,
         details: {
           ...audit.details,
           issues: filteredIssues,
