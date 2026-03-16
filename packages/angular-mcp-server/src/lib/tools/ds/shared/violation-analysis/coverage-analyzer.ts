@@ -45,7 +45,7 @@ function normalizeExcludePatterns(
 function globToRegex(pattern: string): RegExp {
   let regexPattern = pattern
     .replace(/[.+^${}()|[\]\\]/g, '\\$&')
-    .replace(/\?/g, '.')
+    .replace(/\?/g, '[^/]')
     .replace(/\*\*/g, '<!DOUBLESTAR!>')
     .replace(/\*/g, '[^/]*')
     .replace(/<!DOUBLESTAR!>/g, '.*');
