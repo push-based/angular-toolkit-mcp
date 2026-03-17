@@ -28,6 +28,13 @@ export const AngularMcpServerOptionsSchema = z.object({
       message:
         'ds.uiRoot must be a relative path from workspace root to the components folder (e.g., path/to/components)',
     }),
+    tokensRoot: z
+      .string()
+      .optional()
+      .refine((val) => val === undefined || isRelativePath(val), {
+        message:
+          'ds.tokensRoot must be a relative path from workspace root to the generated tokens/styles directory (e.g., path/to/generated/styles)',
+      }),
   }),
 });
 

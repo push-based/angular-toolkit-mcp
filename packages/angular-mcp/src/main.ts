@@ -37,6 +37,11 @@ const argv = yargs(hideBin(process.argv))
       'The root directory of the actual Angular components relative from workspace root',
     type: 'string',
   })
+  .option('ds.tokensRoot', {
+    describe:
+      'The root directory of the generated design system tokens/styles relative from workspace root',
+    type: 'string',
+  })
   .option('sse', {
     describe: 'Configure the server to use SSE (Server-Sent Events)',
     type: 'boolean',
@@ -64,9 +69,10 @@ const { workspaceRoot, ds } = argv as unknown as {
     storybookDocsRoot?: string;
     deprecatedCssClassesPath?: string;
     uiRoot: string;
+    tokensRoot?: string;
   };
 };
-const { storybookDocsRoot, deprecatedCssClassesPath, uiRoot } = ds;
+const { storybookDocsRoot, deprecatedCssClassesPath, uiRoot, tokensRoot } = ds;
 
 async function startServer() {
   const server = await AngularMcpServerWrapper.create({
@@ -75,6 +81,7 @@ async function startServer() {
       storybookDocsRoot,
       deprecatedCssClassesPath,
       uiRoot,
+      tokensRoot,
     },
   });
 

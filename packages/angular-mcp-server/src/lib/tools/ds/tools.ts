@@ -10,6 +10,7 @@ import { buildComponentUsageGraphTools } from './component-usage-graph/index.js'
 import { getDsComponentDataTools } from './component/get-ds-component-data.tool.js';
 import { listDsComponentsTools } from './component/list-ds-components.tool.js';
 import { getDeprecatedCssClassesTools } from './component/get-deprecated-css-classes.tool.js';
+import { getDsTokensTools } from './component/get-ds-tokens.tool.js';
 import {
   buildComponentContractTools,
   diffComponentContractTools,
@@ -32,4 +33,5 @@ export const dsTools: ToolsConfig[] = [
   ...getDsComponentDataTools,
   ...listDsComponentsTools,
   ...getDeprecatedCssClassesTools,
+  ...getDsTokensTools,
 ];

@@ -29,6 +29,7 @@ export class AngularMcpServerWrapper {
   private readonly storybookDocsRoot?: string;
   private readonly deprecatedCssClassesPath?: string;
   private readonly uiRoot: string;
+  private readonly tokensRoot?: string;
 
   /**
    * Private constructor - use AngularMcpServerWrapper.create() instead.
@@ -42,6 +43,7 @@ export class AngularMcpServerWrapper {
     this.storybookDocsRoot = ds.storybookDocsRoot;
     this.deprecatedCssClassesPath = ds.deprecatedCssClassesPath;
     this.uiRoot = ds.uiRoot;
+    this.tokensRoot = ds.tokensRoot;
 
     this.mcpServer = new McpServer({
       name: 'Angular MCP',
@@ -256,6 +258,7 @@ export class AngularMcpServerWrapper {
                 storybookDocsRoot: this.storybookDocsRoot,
                 deprecatedCssClassesPath: this.deprecatedCssClassesPath,
                 uiRoot: this.uiRoot,
+                tokensRoot: this.tokensRoot,
                 cwd: this.workspaceRoot,
                 workspaceRoot: this.workspaceRoot,
               },

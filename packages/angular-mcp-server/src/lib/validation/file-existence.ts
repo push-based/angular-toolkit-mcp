@@ -24,6 +24,9 @@ export function validateAngularMcpServerFilesExist(
           relPath: config.ds.deprecatedCssClassesPath,
         }
       : null,
+    config.ds.tokensRoot
+      ? { label: 'ds.tokensRoot', relPath: config.ds.tokensRoot }
+      : null,
     { label: 'ds.uiRoot', relPath: config.ds.uiRoot },
   ].filter(Boolean) as { label: string; relPath: string }[];
 
