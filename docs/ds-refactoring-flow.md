@@ -65,7 +65,7 @@ This rule follows a two-step process to find violations:
 ### Tools used
 
 - `report-violations` - Main MCP tool that analyzes deprecated design system CSS usage
-  - Parameters: `componentName`, `directory`, `groupBy` (folder/file)
+  - Parameters: `componentName`, `directory`, `groupBy` (folder/file), `excludePatterns` (optional glob pattern(s) to exclude files/directories)
   - Returns violation data with counts and locations
   - Supports both folder-level and file-level grouping
 
@@ -122,7 +122,7 @@ This rule follows a comprehensive two-step process to find all violations:
 ### Tools used
 
 - `report-all-violations` - Comprehensive MCP tool that analyzes all deprecated design system CSS usage across the codebase
-  - Parameters: `directory`, `groupBy` (folder/file)
+  - Parameters: `directory`, `groupBy` (folder/file), `excludePatterns` (optional glob pattern(s) to exclude files/directories)
   - Returns: Complete violation data with counts and locations across all components
   - Supports both folder-level overview and file-level detailed analysis
 
@@ -386,7 +386,7 @@ The rule implements a systematic three-phase process for handling non-migratable
   - Used for: Discovery phase and validation of CSS count consistency
 
 - `report-violations` - Analyzes deprecated component usage in templates and code
-  - Parameters: `directory`, `componentName`  
+  - Parameters: `directory`, `componentName`, `excludePatterns` (optional)
   - Returns: List of component violations with file locations
   - Used for: Validation of violation reduction after implementation
 
@@ -715,7 +715,7 @@ This rule follows a three-step analysis process:
   - Scans: .scss, .sass, .less, .css files for deprecated class selectors
 
 - `report-violations` - Analyzes deprecated component usage in templates and code
-  - Parameters: `directory`, `componentName`
+  - Parameters: `directory`, `componentName`, `excludePatterns` (optional)
   - Returns: List of component violations with file locations and line numbers
   - Scans: .html, .ts files for deprecated component usage in templates and inline templates
 
