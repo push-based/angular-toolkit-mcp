@@ -9,6 +9,7 @@ export interface ReportViolationsOptions extends BaseHandlerOptions {
   componentName: string;
   groupBy?: 'file' | 'folder';
   saveAsFile?: boolean;
+  excludePatterns?: string | string[];
 }
 
 export interface ViolationEntry {
@@ -45,6 +46,7 @@ export interface ReportAllViolationsOptions extends BaseHandlerOptions {
   directory: string;
   groupBy?: 'component' | 'file';
   saveAsFile?: boolean;
+  excludePatterns?: string | string[];
 }
 
 export interface AllViolationsEntry {

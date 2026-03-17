@@ -7,6 +7,7 @@ export interface BaseViolationOptions {
   directory: string;
   componentName: string;
   deprecatedCssClassesPath?: string;
+  excludePatterns?: string | string[];
 }
 
 export interface BaseViolationIssue {
@@ -39,6 +40,7 @@ export interface ReportCoverageParams {
   outputFormat?: 'text';
   directory: string;
   dsComponents: DsComponent[];
+  excludePatterns?: string | string[];
 }
 
 export interface DsComponent {
