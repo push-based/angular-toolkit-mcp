@@ -13,6 +13,7 @@ This document provides comprehensive guidance for AI agents working with Angular
 - `directory`: Target analysis directory (use relative paths like `./src/app`)
 - `componentName`: Component class name (e.g., `DsButton`)
 - `groupBy`: `"file"` or `"folder"` for result organization
+- `excludePatterns`: Optional glob pattern(s) to exclude files/directories from scanning. Supports standard glob syntax (`*`, `**`, `?`). Can be a single string or array of strings (e.g., `"node_modules/**"`, `["**/dist/**", "**/*.spec.ts"]`)
 - `saveAsFile`: Optional boolean - if `true`, saves report to `tmp/.angular-toolkit-mcp/violations-report/<componentName>/<directory>-violations.json`
 **Output**: 
 - Default: Structured violation reports grouped by file or folder
@@ -25,6 +26,7 @@ This document provides comprehensive guidance for AI agents working with Angular
 **Key Parameters**:
 - `directory`: Target analysis directory (use relative paths like `./src/app`)
 - `groupBy`: `"component"` or `"file"` for result organization (default: `"component"`)
+- `excludePatterns`: Optional glob pattern(s) to exclude files/directories from scanning. Supports standard glob syntax (`*`, `**`, `?`). Can be a single string or array of strings (e.g., `"node_modules/**"`, `["**/dist/**", "**/*.spec.ts"]`)
 - `saveAsFile`: Optional boolean - if `true`, saves report to `tmp/.angular-toolkit-mcp/violations-report/<directory>-violations.json`
 **Output**: 
 - Default: Structured violation reports grouped by component or file covering all components
