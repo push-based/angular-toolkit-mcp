@@ -11,6 +11,7 @@ export {
 export {
   detectReportFormat,
   convertComponentToFileFormat,
+  convertSingleComponentToComponentFormat,
 } from './format-converter.utils.js';
 export { calculateViolations, enrichFiles } from './file-enrichment.utils.js';
 export {

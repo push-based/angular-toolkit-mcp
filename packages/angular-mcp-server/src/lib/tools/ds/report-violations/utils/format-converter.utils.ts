@@ -1,6 +1,7 @@
 import type {
   AllViolationsReport,
   AllViolationsReportByFile,
+  ComponentViolationReport,
   FileViolationReport,
 } from '../models/types.js';
 
@@ -9,14 +10,37 @@ import type {
  */
 export function detectReportFormat(
   data: any,
-): 'file' | 'component' | 'unknown' {
+): 'file' | 'component' | 'single-component' | 'unknown' {
   if (data.files && Array.isArray(data.files)) {
     return 'file';
   }
   if (data.components && Array.isArray(data.components)) {
     return 'component';
   }
+  if (data.component && data.violations && Array.isArray(data.violations)) {
+    return 'single-component';
+  }
   return 'unknown';
+}
+
+/**
+ * Convert single-component report to multi-component format
+ */
+export function convertSingleComponentToComponentFormat(
+  report: ComponentViolationReport,
+): AllViolationsReport {
+  return {
+    components: [
+      {
+        component: report.component,
+        violations: report.violations.map((v) => ({
+          ...v,
+          replacement: report.component,
+        })),
+      },
+    ],
+    rootPath: report.rootPath,
+  };
 }
 
 /**
