@@ -6,6 +6,7 @@ import { join } from 'path';
 import type {
   AllViolationsReportByFile,
   AllViolationsReport,
+  ComponentViolationReport,
   GroupViolationsOptions,
   GroupViolationsReport,
   GroupViolationsResult,
@@ -14,6 +15,7 @@ import { groupViolationsSchema } from './models/schema.js';
 import {
   detectReportFormat,
   convertComponentToFileFormat,
+  convertSingleComponentToComponentFormat,
   enrichFiles,
   groupByDirectory,
   determineOptimalGroups,
@@ -55,13 +57,18 @@ export const groupViolationsHandler = createHandler<
 
     if (format === 'unknown') {
       throw new Error(
-        'Invalid violations report format. Expected either { files: [...] } or { components: [...] }',
+        'Invalid violations report format. Expected { files: [...] }, { components: [...] }, or { component: "...", violations: [...] }',
       );
     }
 
     let violationsData: AllViolationsReportByFile;
 
-    if (format === 'component') {
+    if (format === 'single-component') {
+      const asComponentFormat = convertSingleComponentToComponentFormat(
+        rawData as ComponentViolationReport,
+      );
+      violationsData = convertComponentToFileFormat(asComponentFormat);
+    } else if (format === 'component') {
       violationsData = convertComponentToFileFormat(
         rawData as AllViolationsReport,
       );
