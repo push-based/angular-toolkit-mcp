@@ -124,7 +124,10 @@ function crossReferenceDefaults(
   const metaMap = new Map(metaArgs.map((a) => [a.name, a.default]));
   for (const at of argTypes) {
     if (!at.default && metaMap.has(at.name)) {
-      at.default = metaMap.get(at.name)!.replace(/^['"]|['"]$/g, '');
+      const val = metaMap.get(at.name);
+      if (val) {
+        at.default = val.replace(/^['"]|['"]$/g, '');
+      }
     }
   }
 }
@@ -570,7 +573,7 @@ export function extractStoriesAST(
 
 function extractTagsAST(
   obj: ts.ObjectLiteralExpression,
-  sourceFile: ts.SourceFile,
+  _sourceFile: ts.SourceFile,
 ): string[] {
   for (const prop of obj.properties) {
     if (
@@ -592,7 +595,7 @@ function extractTagsAST(
  */
 function extractDisplayNameAST(
   obj: ts.ObjectLiteralExpression,
-  sourceFile: ts.SourceFile,
+  _sourceFile: ts.SourceFile,
 ): string | null {
   for (const prop of obj.properties) {
     if (ts.isPropertyAssignment(prop) && ts.isIdentifier(prop.name)) {
