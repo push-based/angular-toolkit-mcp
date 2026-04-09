@@ -107,7 +107,6 @@ function extractWithRegex(
   };
 }
 
-
 // ============================================================================
 // Post-processing: cross-reference meta args into argTypes
 // ============================================================================
@@ -186,7 +185,6 @@ export function extractImportsRegex(content: string): string[] {
 
   return imports;
 }
-
 
 // ============================================================================
 // Meta args extraction
@@ -325,7 +323,6 @@ export function extractMetaArgsRegex(content: string): MetaArg[] | null {
   return pairs.length > 0 ? pairs : null;
 }
 
-
 // ============================================================================
 // Meta tags extraction
 // ============================================================================
@@ -411,8 +408,7 @@ function extractArgTypeFields(
   entry: ArgTypeEntry,
 ): void {
   for (const prop of obj.properties) {
-    if (!ts.isPropertyAssignment(prop) || !ts.isIdentifier(prop.name))
-      continue;
+    if (!ts.isPropertyAssignment(prop) || !ts.isIdentifier(prop.name)) continue;
 
     const key = prop.name.text;
 
@@ -513,7 +509,6 @@ export function extractArgTypesRegex(content: string): ArgTypeEntry[] {
   return results;
 }
 
-
 // ============================================================================
 // Story extraction
 // ============================================================================
@@ -600,10 +595,7 @@ function extractDisplayNameAST(
   sourceFile: ts.SourceFile,
 ): string | null {
   for (const prop of obj.properties) {
-    if (
-      ts.isPropertyAssignment(prop) &&
-      ts.isIdentifier(prop.name)
-    ) {
+    if (ts.isPropertyAssignment(prop) && ts.isIdentifier(prop.name)) {
       // Top-level name: 'Custom Toggle'
       if (prop.name.text === 'name' && ts.isStringLiteral(prop.initializer)) {
         return prop.initializer.text;
@@ -657,10 +649,7 @@ function extractStoryArgsAST(
         // Skip spread elements
         if (ts.isSpreadAssignment(argProp)) continue;
 
-        if (
-          ts.isPropertyAssignment(argProp) &&
-          ts.isIdentifier(argProp.name)
-        ) {
+        if (ts.isPropertyAssignment(argProp) && ts.isIdentifier(argProp.name)) {
           overrides.push({
             name: argProp.name.text,
             value: argProp.initializer.getText(sourceFile).replace(/,\s*$/, ''),
@@ -779,7 +768,6 @@ function extractTemplateFromMethodBody(
   return extractTemplateFromRenderNode(method.body, content);
 }
 
-
 export function extractStoriesRegex(content: string): StoryEntry[] {
   const stories: StoryEntry[] = [];
   const exportRegex =
@@ -858,7 +846,6 @@ function extractStoryArgsRegex(storyBody: string): ArgsOverride[] {
   return pairs;
 }
 
-
 // ============================================================================
 // Template utilities
 // ============================================================================
@@ -893,7 +880,10 @@ export function extractTernaryElseBranch(storyBody: string): string | null {
  * Extract content of a template literal starting at the opening backtick.
  * Handles nested ${} expressions.
  */
-function extractTemplateLiteral(source: string, openIdx: number): string | null {
+function extractTemplateLiteral(
+  source: string,
+  openIdx: number,
+): string | null {
   let i = openIdx + 1; // skip opening backtick
   let depth = 0;
   let result = '';
@@ -974,10 +964,7 @@ function extractTemplateLiteral(source: string, openIdx: number): string | null 
 /**
  * Extract balanced { } block starting at the opening brace position.
  */
-function extractBalancedBlock(
-  source: string,
-  openIdx: number,
-): string | null {
+function extractBalancedBlock(source: string, openIdx: number): string | null {
   let depth = 0;
   let i = openIdx;
 
@@ -1069,8 +1056,6 @@ function looksLikeHtml(template: string): boolean {
 
   return true;
 }
-
-
 
 // ============================================================================
 // Slot extraction

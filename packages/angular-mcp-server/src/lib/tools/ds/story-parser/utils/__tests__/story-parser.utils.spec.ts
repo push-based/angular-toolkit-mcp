@@ -22,7 +22,12 @@ import * as ts from 'typescript';
 // ---------------------------------------------------------------------------
 
 function createSourceFile(content: string): ts.SourceFile {
-  return ts.createSourceFile('test.stories.ts', content, ts.ScriptTarget.Latest, true);
+  return ts.createSourceFile(
+    'test.stories.ts',
+    content,
+    ts.ScriptTarget.Latest,
+    true,
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -211,9 +216,13 @@ describe('extractImportsAST', () => {
     const imports = extractImportsAST(sf);
 
     expect(imports.length).toBe(2);
-    expect(imports.every(i => i.includes('@frontend/') || i.includes('@design-system/'))).toBe(true);
-    expect(imports.some(i => i.includes('@storybook/'))).toBe(false);
-    expect(imports.some(i => i.includes('lodash'))).toBe(false);
+    expect(
+      imports.every(
+        (i) => i.includes('@frontend/') || i.includes('@design-system/'),
+      ),
+    ).toBe(true);
+    expect(imports.some((i) => i.includes('@storybook/'))).toBe(false);
+    expect(imports.some((i) => i.includes('lodash'))).toBe(false);
   });
 
   it('should normalize multi-line imports to single line', () => {
@@ -232,7 +241,11 @@ describe('extractImportsRegex', () => {
     const imports = extractImportsRegex(BADGE_STORY);
 
     expect(imports.length).toBe(2);
-    expect(imports.every(i => i.includes('@frontend/') || i.includes('@design-system/'))).toBe(true);
+    expect(
+      imports.every(
+        (i) => i.includes('@frontend/') || i.includes('@design-system/'),
+      ),
+    ).toBe(true);
   });
 
   it('should normalize multi-line imports', () => {
@@ -254,9 +267,9 @@ describe('extractMetaArgsAST', () => {
 
     expect(args).not.toBeNull();
     expect(args!.length).toBe(3);
-    expect(args!.find(a => a.name === 'label')?.default).toBe("'Label'");
-    expect(args!.find(a => a.name === 'size')?.default).toBe("'medium'");
-    expect(args!.find(a => a.name === 'variant')?.default).toBe("'primary'");
+    expect(args!.find((a) => a.name === 'label')?.default).toBe("'Label'");
+    expect(args!.find((a) => a.name === 'size')?.default).toBe("'medium'");
+    expect(args!.find((a) => a.name === 'variant')?.default).toBe("'primary'");
   });
 
   it('should return null when no args exist', () => {
@@ -273,7 +286,7 @@ describe('extractMetaArgsRegex', () => {
 
     expect(args).not.toBeNull();
     expect(args!.length).toBe(3);
-    expect(args!.find(a => a.name === 'label')?.default).toBe("'Label'");
+    expect(args!.find((a) => a.name === 'label')?.default).toBe("'Label'");
   });
 
   it('should return null when no args exist', () => {
@@ -293,12 +306,12 @@ describe('extractArgTypesAST', () => {
 
     expect(argTypes.length).toBe(3);
 
-    const label = argTypes.find(a => a.name === 'label')!;
+    const label = argTypes.find((a) => a.name === 'label')!;
     expect(label.type).toBe('string');
     expect(label.default).toBe('Label');
     expect(label.description).toBe('The text of the badge');
 
-    const size = argTypes.find(a => a.name === 'size')!;
+    const size = argTypes.find((a) => a.name === 'size')!;
     expect(size.options).toBe('DS_BADGE_SIZE_ARRAY');
     expect(size.default).toBe('medium');
   });
@@ -312,8 +325,7 @@ describe('extractArgTypesAST', () => {
 describe('extractArgTypesRegex', () => {
   // The regex path uses indentation-sensitive patterns matching real story file formatting.
   // argTypes closing } at 2-4 spaces, entry closing } at 6-8 spaces.
-  const REGEX_FORMATTED_ARGTYPES =
-`const meta = {
+  const REGEX_FORMATTED_ARGTYPES = `const meta = {
   argTypes: {
       label: {
           type: 'string',
@@ -333,17 +345,18 @@ export default meta;
   it('should extract argType entries', () => {
     const argTypes = extractArgTypesRegex(REGEX_FORMATTED_ARGTYPES);
     expect(argTypes.length).toBe(2);
-    expect(argTypes.some(a => a.name === 'label')).toBe(true);
-    expect(argTypes.find(a => a.name === 'label')?.type).toBe('string');
-    expect(argTypes.find(a => a.name === 'label')?.default).toBe('Label');
-    expect(argTypes.find(a => a.name === 'size')?.options).toBe('DS_BADGE_SIZE_ARRAY');
+    expect(argTypes.some((a) => a.name === 'label')).toBe(true);
+    expect(argTypes.find((a) => a.name === 'label')?.type).toBe('string');
+    expect(argTypes.find((a) => a.name === 'label')?.default).toBe('Label');
+    expect(argTypes.find((a) => a.name === 'size')?.options).toBe(
+      'DS_BADGE_SIZE_ARRAY',
+    );
   });
 
   it('should return empty array when no argTypes exist', () => {
     expect(extractArgTypesRegex(EMPTY_META_STORY)).toEqual([]);
   });
 });
-
 
 // ---------------------------------------------------------------------------
 // Tests: Story extraction
@@ -373,8 +386,10 @@ describe('extractStoriesAST', () => {
 
     // WithIcon has ...meta.args (spread, excluded) and size: 'large' (included)
     const withIcon = stories[1];
-    expect(withIcon.argsOverrides.some(a => a.name === 'size')).toBe(true);
-    expect(withIcon.argsOverrides.every(a => !a.name.includes('...'))).toBe(true);
+    expect(withIcon.argsOverrides.some((a) => a.name === 'size')).toBe(true);
+    expect(withIcon.argsOverrides.every((a) => !a.name.includes('...'))).toBe(
+      true,
+    );
   });
 
   it('should detect play function', () => {
@@ -420,7 +435,11 @@ describe('extractSlotsFromTemplates', () => {
       '<span slot="icon">★</span><span slot="suffix">→</span>',
       '<span slot="icon">★</span><span slot="prefix">←</span>',
     ];
-    expect(extractSlotsFromTemplates(templates)).toEqual(['icon', 'prefix', 'suffix']);
+    expect(extractSlotsFromTemplates(templates)).toEqual([
+      'icon',
+      'prefix',
+      'suffix',
+    ]);
   });
 
   it('should return empty array when no slots found', () => {
@@ -432,9 +451,7 @@ describe('extractSlotsFromTemplates', () => {
   });
 
   it('should deduplicate slot names', () => {
-    const templates = [
-      '<span slot="icon">1</span><span slot="icon">2</span>',
-    ];
+    const templates = ['<span slot="icon">1</span><span slot="icon">2</span>'];
     expect(extractSlotsFromTemplates(templates)).toEqual(['icon']);
   });
 });
@@ -451,7 +468,10 @@ describe('detectSelectorStyle', () => {
   });
 
   it('should detect attribute-style selector', () => {
-    const result = detectSelectorStyle('<button ds-button>Click</button>', 'button');
+    const result = detectSelectorStyle(
+      '<button ds-button>Click</button>',
+      'button',
+    );
     expect(result.style).toBe('attribute');
     expect(result.selector).toBe('ds-button');
     expect(result.note).toContain('attribute');
@@ -463,7 +483,10 @@ describe('detectSelectorStyle', () => {
   });
 
   it('should detect attribute on <a> elements', () => {
-    const result = detectSelectorStyle('<a ds-button href="#">Link</a>', 'button');
+    const result = detectSelectorStyle(
+      '<a ds-button href="#">Link</a>',
+      'button',
+    );
     expect(result.style).toBe('attribute');
   });
 });
@@ -505,13 +528,17 @@ describe('detectFormIntegration', () => {
 
 describe('cleanTemplate', () => {
   it('should replace ${...} with ...', () => {
-    const result = cleanTemplate('<ds-badge variant="${badge.variant}">${badge.label}</ds-badge>');
+    const result = cleanTemplate(
+      '<ds-badge variant="${badge.variant}">${badge.label}</ds-badge>',
+    );
     expect(result).not.toContain('${');
     expect(result).toContain('...');
   });
 
   it('should remove Storybook layout wrapper divs', () => {
-    const result = cleanTemplate('<div style="width: 650px; display: grid;"><ds-badge>Label</ds-badge>');
+    const result = cleanTemplate(
+      '<div style="width: 650px; display: grid;"><ds-badge>Label</ds-badge>',
+    );
     expect(result).not.toContain('display: grid');
     expect(result).toContain('ds-badge');
   });

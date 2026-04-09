@@ -10,7 +10,9 @@ export function formatStoryDataAsMarkdown(data: StoryFileData): string {
   lines.push('');
 
   // Selector
-  lines.push(`Selector: \`${data.selector.selector}\` (${data.selector.style})`);
+  lines.push(
+    `Selector: \`${data.selector.selector}\` (${data.selector.style})`,
+  );
   if (data.selector.note) {
     lines.push(`Note: ${data.selector.note}`);
   }

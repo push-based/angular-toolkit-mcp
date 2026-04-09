@@ -92,7 +92,15 @@ export const getDsStoryDataHandler = createHandler<
   string
 >(
   getDsStoryDataToolSchema.name,
-  async ({ componentName, format = 'markdown', descriptionLength = 'short', excludeTags = ['docs-template'] }, { cwd, storybookDocsRoot }) => {
+  async (
+    {
+      componentName,
+      format = 'markdown',
+      descriptionLength = 'short',
+      excludeTags = ['docs-template'],
+    },
+    { cwd, storybookDocsRoot },
+  ) => {
     validateComponentName(componentName);
 
     if (!storybookDocsRoot) {
