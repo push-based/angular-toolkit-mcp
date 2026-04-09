@@ -15,6 +15,7 @@ import {
   diffComponentContractTools,
   listComponentContractsTools,
 } from './component-contract/index.js';
+import { getDsStoryDataTools } from './story-parser/index.js';
 
 export const dsTools: ToolsConfig[] = [
   // Project tools
@@ -32,4 +33,6 @@ export const dsTools: ToolsConfig[] = [
   ...getDsComponentDataTools,
   ...listDsComponentsTools,
   ...getDeprecatedCssClassesTools,
+  // Story parser tools
+  ...getDsStoryDataTools,
 ];

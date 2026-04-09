@@ -109,6 +109,23 @@ This document provides comprehensive guidance for AI agents working with Angular
 **Output**: Array of deprecated CSS class names
 **Best Practice**: Cross-reference with violation reports to prioritize fixes
 
+#### `get-ds-story-data`
+**Purpose**: Parses Storybook `.stories.ts` files for a DS component and returns a compact summary of its API surface, usage patterns, and story templates
+**AI Usage**: Use to understand selector style, input API, slots, form integration, and real-world template examples before generating or migrating component code. Defaults to markdown output with `docs-template` stories filtered out for minimal token cost.
+**Key Parameters**:
+- `componentName`: DS component class name (e.g., `DsButton`, `DsBadge`)
+- `format`: `"markdown"` (default) or `"json"` for structured data
+- `descriptionLength`: `"short"` (default, first sentence only) or `"full"`
+- `excludeTags`: Story tags to filter out — defaults to `["docs-template"]` to skip showcase stories. Pass `[]` to include all.
+**Output**: Contains:
+- `selector`: Selector style (`element` or `attribute`) with CSS selector and usage note
+- `imports`: Filtered `@frontend/` and `@design-system/` scoped imports
+- `argTypes`: Input definitions with type, default, and description
+- `slots`: Named content projection slots
+- `formIntegration`: Detected Angular forms bindings (ngModel, formControlName, formControl)
+- `stories`: Story entries with name, single-line cleaned template, tags, args overrides, and story-level inputs. Templates have inline styles and HTML comments stripped. `[all-meta-args-bound]` indicates `argsToTemplate()` usage.
+**Best Practice**: Use alongside `get-ds-component-data` for a complete picture before planning migrations. For components with many stories, the default `excludeTags: ["docs-template"]` filter reduces output by 40-50%.
+
 ### 🔗 Analysis & Mapping Tools
 
 #### `build-component-usage-graph`
@@ -178,10 +195,11 @@ This document provides comprehensive guidance for AI agents working with Angular
 ### 2. Planning & Preparation Workflow
 ```
 1. get-ds-component-data → Get comprehensive component information
-2. build-component-usage-graph → Map component relationships
-3. get-component-docs → Review proper usage patterns
-4. get-component-paths → Verify import paths
-5. build_component_contract → Create baseline contracts
+2. get-ds-story-data → Extract usage patterns and templates from stories
+3. build-component-usage-graph → Map component relationships
+4. get-component-docs → Review proper usage patterns
+5. get-component-paths → Verify import paths
+6. build_component_contract → Create baseline contracts
 ```
 
 ### 3. Refactoring & Validation Workflow
