@@ -2,7 +2,7 @@
 // get-ds-story-data types
 // ============================================================================
 
-export { SelectorInfo } from '../../shared/utils/template-helpers.js';
+export type { SelectorInfo } from '../../shared/utils/template-helpers.js';
 
 export interface ArgTypeEntry {
   name: string;
