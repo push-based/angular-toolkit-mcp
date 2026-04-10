@@ -3,6 +3,7 @@
 // ============================================================================
 
 export type { SelectorInfo } from '../../shared/utils/template-helpers.js';
+import type { SelectorInfo } from '../../shared/utils/template-helpers.js';
 
 export interface ArgTypeEntry {
   name: string;
