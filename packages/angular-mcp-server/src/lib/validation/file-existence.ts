@@ -4,7 +4,7 @@ import { AngularMcpServerOptions } from './angular-mcp-server-options.schema.js'
 
 export function validateAngularMcpServerFilesExist(
   config: AngularMcpServerOptions,
-) {
+): AngularMcpServerOptions {
   const root = config.workspaceRoot;
 
   if (!fs.existsSync(root)) {
@@ -40,4 +40,21 @@ export function validateAngularMcpServerFilesExist(
         missingFiles.join('\n'),
     );
   }
+
+  // Validate generatedStylesRoot separately: warn and continue (never throw)
+  let result = config;
+  if (config.ds.generatedStylesRoot) {
+    const absPath = path.resolve(root, config.ds.generatedStylesRoot);
+    if (!fs.existsSync(absPath) || !fs.statSync(absPath).isDirectory()) {
+      console.warn(
+        `ds.generatedStylesRoot resolved to '${absPath}' which does not exist or is not a directory. Token features will be disabled.`,
+      );
+      result = {
+        ...config,
+        ds: { ...config.ds, generatedStylesRoot: undefined },
+      };
+    }
+  }
+
+  return result;
 }

@@ -86,7 +86,8 @@ Add the server to your MCP client configuration (e.g., Claude Desktop, Cursor, C
         "--workspaceRoot=/absolute/path/to/your/angular/workspace",
         "--ds.uiRoot=relative/path/to/ui/components",
         "--ds.storybookDocsRoot=relative/path/to/storybook/docs",
-        "--ds.deprecatedCssClassesPath=relative/path/to/component-options.mjs"
+        "--ds.deprecatedCssClassesPath=relative/path/to/component-options.mjs",
+        "--ds.generatedStylesRoot=relative/path/to/generated/styles"
       ]
     }
   }
@@ -107,14 +108,15 @@ When developing locally, point to the built server:
         "--workspaceRoot=/absolute/path/to/your/angular/workspace",
         "--ds.uiRoot=relative/path/to/ui/components",
         "--ds.storybookDocsRoot=relative/path/to/storybook/docs",
-        "--ds.deprecatedCssClassesPath=relative/path/to/component-options.mjs"
+        "--ds.deprecatedCssClassesPath=relative/path/to/component-options.mjs",
+        "--ds.generatedStylesRoot=relative/path/to/generated/styles"
       ]
     }
   }
 }
 ```
 
-> Note: `ds.storybookDocsRoot` and `ds.deprecatedCssClassesPath` are optional. The server will start without them. Tools that require these paths will return a clear error prompting you to provide the missing parameter.
+> Note: `ds.storybookDocsRoot`, `ds.deprecatedCssClassesPath`, and `ds.generatedStylesRoot` are optional. The server will start without them. Tools that require these paths will return a clear error prompting you to provide the missing parameter.
 
 > **Note**: The example file contains configuration for `ESLint` official MCP which is required for the toolkit to work properly.
 
@@ -133,11 +135,27 @@ When developing locally, point to the built server:
 |-----------|------|-------------|---------|
 | `ds.storybookDocsRoot` | Relative path | Root directory containing Storybook documentation used by documentation-related tools | `storybook/docs` |
 | `ds.deprecatedCssClassesPath` | Relative path | JavaScript file mapping deprecated CSS classes used by violation and deprecated CSS tools | `design-system/component-options.mjs` |
+| `ds.generatedStylesRoot` | Relative path | Directory containing generated design token CSS files. Required for token-aware tools. | `dist/generated/styles` |
 
 When optional parameters are omitted:
 
 - `ds.storybookDocsRoot`: Tools will skip Storybook documentation lookups (e.g., `get-ds-component-data` will still return implementation/import data but may have no docs files).
 - `ds.deprecatedCssClassesPath`: Tools that require the mapping will fail fast with a clear error. Affected tools include: `get-deprecated-css-classes`, `report-deprecated-css`, `report-all-violations`, and `report-violations`.
+- `ds.generatedStylesRoot`: Token features are disabled. Token-aware tools return a clear message explaining that `--ds.generatedStylesRoot` is required. All other tools work normally.
+
+#### Token Configuration Parameters
+
+These parameters control how design tokens are discovered, organised, and categorised. All are optional and have sensible defaults. They are only relevant when `ds.generatedStylesRoot` is configured.
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `ds.tokens.filePattern` | `string` | `**/semantic.css` | Glob pattern to discover token files inside `generatedStylesRoot`. Supports `**` (recursive) and `*` (single-segment) wildcards. Change if your token files have a different name (e.g. `**/variables.css`). |
+| `ds.tokens.propertyPrefix` | `string \| null` | `null` | When set, only CSS custom properties whose name starts with this prefix are loaded. When `null`, all `--*` properties are included. Useful to filter out non-token properties from generated files. |
+| `ds.tokens.directoryStrategy` | `flat \| brand-theme \| auto` | `flat` | Controls how the directory tree under `generatedStylesRoot` is interpreted. `flat`: all files belong to a single token set (empty scope). `brand-theme`: path segments map to scope keys (first → `brand`, second → `theme`). `auto`: infers from directory depth (≥ 2 levels → `brand-theme`, otherwise → `flat`). |
+| `ds.tokens.categoryInference` | `by-prefix \| by-value \| none` | `by-prefix` | How tokens are assigned to categories (color, spacing, etc.). `by-prefix`: matches token names against `categoryPrefixMap` (longest prefix wins). `by-value`: infers from resolved values (hex/rgb/hsl → color, px/rem/em → spacing, % → opacity). `none`: leaves all tokens uncategorised. |
+| `ds.tokens.componentTokenPrefix` | `string` | `--ds-` | Prefix identifying component-level token declarations in SCSS files. The SCSS Value Parser classifies properties starting with this prefix as `declaration` entries. Change if your components use a different prefix convention (e.g. `--app-`). |
+
+> **Note:** `ds.tokens.categoryPrefixMap` (a `Record<string, string>` mapping category names to token name prefixes) defaults to `{ color: '--semantic-color', spacing: '--semantic-spacing', radius: '--semantic-radius', typography: '--semantic-typography', size: '--semantic-size', opacity: '--semantic-opacity' }`. It is not exposed as a CLI argument but can be set via config file. Only relevant when `categoryInference` is `by-prefix`.
 
 #### Deprecated CSS Classes File Format
 
@@ -169,6 +187,15 @@ my-angular-workspace/
 │   │   └── ...
 │   └── design-system/
 │       └── component-options.mjs     # ds.deprecatedCssClassesPath
+├── dist/
+│   └── generated/
+│       └── styles/                   # ds.generatedStylesRoot
+│           ├── semantic.css          # flat layout
+│           └── acme/                 # brand-theme layout
+│               ├── dark/
+│               │   └── semantic.css
+│               └── light/
+│                   └── semantic.css
 ├── storybook/
 │   └── docs/                         # ds.storybookDocsRoot
 └── apps/
