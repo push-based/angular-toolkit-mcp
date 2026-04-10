@@ -71,11 +71,17 @@ export interface TokenDataset {
 /**
  * Indexed implementation of {@link TokenDataset}.
  *
- * Builds four internal indexes at construction time for O(1) / O(k) lookups:
- *  - `byName`     — Map<name, TokenEntry>
- *  - `byValue`    — Map<value, TokenEntry[]>
- *  - `byCategory` — Map<category, TokenEntry[]>
- *  - `byScopeKey` — Map<scopeKey, Map<scopeValue, TokenEntry[]>>
+ * Builds four internal indexes at construction time:
+ *  - `byName`     — Map<name, TokenEntry>          (O(1) lookup)
+ *  - `byValue`    — Map<value, TokenEntry[]>        (O(1) lookup)
+ *  - `byCategory` — Map<category, TokenEntry[]>     (O(1) lookup)
+ *  - `byScopeKey` — Map<scopeKey, Map<scopeValue, TokenEntry[]>>  (O(k) lookup)
+ *
+ * `getByPrefix()` performs a linear scan (O(n)).
+ *
+ * Note: individual TokenEntry objects are not deep-frozen for performance.
+ * ReadonlyArray typing prevents structural mutation at compile time.
+ * Deep-freeze can be added if consumers require runtime immutability guarantees.
  */
 export class TokenDatasetImpl implements TokenDataset {
   readonly isEmpty: boolean;
@@ -148,11 +154,11 @@ export class TokenDatasetImpl implements TokenDataset {
   }
 
   getByValue(value: string): TokenEntry[] {
-    return this.byValue.get(value) ?? [];
+    return [...(this.byValue.get(value) ?? [])];
   }
 
   getByCategory(category: string): TokenEntry[] {
-    return this.byCategory.get(category) ?? [];
+    return [...(this.byCategory.get(category) ?? [])];
   }
 
   getByScope(scope: Record<string, string>): TokenEntry[] {

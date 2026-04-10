@@ -1,8 +1,9 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
+import { globToRegex, walkDirectorySync } from '@push-based/utils';
+import { parseCssCustomProperties } from '@push-based/styles-ast-utils';
 import type { TokensConfig } from '../../../../validation/angular-mcp-server-options.schema.js';
-import { parseCssCustomProperties } from './css-custom-property-parser.js';
 import {
   type TokenEntry,
   type TokenScope,
@@ -60,7 +61,7 @@ export async function loadTokenDataset(
 
   for (const filePath of files) {
     const scope = computeScope(strategy, filePath, absRoot);
-    const properties = parseCssCustomProperties(filePath, {
+    const properties = await parseCssCustomProperties(filePath, {
       propertyPrefix: tokens.propertyPrefix,
     });
 
@@ -94,73 +95,13 @@ export { createEmptyTokenDataset } from './token-dataset.js';
 
 /**
  * Discovers files matching a glob-like pattern under the given root.
- * Supports `**` for recursive directory matching and `*` for single-segment wildcards.
- * Uses synchronous fs operations consistent with existing codebase patterns.
  */
 function discoverFiles(absRoot: string, filePattern: string): string[] {
-  const allFiles = walkDirectory(absRoot);
-  const matcher = createGlobMatcher(filePattern);
-  return allFiles.filter((f) => matcher(path.relative(absRoot, f))).sort();
-}
-
-/**
- * Recursively walks a directory and returns all file paths.
- */
-function walkDirectory(dir: string): string[] {
-  const results: string[] = [];
-  try {
-    const entries = fs.readdirSync(dir, { withFileTypes: true });
-    for (const entry of entries) {
-      const fullPath = path.join(dir, entry.name);
-      if (entry.isDirectory()) {
-        results.push(...walkDirectory(fullPath));
-      } else if (entry.isFile()) {
-        results.push(fullPath);
-      }
-    }
-  } catch {
-    // Silently skip unreadable directories
-  }
-  return results;
-}
-
-/**
- * Creates a matcher function from a glob-like pattern.
- * Converts glob syntax to a RegExp:
- *  - `**` matches any number of path segments (including zero)
- *  - `*` matches any characters within a single path segment
- *  - `.` and other regex specials are escaped
- */
-function createGlobMatcher(pattern: string): (filePath: string) => boolean {
-  // Normalise to forward slashes
-  const normalised = pattern.replace(/\\/g, '/');
-
-  // Build regex from glob pattern
-  let regexStr = '';
-  let i = 0;
-  while (i < normalised.length) {
-    if (normalised[i] === '*' && normalised[i + 1] === '*') {
-      // ** matches any path segments
-      regexStr += '.*';
-      i += 2;
-      // Skip trailing slash after **
-      if (normalised[i] === '/') i++;
-    } else if (normalised[i] === '*') {
-      // * matches anything except path separator
-      regexStr += '[^/]*';
-      i++;
-    } else if ('.+?^${}()|[]\\'.includes(normalised[i])) {
-      // Escape regex special characters
-      regexStr += '\\' + normalised[i];
-      i++;
-    } else {
-      regexStr += normalised[i];
-      i++;
-    }
-  }
-
-  const regex = new RegExp(`^${regexStr}$`);
-  return (filePath: string) => regex.test(filePath.replace(/\\/g, '/'));
+  const allFiles = walkDirectorySync(absRoot);
+  const regex = globToRegex(filePattern);
+  return allFiles
+    .filter((f) => regex.test(path.relative(absRoot, f).replace(/\\/g, '/')))
+    .sort();
 }
 
 // ---------------------------------------------------------------------------

@@ -100,16 +100,6 @@ export const IMPORT_REGEXES = {
     ),
 } as const;
 
-// CSS Custom Property Regexes
-export const CSS_CUSTOM_PROPERTY_REGEXES = {
-  /** Matches CSS comments for stripping */
-  COMMENT: /\/\*[\s\S]*?\*\//g,
-  /** Matches CSS custom property declarations: --name: value; */
-  DECLARATION: /(--[\w-]+)\s*:\s*([^;]+);/g,
-  /** Matches var() references in values */
-  VAR_REFERENCE: /var\(\s*(--[\w-]+)\s*(?:,\s*([^)]+))?\)/g,
-} as const;
-
 // Regex Cache Management
 const REGEX_CACHE = new Map<string, RegExp>();
 

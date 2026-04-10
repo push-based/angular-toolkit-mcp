@@ -208,10 +208,12 @@ describe('validateAngularMcpServerFilesExist — generatedStylesRoot', () => {
   });
 
   it('sets generatedStylesRoot to undefined and warns when path does not exist', () => {
-    existsSyncMock = vi.fn((p: string) => {
+    statSyncMock = vi.fn((p: string) => {
       // workspace root exists, but the generatedStylesRoot does not
-      if (typeof p === 'string' && p.includes('dist/styles')) return false;
-      return true;
+      if (typeof p === 'string' && p.includes('dist/styles')) {
+        throw new Error('ENOENT: no such file or directory');
+      }
+      return { isDirectory: () => true };
     });
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function

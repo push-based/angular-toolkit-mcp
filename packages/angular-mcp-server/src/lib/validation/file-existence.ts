@@ -45,7 +45,13 @@ export function validateAngularMcpServerFilesExist(
   let result = config;
   if (config.ds.generatedStylesRoot) {
     const absPath = path.resolve(root, config.ds.generatedStylesRoot);
-    if (!fs.existsSync(absPath) || !fs.statSync(absPath).isDirectory()) {
+    let isValidDir = false;
+    try {
+      isValidDir = fs.statSync(absPath).isDirectory();
+    } catch {
+      // permission error, TOCTOU race, etc.
+    }
+    if (!isValidDir) {
       console.warn(
         `ds.generatedStylesRoot resolved to '${absPath}' which does not exist or is not a directory. Token features will be disabled.`,
       );

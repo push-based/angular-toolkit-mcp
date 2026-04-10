@@ -21,7 +21,7 @@ export interface ScssPropertyEntry {
   property: string;
   /** CSS value, e.g. 'var(--semantic-color-primary)' */
   value: string;
-  /** 1-based line number in the source file */
+  /** 1-based line number in the source file, or -1 if unavailable */
   line: number;
   /** Full selector path, e.g. ':host .button' */
   selector: string;
@@ -132,7 +132,7 @@ export async function parseScssContent(
       const selector = resolveSelector(decl);
       const property = decl.prop;
       const value = decl.value;
-      const line = decl.source?.start?.line ?? 0;
+      const line = decl.source?.start?.line ?? -1;
       const classification = classifyEntry(
         property,
         value,
@@ -154,6 +154,11 @@ export async function parseScssValues(
   filePath: string,
   options?: ScssValueParserOptions,
 ): Promise<ScssParseResult> {
-  const content = fs.readFileSync(filePath, 'utf-8');
+  let content: string;
+  try {
+    content = fs.readFileSync(filePath, 'utf-8');
+  } catch {
+    return createParseResult([]);
+  }
   return parseScssContent(content, filePath, options);
 }

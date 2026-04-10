@@ -4,7 +4,7 @@ import * as path from 'node:path';
 import {
   extractCustomPropertiesFromContent,
   parseCssCustomProperties,
-} from '../css-custom-property-parser.js';
+} from '@push-based/styles-ast-utils';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -20,19 +20,19 @@ function cssRoot(declarations: string): string {
 // ---------------------------------------------------------------------------
 
 describe('extractCustomPropertiesFromContent', () => {
-  it('extracts basic --name: value; pairs', () => {
+  it('extracts basic --name: value; pairs', async () => {
     const css = cssRoot(`
       --color-primary: #ff0000;
       --spacing-sm: 4px;
     `);
-    const result = extractCustomPropertiesFromContent(css);
+    const result = await extractCustomPropertiesFromContent(css);
 
     expect(result.get('--color-primary')).toBe('#ff0000');
     expect(result.get('--spacing-sm')).toBe('4px');
     expect(result.size).toBe(2);
   });
 
-  it('extracts multi-line declarations', () => {
+  it('extracts multi-line declarations', async () => {
     const css = cssRoot(`
       --gradient-bg: linear-gradient(
         to right,
@@ -41,14 +41,13 @@ describe('extractCustomPropertiesFromContent', () => {
       );
       --simple: blue;
     `);
-    const result = extractCustomPropertiesFromContent(css);
+    const result = await extractCustomPropertiesFromContent(css);
 
-    // The regex captures everything up to the semicolon
     expect(result.has('--gradient-bg')).toBe(true);
     expect(result.get('--simple')).toBe('blue');
   });
 
-  it('strips comments and does not extract properties inside comments', () => {
+  it('strips comments and does not extract properties inside comments', async () => {
     const css = cssRoot(`
       /* --commented-out: should-not-appear; */
       --real-prop: visible;
@@ -58,7 +57,7 @@ describe('extractCustomPropertiesFromContent', () => {
       */
       --another-real: yes;
     `);
-    const result = extractCustomPropertiesFromContent(css);
+    const result = await extractCustomPropertiesFromContent(css);
 
     expect(result.has('--commented-out')).toBe(false);
     expect(result.has('--multi-line-comment')).toBe(false);
@@ -68,26 +67,26 @@ describe('extractCustomPropertiesFromContent', () => {
     expect(result.size).toBe(2);
   });
 
-  it('preserves var() references in values', () => {
+  it('preserves var() references in values', async () => {
     const css = cssRoot(`
       --color-primary: #86b521;
       --button-bg: var(--color-primary);
       --button-border: var(--color-primary, #000);
     `);
-    const result = extractCustomPropertiesFromContent(css);
+    const result = await extractCustomPropertiesFromContent(css);
 
     expect(result.get('--button-bg')).toBe('var(--color-primary)');
     expect(result.get('--button-border')).toBe('var(--color-primary, #000)');
   });
 
-  it('returns empty Map for empty content', () => {
-    const result = extractCustomPropertiesFromContent('');
+  it('returns empty Map for empty content', async () => {
+    const result = await extractCustomPropertiesFromContent('');
     expect(result.size).toBe(0);
   });
 
-  it('returns empty Map for content with no custom properties', () => {
+  it('returns empty Map for content with no custom properties', async () => {
     const css = `body { color: red; font-size: 16px; }`;
-    const result = extractCustomPropertiesFromContent(css);
+    const result = await extractCustomPropertiesFromContent(css);
     expect(result.size).toBe(0);
   });
 });
@@ -97,8 +96,8 @@ describe('extractCustomPropertiesFromContent', () => {
 // ---------------------------------------------------------------------------
 
 describe('parseCssCustomProperties', () => {
-  it('returns empty Map for non-existent file', () => {
-    const result = parseCssCustomProperties(
+  it('returns empty Map for non-existent file', async () => {
+    const result = await parseCssCustomProperties(
       path.join(__dirname, 'this-file-does-not-exist.css'),
     );
     expect(result).toBeInstanceOf(Map);
@@ -119,20 +118,20 @@ describe('extractCustomPropertiesFromContent — propertyPrefix filtering', () =
     --other-prop: 10px;
   `);
 
-  it('returns all properties when propertyPrefix is null', () => {
-    const result = extractCustomPropertiesFromContent(css, {
+  it('returns all properties when propertyPrefix is null', async () => {
+    const result = await extractCustomPropertiesFromContent(css, {
       propertyPrefix: null,
     });
     expect(result.size).toBe(5);
   });
 
-  it('returns all properties when propertyPrefix is undefined', () => {
-    const result = extractCustomPropertiesFromContent(css);
+  it('returns all properties when propertyPrefix is undefined', async () => {
+    const result = await extractCustomPropertiesFromContent(css);
     expect(result.size).toBe(5);
   });
 
-  it('filters by prefix --semantic-color', () => {
-    const result = extractCustomPropertiesFromContent(css, {
+  it('filters by prefix --semantic-color', async () => {
+    const result = await extractCustomPropertiesFromContent(css, {
       propertyPrefix: '--semantic-color',
     });
     expect(result.size).toBe(2);
@@ -140,16 +139,16 @@ describe('extractCustomPropertiesFromContent — propertyPrefix filtering', () =
     expect(result.has('--semantic-color-secondary')).toBe(true);
   });
 
-  it('filters by prefix --ds-', () => {
-    const result = extractCustomPropertiesFromContent(css, {
+  it('filters by prefix --ds-', async () => {
+    const result = await extractCustomPropertiesFromContent(css, {
       propertyPrefix: '--ds-',
     });
     expect(result.size).toBe(1);
     expect(result.has('--ds-button-bg')).toBe(true);
   });
 
-  it('returns empty Map when no properties match prefix', () => {
-    const result = extractCustomPropertiesFromContent(css, {
+  it('returns empty Map when no properties match prefix', async () => {
+    const result = await extractCustomPropertiesFromContent(css, {
       propertyPrefix: '--nonexistent-',
     });
     expect(result.size).toBe(0);
@@ -163,10 +162,6 @@ describe('extractCustomPropertiesFromContent — propertyPrefix filtering', () =
 /**
  * **Validates: Requirements 3.1, 3.5**
  * Property 4: CSS custom property parsing round-trip
- *
- * For any set of valid CSS custom property declarations, embedding them in a
- * CSS :root block and parsing with extractCustomPropertiesFromContent SHALL
- * produce a Map containing every original name-value pair.
  */
 describe('Property 4: CSS custom property parsing round-trip', () => {
   const testCases = [
@@ -217,27 +212,27 @@ describe('Property 4: CSS custom property parsing round-trip', () => {
     },
   ];
 
-  it.each(testCases)('round-trips all properties: $label', ({ properties }) => {
-    const declarations = properties
-      .map(([name, value]) => `  ${name}: ${value};`)
-      .join('\n');
-    const css = cssRoot(declarations);
+  it.each(testCases)(
+    'round-trips all properties: $label',
+    async ({ properties }) => {
+      const declarations = properties
+        .map(([name, value]) => `  ${name}: ${value};`)
+        .join('\n');
+      const css = cssRoot(declarations);
 
-    const result = extractCustomPropertiesFromContent(css);
+      const result = await extractCustomPropertiesFromContent(css);
 
-    for (const [name, value] of properties) {
-      expect(result.get(name)).toBe(value);
-    }
-    expect(result.size).toBe(properties.length);
-  });
+      for (const [name, value] of properties) {
+        expect(result.get(name)).toBe(value);
+      }
+      expect(result.size).toBe(properties.length);
+    },
+  );
 });
 
 /**
  * **Validates: Requirements 3.4**
  * Property 5: CSS parser ignores comments
- *
- * For any CSS content where custom property patterns appear only inside
- * comments, extractCustomPropertiesFromContent SHALL return an empty Map.
  */
 describe('Property 5: CSS parser ignores comments', () => {
   const commentOnlyCases = [
@@ -271,13 +266,12 @@ describe('Property 5: CSS parser ignores comments', () => {
     },
   ];
 
-  it.each(commentOnlyCases)('returns empty Map: $label', ({ css }) => {
-    const result = extractCustomPropertiesFromContent(css);
+  it.each(commentOnlyCases)('returns empty Map: $label', async ({ css }) => {
+    const result = await extractCustomPropertiesFromContent(css);
     expect(result.size).toBe(0);
   });
 
-  // Also verify that real properties adjacent to comments ARE extracted
-  it('extracts real properties while ignoring commented ones', () => {
+  it('extracts real properties while ignoring commented ones', async () => {
     const css = `
       /* --hidden: nope; */
       :root {
@@ -286,7 +280,7 @@ describe('Property 5: CSS parser ignores comments', () => {
         --also-visible: yes;
       }
     `;
-    const result = extractCustomPropertiesFromContent(css);
+    const result = await extractCustomPropertiesFromContent(css);
     expect(result.size).toBe(2);
     expect(result.has('--visible')).toBe(true);
     expect(result.has('--also-visible')).toBe(true);
@@ -298,10 +292,6 @@ describe('Property 5: CSS parser ignores comments', () => {
 /**
  * **Validates: Requirements 4.5, 4.6**
  * Property 6: Property prefix filtering
- *
- * For any set of custom properties and any non-null propertyPrefix, only
- * properties whose name starts with the given prefix SHALL be included.
- * When propertyPrefix is null, all properties SHALL be included.
  */
 describe('Property 6: Property prefix filtering', () => {
   const allProperties: [string, string][] = [
@@ -359,18 +349,21 @@ describe('Property 6: Property prefix filtering', () => {
     },
   ];
 
-  it.each(prefixCases)('$label', ({ prefix, expectedCount, expectedNames }) => {
-    const result = extractCustomPropertiesFromContent(css, {
-      propertyPrefix: prefix,
-    });
-    expect(result.size).toBe(expectedCount);
-    for (const name of expectedNames) {
-      expect(result.has(name)).toBe(true);
-    }
-  });
+  it.each(prefixCases)(
+    '$label',
+    async ({ prefix, expectedCount, expectedNames }) => {
+      const result = await extractCustomPropertiesFromContent(css, {
+        propertyPrefix: prefix,
+      });
+      expect(result.size).toBe(expectedCount);
+      for (const name of expectedNames) {
+        expect(result.has(name)).toBe(true);
+      }
+    },
+  );
 
-  it('null prefix includes all properties', () => {
-    const result = extractCustomPropertiesFromContent(css, {
+  it('null prefix includes all properties', async () => {
+    const result = await extractCustomPropertiesFromContent(css, {
       propertyPrefix: null,
     });
     expect(result.size).toBe(allProperties.length);
@@ -379,8 +372,8 @@ describe('Property 6: Property prefix filtering', () => {
     }
   });
 
-  it('undefined options includes all properties', () => {
-    const result = extractCustomPropertiesFromContent(css);
+  it('undefined options includes all properties', async () => {
+    const result = await extractCustomPropertiesFromContent(css);
     expect(result.size).toBe(allProperties.length);
   });
 });
