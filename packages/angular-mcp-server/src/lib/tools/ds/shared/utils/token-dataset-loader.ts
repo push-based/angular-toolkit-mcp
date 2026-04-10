@@ -100,9 +100,7 @@ export { createEmptyTokenDataset } from './token-dataset.js';
 function discoverFiles(absRoot: string, filePattern: string): string[] {
   const allFiles = walkDirectory(absRoot);
   const matcher = createGlobMatcher(filePattern);
-  return allFiles
-    .filter((f) => matcher(path.relative(absRoot, f)))
-    .sort();
+  return allFiles.filter((f) => matcher(path.relative(absRoot, f))).sort();
 }
 
 /**

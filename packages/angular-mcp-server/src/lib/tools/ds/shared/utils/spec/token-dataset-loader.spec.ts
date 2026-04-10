@@ -232,13 +232,27 @@ describe('loadTokenDataset — by-prefix categorisation', () => {
       tokens: { ...defaultTokensConfig(), categoryInference: 'by-prefix' },
     });
 
-    expect(ds.tokens.find((t) => t.name === '--semantic-color-primary')?.category).toBe('color');
-    expect(ds.tokens.find((t) => t.name === '--semantic-spacing-sm')?.category).toBe('spacing');
-    expect(ds.tokens.find((t) => t.name === '--semantic-radius-md')?.category).toBe('radius');
-    expect(ds.tokens.find((t) => t.name === '--semantic-typography-body')?.category).toBe('typography');
-    expect(ds.tokens.find((t) => t.name === '--semantic-size-lg')?.category).toBe('size');
-    expect(ds.tokens.find((t) => t.name === '--semantic-opacity-half')?.category).toBe('opacity');
-    expect(ds.tokens.find((t) => t.name === '--unknown-token')?.category).toBeUndefined();
+    expect(
+      ds.tokens.find((t) => t.name === '--semantic-color-primary')?.category,
+    ).toBe('color');
+    expect(
+      ds.tokens.find((t) => t.name === '--semantic-spacing-sm')?.category,
+    ).toBe('spacing');
+    expect(
+      ds.tokens.find((t) => t.name === '--semantic-radius-md')?.category,
+    ).toBe('radius');
+    expect(
+      ds.tokens.find((t) => t.name === '--semantic-typography-body')?.category,
+    ).toBe('typography');
+    expect(
+      ds.tokens.find((t) => t.name === '--semantic-size-lg')?.category,
+    ).toBe('size');
+    expect(
+      ds.tokens.find((t) => t.name === '--semantic-opacity-half')?.category,
+    ).toBe('opacity');
+    expect(
+      ds.tokens.find((t) => t.name === '--unknown-token')?.category,
+    ).toBeUndefined();
   });
 
   it('assigns categories using custom categoryPrefixMap', async () => {
@@ -265,10 +279,16 @@ describe('loadTokenDataset — by-prefix categorisation', () => {
       },
     });
 
-    expect(ds.tokens.find((t) => t.name === '--brand-color-primary')?.category).toBe('color');
-    expect(ds.tokens.find((t) => t.name === '--brand-space-sm')?.category).toBe('spacing');
+    expect(
+      ds.tokens.find((t) => t.name === '--brand-color-primary')?.category,
+    ).toBe('color');
+    expect(ds.tokens.find((t) => t.name === '--brand-space-sm')?.category).toBe(
+      'spacing',
+    );
     // --semantic-color-primary doesn't match custom map
-    expect(ds.tokens.find((t) => t.name === '--semantic-color-primary')?.category).toBeUndefined();
+    expect(
+      ds.tokens.find((t) => t.name === '--semantic-color-primary')?.category,
+    ).toBeUndefined();
   });
 });
 
@@ -302,17 +322,39 @@ describe('loadTokenDataset — by-value categorisation', () => {
       tokens: { ...defaultTokensConfig(), categoryInference: 'by-value' },
     });
 
-    expect(ds.tokens.find((t) => t.name === '--token-hex')?.category).toBe('color');
-    expect(ds.tokens.find((t) => t.name === '--token-hex-short')?.category).toBe('color');
-    expect(ds.tokens.find((t) => t.name === '--token-rgb')?.category).toBe('color');
-    expect(ds.tokens.find((t) => t.name === '--token-rgba')?.category).toBe('color');
-    expect(ds.tokens.find((t) => t.name === '--token-hsl')?.category).toBe('color');
-    expect(ds.tokens.find((t) => t.name === '--token-hsla')?.category).toBe('color');
-    expect(ds.tokens.find((t) => t.name === '--token-px')?.category).toBe('spacing');
-    expect(ds.tokens.find((t) => t.name === '--token-rem')?.category).toBe('spacing');
-    expect(ds.tokens.find((t) => t.name === '--token-em')?.category).toBe('spacing');
-    expect(ds.tokens.find((t) => t.name === '--token-percent')?.category).toBe('opacity');
-    expect(ds.tokens.find((t) => t.name === '--token-plain')?.category).toBeUndefined();
+    expect(ds.tokens.find((t) => t.name === '--token-hex')?.category).toBe(
+      'color',
+    );
+    expect(
+      ds.tokens.find((t) => t.name === '--token-hex-short')?.category,
+    ).toBe('color');
+    expect(ds.tokens.find((t) => t.name === '--token-rgb')?.category).toBe(
+      'color',
+    );
+    expect(ds.tokens.find((t) => t.name === '--token-rgba')?.category).toBe(
+      'color',
+    );
+    expect(ds.tokens.find((t) => t.name === '--token-hsl')?.category).toBe(
+      'color',
+    );
+    expect(ds.tokens.find((t) => t.name === '--token-hsla')?.category).toBe(
+      'color',
+    );
+    expect(ds.tokens.find((t) => t.name === '--token-px')?.category).toBe(
+      'spacing',
+    );
+    expect(ds.tokens.find((t) => t.name === '--token-rem')?.category).toBe(
+      'spacing',
+    );
+    expect(ds.tokens.find((t) => t.name === '--token-em')?.category).toBe(
+      'spacing',
+    );
+    expect(ds.tokens.find((t) => t.name === '--token-percent')?.category).toBe(
+      'opacity',
+    );
+    expect(
+      ds.tokens.find((t) => t.name === '--token-plain')?.category,
+    ).toBeUndefined();
   });
 });
 
@@ -394,7 +436,6 @@ describe('loadTokenDataset — propertyPrefix filtering', () => {
   });
 });
 
-
 // ===========================================================================
 // Property-Based Tests (parameterised)
 // ===========================================================================
@@ -418,7 +459,10 @@ describe('Property 7: Flat directory strategy produces scopeless tokens', () => 
     {
       label: 'multiple files at root',
       setup: (dir: string) => {
-        writeCssFile(path.join(dir, 'semantic.css'), '  --a: #f00;\n  --b: 4px;');
+        writeCssFile(
+          path.join(dir, 'semantic.css'),
+          '  --a: #f00;\n  --b: 4px;',
+        );
         writeCssFile(path.join(dir, 'other.css'), '  --c: 8px;');
       },
       filePattern: '**/*.css',
@@ -426,14 +470,20 @@ describe('Property 7: Flat directory strategy produces scopeless tokens', () => 
     {
       label: 'files in nested directories (still flat strategy)',
       setup: (dir: string) => {
-        writeCssFile(path.join(dir, 'brand', 'theme', 'semantic.css'), '  --a: #f00;');
+        writeCssFile(
+          path.join(dir, 'brand', 'theme', 'semantic.css'),
+          '  --a: #f00;',
+        );
         writeCssFile(path.join(dir, 'semantic.css'), '  --b: 4px;');
       },
     },
     {
       label: 'file with many tokens',
       setup: (dir: string) => {
-        const declarations = Array.from({ length: 10 }, (_, i) => `  --token-${i}: value-${i};`).join('\n');
+        const declarations = Array.from(
+          { length: 10 },
+          (_, i) => `  --token-${i}: value-${i};`,
+        ).join('\n');
         writeCssFile(path.join(dir, 'semantic.css'), declarations);
       },
     },
@@ -442,7 +492,9 @@ describe('Property 7: Flat directory strategy produces scopeless tokens', () => 
   it.each(cases)(
     'all tokens have empty scope: $label',
     async ({ setup, filePattern }) => {
-      const stylesDir = makeTempDir(`p7-${cases.indexOf(cases.find((c) => c.setup === setup)!)}`);
+      const stylesDir = makeTempDir(
+        `p7-${cases.indexOf(cases.find((c) => c.setup === setup)!)}`,
+      );
       setup(stylesDir);
 
       const ds = await loadTokenDataset({
@@ -495,23 +547,20 @@ describe('Property 8: Brand-theme directory strategy assigns correct scope', () 
     },
   ];
 
-  it.each(cases)(
-    '$label',
-    async ({ pathSegments, expectedScope }) => {
-      const stylesDir = makeTempDir(`p8-${pathSegments.join('-') || 'root'}`);
-      const filePath = path.join(stylesDir, ...pathSegments, 'semantic.css');
-      writeCssFile(filePath, '  --token-a: #ff0000;');
+  it.each(cases)('$label', async ({ pathSegments, expectedScope }) => {
+    const stylesDir = makeTempDir(`p8-${pathSegments.join('-') || 'root'}`);
+    const filePath = path.join(stylesDir, ...pathSegments, 'semantic.css');
+    writeCssFile(filePath, '  --token-a: #ff0000;');
 
-      const ds = await loadTokenDataset({
-        generatedStylesRoot: path.relative(tmpRoot, stylesDir),
-        workspaceRoot: tmpRoot,
-        tokens: { ...defaultTokensConfig(), directoryStrategy: 'brand-theme' },
-      });
+    const ds = await loadTokenDataset({
+      generatedStylesRoot: path.relative(tmpRoot, stylesDir),
+      workspaceRoot: tmpRoot,
+      tokens: { ...defaultTokensConfig(), directoryStrategy: 'brand-theme' },
+    });
 
-      expect(ds.isEmpty).toBe(false);
-      expect(ds.tokens[0].scope).toEqual(expectedScope);
-    },
-  );
+    expect(ds.isEmpty).toBe(false);
+    expect(ds.tokens[0].scope).toEqual(expectedScope);
+  });
 });
 
 /**
@@ -594,21 +643,65 @@ describe('Property 9: Category assignment by prefix', () => {
  */
 describe('Property 10: Category inference by value', () => {
   const cases = [
-    { label: 'hex 6-digit → color', value: '#ff0000', expectedCategory: 'color' },
+    {
+      label: 'hex 6-digit → color',
+      value: '#ff0000',
+      expectedCategory: 'color',
+    },
     { label: 'hex 3-digit → color', value: '#f00', expectedCategory: 'color' },
-    { label: 'hex 8-digit → color', value: '#ff000080', expectedCategory: 'color' },
-    { label: 'rgb() → color', value: 'rgb(255, 0, 0)', expectedCategory: 'color' },
-    { label: 'rgba() → color', value: 'rgba(255, 0, 0, 0.5)', expectedCategory: 'color' },
-    { label: 'hsl() → color', value: 'hsl(120, 100%, 50%)', expectedCategory: 'color' },
-    { label: 'hsla() → color', value: 'hsla(120, 100%, 50%, 0.5)', expectedCategory: 'color' },
+    {
+      label: 'hex 8-digit → color',
+      value: '#ff000080',
+      expectedCategory: 'color',
+    },
+    {
+      label: 'rgb() → color',
+      value: 'rgb(255, 0, 0)',
+      expectedCategory: 'color',
+    },
+    {
+      label: 'rgba() → color',
+      value: 'rgba(255, 0, 0, 0.5)',
+      expectedCategory: 'color',
+    },
+    {
+      label: 'hsl() → color',
+      value: 'hsl(120, 100%, 50%)',
+      expectedCategory: 'color',
+    },
+    {
+      label: 'hsla() → color',
+      value: 'hsla(120, 100%, 50%, 0.5)',
+      expectedCategory: 'color',
+    },
     { label: 'px → spacing', value: '16px', expectedCategory: 'spacing' },
-    { label: 'negative px → spacing', value: '-4px', expectedCategory: 'spacing' },
+    {
+      label: 'negative px → spacing',
+      value: '-4px',
+      expectedCategory: 'spacing',
+    },
     { label: 'rem → spacing', value: '1.5rem', expectedCategory: 'spacing' },
     { label: 'em → spacing', value: '2em', expectedCategory: 'spacing' },
-    { label: 'percentage → opacity', value: '50%', expectedCategory: 'opacity' },
-    { label: 'plain string → uncategorised', value: 'some-value', expectedCategory: undefined },
-    { label: 'number without unit → uncategorised', value: '42', expectedCategory: undefined },
-    { label: 'var() reference → uncategorised', value: 'var(--other)', expectedCategory: undefined },
+    {
+      label: 'percentage → opacity',
+      value: '50%',
+      expectedCategory: 'opacity',
+    },
+    {
+      label: 'plain string → uncategorised',
+      value: 'some-value',
+      expectedCategory: undefined,
+    },
+    {
+      label: 'number without unit → uncategorised',
+      value: '42',
+      expectedCategory: undefined,
+    },
+    {
+      label: 'var() reference → uncategorised',
+      value: 'var(--other)',
+      expectedCategory: undefined,
+    },
   ];
 
   it.each(cases)(

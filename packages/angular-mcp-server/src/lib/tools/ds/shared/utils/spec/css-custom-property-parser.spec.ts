@@ -217,22 +217,19 @@ describe('Property 4: CSS custom property parsing round-trip', () => {
     },
   ];
 
-  it.each(testCases)(
-    'round-trips all properties: $label',
-    ({ properties }) => {
-      const declarations = properties
-        .map(([name, value]) => `  ${name}: ${value};`)
-        .join('\n');
-      const css = cssRoot(declarations);
+  it.each(testCases)('round-trips all properties: $label', ({ properties }) => {
+    const declarations = properties
+      .map(([name, value]) => `  ${name}: ${value};`)
+      .join('\n');
+    const css = cssRoot(declarations);
 
-      const result = extractCustomPropertiesFromContent(css);
+    const result = extractCustomPropertiesFromContent(css);
 
-      for (const [name, value] of properties) {
-        expect(result.get(name)).toBe(value);
-      }
-      expect(result.size).toBe(properties.length);
-    },
-  );
+    for (const [name, value] of properties) {
+      expect(result.get(name)).toBe(value);
+    }
+    expect(result.size).toBe(properties.length);
+  });
 });
 
 /**
@@ -274,13 +271,10 @@ describe('Property 5: CSS parser ignores comments', () => {
     },
   ];
 
-  it.each(commentOnlyCases)(
-    'returns empty Map: $label',
-    ({ css }) => {
-      const result = extractCustomPropertiesFromContent(css);
-      expect(result.size).toBe(0);
-    },
-  );
+  it.each(commentOnlyCases)('returns empty Map: $label', ({ css }) => {
+    const result = extractCustomPropertiesFromContent(css);
+    expect(result.size).toBe(0);
+  });
 
   // Also verify that real properties adjacent to comments ARE extracted
   it('extracts real properties while ignoring commented ones', () => {
@@ -365,18 +359,15 @@ describe('Property 6: Property prefix filtering', () => {
     },
   ];
 
-  it.each(prefixCases)(
-    '$label',
-    ({ prefix, expectedCount, expectedNames }) => {
-      const result = extractCustomPropertiesFromContent(css, {
-        propertyPrefix: prefix,
-      });
-      expect(result.size).toBe(expectedCount);
-      for (const name of expectedNames) {
-        expect(result.has(name)).toBe(true);
-      }
-    },
-  );
+  it.each(prefixCases)('$label', ({ prefix, expectedCount, expectedNames }) => {
+    const result = extractCustomPropertiesFromContent(css, {
+      propertyPrefix: prefix,
+    });
+    expect(result.size).toBe(expectedCount);
+    for (const name of expectedNames) {
+      expect(result.has(name)).toBe(true);
+    }
+  });
 
   it('null prefix includes all properties', () => {
     const result = extractCustomPropertiesFromContent(css, {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { parseScssContent, ScssPropertyEntry } from './scss-value-parser.js';
+import { parseScssContent } from './scss-value-parser.js';
 
 // ---------------------------------------------------------------------------
 // Unit Tests

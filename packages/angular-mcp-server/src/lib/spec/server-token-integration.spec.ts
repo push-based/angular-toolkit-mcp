@@ -14,7 +14,10 @@ function createTmpDir(): string {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'mcp-server-test-'));
 }
 
-function setupWorkspace(options?: { generatedStylesRoot?: string; cssContent?: string }) {
+function setupWorkspace(options?: {
+  generatedStylesRoot?: string;
+  cssContent?: string;
+}) {
   tmpDir = createTmpDir();
 
   // Create the required uiRoot directory
@@ -27,7 +30,11 @@ function setupWorkspace(options?: { generatedStylesRoot?: string; cssContent?: s
     fs.mkdirSync(stylesDir, { recursive: true });
 
     if (options.cssContent) {
-      fs.writeFileSync(path.join(stylesDir, 'semantic.css'), options.cssContent, 'utf-8');
+      fs.writeFileSync(
+        path.join(stylesDir, 'semantic.css'),
+        options.cssContent,
+        'utf-8',
+      );
     }
   }
 
@@ -90,6 +97,7 @@ describe('Server bootstrap with token config (integration)', () => {
   // ---- Req 1.5, 1.6: Server starts with warning when generatedStylesRoot points to non-existent path ----
   it('starts with warning when generatedStylesRoot points to non-existent path', async () => {
     const { workspaceRoot, uiRoot } = setupWorkspace();
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
     const server = await AngularMcpServerWrapper.create({

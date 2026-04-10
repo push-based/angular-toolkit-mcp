@@ -214,6 +214,7 @@ describe('validateAngularMcpServerFilesExist — generatedStylesRoot', () => {
       return true;
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const config = parsedConfig({ generatedStylesRoot: 'dist/styles' });
     const result = validateAngularMcpServerFilesExist(config);
@@ -228,6 +229,7 @@ describe('validateAngularMcpServerFilesExist — generatedStylesRoot', () => {
   it('sets generatedStylesRoot to undefined when path exists but is not a directory', () => {
     statSyncMock = vi.fn().mockReturnValue({ isDirectory: () => false });
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const config = parsedConfig({ generatedStylesRoot: 'dist/styles' });
     const result = validateAngularMcpServerFilesExist(config);
@@ -257,32 +259,21 @@ describe('Property 1: generatedStylesRoot path validation', () => {
     '../parent-relative',
   ];
 
-  const absolutePaths = [
-    '/absolute/path',
-    '/usr/local/styles',
-    '/a',
-    '/root',
-  ];
+  const absolutePaths = ['/absolute/path', '/usr/local/styles', '/a', '/root'];
 
-  it.each(relativePaths)(
-    'accepts relative path: %s',
-    (relPath) => {
-      const result = AngularMcpServerOptionsSchema.safeParse(
-        baseConfig({ generatedStylesRoot: relPath }),
-      );
-      expect(result.success).toBe(true);
-    },
-  );
+  it.each(relativePaths)('accepts relative path: %s', (relPath) => {
+    const result = AngularMcpServerOptionsSchema.safeParse(
+      baseConfig({ generatedStylesRoot: relPath }),
+    );
+    expect(result.success).toBe(true);
+  });
 
-  it.each(absolutePaths)(
-    'rejects absolute path: %s',
-    (absPath) => {
-      const result = AngularMcpServerOptionsSchema.safeParse(
-        baseConfig({ generatedStylesRoot: absPath }),
-      );
-      expect(result.success).toBe(false);
-    },
-  );
+  it.each(absolutePaths)('rejects absolute path: %s', (absPath) => {
+    const result = AngularMcpServerOptionsSchema.safeParse(
+      baseConfig({ generatedStylesRoot: absPath }),
+    );
+    expect(result.success).toBe(false);
+  });
 });
 
 /**
@@ -305,21 +296,15 @@ describe('Property 2: directoryStrategy enum validation', () => {
     'brandTheme',
   ];
 
-  it.each(validValues)(
-    'accepts valid directoryStrategy: %s',
-    (value) => {
-      const result = TokensConfigSchema.safeParse({ directoryStrategy: value });
-      expect(result.success).toBe(true);
-    },
-  );
+  it.each(validValues)('accepts valid directoryStrategy: %s', (value) => {
+    const result = TokensConfigSchema.safeParse({ directoryStrategy: value });
+    expect(result.success).toBe(true);
+  });
 
-  it.each(invalidValues)(
-    'rejects invalid directoryStrategy: %s',
-    (value) => {
-      const result = TokensConfigSchema.safeParse({ directoryStrategy: value });
-      expect(result.success).toBe(false);
-    },
-  );
+  it.each(invalidValues)('rejects invalid directoryStrategy: %s', (value) => {
+    const result = TokensConfigSchema.safeParse({ directoryStrategy: value });
+    expect(result.success).toBe(false);
+  });
 });
 
 /**
@@ -342,21 +327,15 @@ describe('Property 3: categoryInference enum validation', () => {
     ' none',
   ];
 
-  it.each(validValues)(
-    'accepts valid categoryInference: %s',
-    (value) => {
-      const result = TokensConfigSchema.safeParse({ categoryInference: value });
-      expect(result.success).toBe(true);
-    },
-  );
+  it.each(validValues)('accepts valid categoryInference: %s', (value) => {
+    const result = TokensConfigSchema.safeParse({ categoryInference: value });
+    expect(result.success).toBe(true);
+  });
 
-  it.each(invalidValues)(
-    'rejects invalid categoryInference: %s',
-    (value) => {
-      const result = TokensConfigSchema.safeParse({ categoryInference: value });
-      expect(result.success).toBe(false);
-    },
-  );
+  it.each(invalidValues)('rejects invalid categoryInference: %s', (value) => {
+    const result = TokensConfigSchema.safeParse({ categoryInference: value });
+    expect(result.success).toBe(false);
+  });
 });
 
 /**
@@ -405,13 +384,10 @@ describe('Property 21: Backward-compatible config parsing', () => {
     },
   ];
 
-  it.each(existingConfigs)(
-    'parses successfully: $label',
-    ({ config }) => {
-      const result = AngularMcpServerOptionsSchema.safeParse(config);
-      expect(result.success).toBe(true);
-    },
-  );
+  it.each(existingConfigs)('parses successfully: $label', ({ config }) => {
+    const result = AngularMcpServerOptionsSchema.safeParse(config);
+    expect(result.success).toBe(true);
+  });
 
   it.each(existingConfigs)(
     'produces valid defaults for new fields: $label',

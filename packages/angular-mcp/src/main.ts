@@ -38,8 +38,7 @@ const argv = yargs(hideBin(process.argv))
     type: 'string',
   })
   .option('ds.generatedStylesRoot', {
-    describe:
-      'Path to generated styles directory relative from workspace root',
+    describe: 'Path to generated styles directory relative from workspace root',
     type: 'string',
   })
   .option('ds.tokens.filePattern', { type: 'string' })
@@ -84,7 +83,13 @@ const { workspaceRoot, ds } = argv as unknown as {
     };
   };
 };
-const { storybookDocsRoot, deprecatedCssClassesPath, uiRoot, generatedStylesRoot, tokens } = ds;
+const {
+  storybookDocsRoot,
+  deprecatedCssClassesPath,
+  uiRoot,
+  generatedStylesRoot,
+  tokens,
+} = ds;
 
 async function startServer() {
   const server = await AngularMcpServerWrapper.create({

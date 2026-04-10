@@ -56,10 +56,7 @@ export interface TokenDataset {
   /** Lookup by scope: returns tokens matching all provided key-value pairs */
   getByScope(scope: Record<string, string>): TokenEntry[];
   /** Scope-filtered reverse value lookup */
-  getByValueInScope(
-    value: string,
-    scope: Record<string, string>,
-  ): TokenEntry[];
+  getByValueInScope(value: string, scope: Record<string, string>): TokenEntry[];
   /** Scope-filtered category lookup */
   getByCategoryInScope(
     category: string,

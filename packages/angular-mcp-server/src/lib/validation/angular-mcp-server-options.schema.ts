@@ -8,22 +8,18 @@ export const TokensConfigSchema = z
   .object({
     filePattern: z.string().default('**/semantic.css'),
     propertyPrefix: z.string().nullable().default(null),
-    directoryStrategy: z
-      .enum(['flat', 'brand-theme', 'auto'])
-      .default('flat'),
+    directoryStrategy: z.enum(['flat', 'brand-theme', 'auto']).default('flat'),
     categoryInference: z
       .enum(['by-prefix', 'by-value', 'none'])
       .default('by-prefix'),
-    categoryPrefixMap: z
-      .record(z.string(), z.string())
-      .default({
-        color: '--semantic-color',
-        spacing: '--semantic-spacing',
-        radius: '--semantic-radius',
-        typography: '--semantic-typography',
-        size: '--semantic-size',
-        opacity: '--semantic-opacity',
-      }),
+    categoryPrefixMap: z.record(z.string(), z.string()).default({
+      color: '--semantic-color',
+      spacing: '--semantic-spacing',
+      radius: '--semantic-radius',
+      typography: '--semantic-typography',
+      size: '--semantic-size',
+      opacity: '--semantic-opacity',
+    }),
     componentTokenPrefix: z.string().default('--ds-'),
   })
   .default({});

@@ -133,7 +133,11 @@ export async function parseScssContent(
       const property = decl.prop;
       const value = decl.value;
       const line = decl.source?.start?.line ?? 0;
-      const classification = classifyEntry(property, value, componentTokenPrefix);
+      const classification = classifyEntry(
+        property,
+        value,
+        componentTokenPrefix,
+      );
 
       entries.push({ property, value, line, selector, classification });
     },

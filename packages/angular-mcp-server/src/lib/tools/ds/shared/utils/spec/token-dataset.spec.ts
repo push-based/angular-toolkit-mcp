@@ -24,35 +24,110 @@ function entry(
 /** Rich fixture set covering various categories, scopes, and values. */
 const FIXTURES: TokenEntry[] = [
   // Color tokens — flat scope
-  entry({ name: '--semantic-color-primary', value: '#86b521', category: 'color', sourceFile: 'semantic.css' }),
-  entry({ name: '--semantic-color-secondary', value: '#3366cc', category: 'color', sourceFile: 'semantic.css' }),
-  entry({ name: '--semantic-color-error', value: '#ff0000', category: 'color', sourceFile: 'semantic.css' }),
+  entry({
+    name: '--semantic-color-primary',
+    value: '#86b521',
+    category: 'color',
+    sourceFile: 'semantic.css',
+  }),
+  entry({
+    name: '--semantic-color-secondary',
+    value: '#3366cc',
+    category: 'color',
+    sourceFile: 'semantic.css',
+  }),
+  entry({
+    name: '--semantic-color-error',
+    value: '#ff0000',
+    category: 'color',
+    sourceFile: 'semantic.css',
+  }),
 
   // Spacing tokens — flat scope
-  entry({ name: '--semantic-spacing-sm', value: '4px', category: 'spacing', sourceFile: 'semantic.css' }),
-  entry({ name: '--semantic-spacing-md', value: '8px', category: 'spacing', sourceFile: 'semantic.css' }),
-  entry({ name: '--semantic-spacing-lg', value: '16px', category: 'spacing', sourceFile: 'semantic.css' }),
+  entry({
+    name: '--semantic-spacing-sm',
+    value: '4px',
+    category: 'spacing',
+    sourceFile: 'semantic.css',
+  }),
+  entry({
+    name: '--semantic-spacing-md',
+    value: '8px',
+    category: 'spacing',
+    sourceFile: 'semantic.css',
+  }),
+  entry({
+    name: '--semantic-spacing-lg',
+    value: '16px',
+    category: 'spacing',
+    sourceFile: 'semantic.css',
+  }),
 
   // Radius tokens — flat scope
-  entry({ name: '--semantic-radius-sm', value: '2px', category: 'radius', sourceFile: 'semantic.css' }),
+  entry({
+    name: '--semantic-radius-sm',
+    value: '2px',
+    category: 'radius',
+    sourceFile: 'semantic.css',
+  }),
 
   // Uncategorised token
   entry({ name: '--misc-token', value: '42', sourceFile: 'semantic.css' }),
 
   // Tokens with var() references
-  entry({ name: '--ds-button-bg', value: 'var(--semantic-color-primary)', category: 'color', sourceFile: 'components.css' }),
+  entry({
+    name: '--ds-button-bg',
+    value: 'var(--semantic-color-primary)',
+    category: 'color',
+    sourceFile: 'components.css',
+  }),
 
   // Tokens with brand scope
-  entry({ name: '--semantic-color-primary', value: '#ff9900', category: 'color', scope: { brand: 'acme' }, sourceFile: 'acme/semantic.css' }),
-  entry({ name: '--semantic-color-secondary', value: '#009900', category: 'color', scope: { brand: 'acme' }, sourceFile: 'acme/semantic.css' }),
+  entry({
+    name: '--semantic-color-primary',
+    value: '#ff9900',
+    category: 'color',
+    scope: { brand: 'acme' },
+    sourceFile: 'acme/semantic.css',
+  }),
+  entry({
+    name: '--semantic-color-secondary',
+    value: '#009900',
+    category: 'color',
+    scope: { brand: 'acme' },
+    sourceFile: 'acme/semantic.css',
+  }),
 
   // Tokens with brand + theme scope
-  entry({ name: '--semantic-color-primary', value: '#111111', category: 'color', scope: { brand: 'acme', theme: 'dark' }, sourceFile: 'acme/dark/semantic.css' }),
-  entry({ name: '--semantic-spacing-sm', value: '6px', category: 'spacing', scope: { brand: 'acme', theme: 'dark' }, sourceFile: 'acme/dark/semantic.css' }),
+  entry({
+    name: '--semantic-color-primary',
+    value: '#111111',
+    category: 'color',
+    scope: { brand: 'acme', theme: 'dark' },
+    sourceFile: 'acme/dark/semantic.css',
+  }),
+  entry({
+    name: '--semantic-spacing-sm',
+    value: '6px',
+    category: 'spacing',
+    scope: { brand: 'acme', theme: 'dark' },
+    sourceFile: 'acme/dark/semantic.css',
+  }),
 
   // Duplicate value across scopes (for reverse lookup testing)
-  entry({ name: '--semantic-opacity-low', value: '0.5', category: 'opacity', sourceFile: 'semantic.css' }),
-  entry({ name: '--semantic-opacity-low', value: '0.5', category: 'opacity', scope: { brand: 'acme' }, sourceFile: 'acme/semantic.css' }),
+  entry({
+    name: '--semantic-opacity-low',
+    value: '0.5',
+    category: 'opacity',
+    sourceFile: 'semantic.css',
+  }),
+  entry({
+    name: '--semantic-opacity-low',
+    value: '0.5',
+    category: 'opacity',
+    scope: { brand: 'acme' },
+    sourceFile: 'acme/semantic.css',
+  }),
 ];
 
 function buildDataset(tokens: TokenEntry[] = FIXTURES): TokenDatasetImpl {
@@ -83,7 +158,6 @@ describe('TokenDatasetImpl — getByName', () => {
     expect(result!.category).toBe('radius');
   });
 });
-
 
 // ---------------------------------------------------------------------------
 // Unit Tests — getByPrefix
@@ -229,7 +303,10 @@ describe('TokenDatasetImpl — getByCategoryInScope', () => {
   const ds = buildDataset();
 
   it('returns only tokens matching both category and scope', () => {
-    const result = ds.getByCategoryInScope('color', { brand: 'acme', theme: 'dark' });
+    const result = ds.getByCategoryInScope('color', {
+      brand: 'acme',
+      theme: 'dark',
+    });
     expect(result.length).toBe(1);
     expect(result[0].name).toBe('--semantic-color-primary');
     expect(result[0].scope.brand).toBe('acme');
@@ -237,11 +314,15 @@ describe('TokenDatasetImpl — getByCategoryInScope', () => {
   });
 
   it('returns empty when category matches but scope does not', () => {
-    expect(ds.getByCategoryInScope('color', { brand: 'nonexistent' })).toEqual([]);
+    expect(ds.getByCategoryInScope('color', { brand: 'nonexistent' })).toEqual(
+      [],
+    );
   });
 
   it('returns empty when scope matches but category does not', () => {
-    expect(ds.getByCategoryInScope('nonexistent', { brand: 'acme' })).toEqual([]);
+    expect(ds.getByCategoryInScope('nonexistent', { brand: 'acme' })).toEqual(
+      [],
+    );
   });
 });
 
@@ -276,7 +357,9 @@ describe('TokenDatasetImpl — result shape', () => {
     expect(result).toHaveProperty('scope');
     expect(result).toHaveProperty('sourceFile');
     // category is either a string or undefined
-    expect(result!.category === undefined || typeof result!.category === 'string').toBe(true);
+    expect(
+      result!.category === undefined || typeof result!.category === 'string',
+    ).toBe(true);
   });
 
   it('getByPrefix results contain all required fields', () => {
@@ -343,7 +426,6 @@ describe('TokenDatasetImpl — diagnostics', () => {
   });
 });
 
-
 // ===========================================================================
 // Property-Based Tests (parameterised)
 // ===========================================================================
@@ -365,7 +447,11 @@ describe('Property 11: Token dataset exact name lookup', () => {
     entry({ name: '--opacity-half', value: '0.5', category: 'opacity' }),
     entry({ name: '--z-index-100', value: '100' }),
     entry({ name: '--font-size-base', value: '16px', category: 'typography' }),
-    entry({ name: '--ds-button-bg', value: 'var(--color-red)', category: 'color' }),
+    entry({
+      name: '--ds-button-bg',
+      value: 'var(--color-red)',
+      category: 'color',
+    }),
   ];
 
   const ds = new TokenDatasetImpl(uniqueTokens);
@@ -554,8 +640,20 @@ describe('Property 14: Token dataset category lookup', () => {
  */
 describe('Property 15: Token dataset query results contain all required fields', () => {
   const tokens: TokenEntry[] = [
-    entry({ name: '--a', value: '#f00', category: 'color', scope: { brand: 'x' }, sourceFile: 'a.css' }),
-    entry({ name: '--b', value: '4px', category: 'spacing', scope: {}, sourceFile: 'b.css' }),
+    entry({
+      name: '--a',
+      value: '#f00',
+      category: 'color',
+      scope: { brand: 'x' },
+      sourceFile: 'a.css',
+    }),
+    entry({
+      name: '--b',
+      value: '4px',
+      category: 'spacing',
+      scope: {},
+      sourceFile: 'b.css',
+    }),
     entry({ name: '--c', value: '1', scope: {}, sourceFile: 'c.css' }), // no category
   ];
 
@@ -567,7 +665,9 @@ describe('Property 15: Token dataset query results contain all required fields',
     expect(t).toHaveProperty('scope');
     expect(t).toHaveProperty('sourceFile');
     // category is either a string or undefined (key may or may not be present)
-    expect(t.category === undefined || typeof t.category === 'string').toBe(true);
+    expect(t.category === undefined || typeof t.category === 'string').toBe(
+      true,
+    );
     expect(typeof t.name).toBe('string');
     expect(typeof t.value).toBe('string');
     expect(typeof t.scope).toBe('object');
@@ -579,8 +679,14 @@ describe('Property 15: Token dataset query results contain all required fields',
     { label: 'getByValue', fn: () => ds.getByValue('#f00') },
     { label: 'getByCategory', fn: () => ds.getByCategory('color') },
     { label: 'getByScope', fn: () => ds.getByScope({ brand: 'x' }) },
-    { label: 'getByValueInScope', fn: () => ds.getByValueInScope('#f00', { brand: 'x' }) },
-    { label: 'getByCategoryInScope', fn: () => ds.getByCategoryInScope('color', { brand: 'x' }) },
+    {
+      label: 'getByValueInScope',
+      fn: () => ds.getByValueInScope('#f00', { brand: 'x' }),
+    },
+    {
+      label: 'getByCategoryInScope',
+      fn: () => ds.getByCategoryInScope('color', { brand: 'x' }),
+    },
   ];
 
   it.each(queryCases)(
@@ -608,15 +714,31 @@ describe('Property 16: Token dataset scope lookup', () => {
   const tokens: TokenEntry[] = [
     entry({ name: '--t1', value: 'v1', scope: {} }),
     entry({ name: '--t2', value: 'v2', scope: { brand: 'acme' } }),
-    entry({ name: '--t3', value: 'v3', scope: { brand: 'acme', theme: 'dark' } }),
-    entry({ name: '--t4', value: 'v4', scope: { brand: 'acme', theme: 'light' } }),
+    entry({
+      name: '--t3',
+      value: 'v3',
+      scope: { brand: 'acme', theme: 'dark' },
+    }),
+    entry({
+      name: '--t4',
+      value: 'v4',
+      scope: { brand: 'acme', theme: 'light' },
+    }),
     entry({ name: '--t5', value: 'v5', scope: { brand: 'beta' } }),
-    entry({ name: '--t6', value: 'v6', scope: { brand: 'beta', theme: 'dark' } }),
+    entry({
+      name: '--t6',
+      value: 'v6',
+      scope: { brand: 'beta', theme: 'dark' },
+    }),
   ];
 
   const ds = new TokenDatasetImpl(tokens);
 
-  const scopeCases: Array<{ label: string; scope: Record<string, string>; expectedNames: string[] }> = [
+  const scopeCases: Array<{
+    label: string;
+    scope: Record<string, string>;
+    expectedNames: string[];
+  }> = [
     {
       label: 'single key: brand=acme',
       scope: { brand: 'acme' },
@@ -681,7 +803,11 @@ describe('Property 17: Token dataset scope-filtered value lookup', () => {
   const tokens: TokenEntry[] = [
     entry({ name: '--a1', value: '#f00', scope: {} }),
     entry({ name: '--a2', value: '#f00', scope: { brand: 'acme' } }),
-    entry({ name: '--a3', value: '#f00', scope: { brand: 'acme', theme: 'dark' } }),
+    entry({
+      name: '--a3',
+      value: '#f00',
+      scope: { brand: 'acme', theme: 'dark' },
+    }),
     entry({ name: '--a4', value: '#f00', scope: { brand: 'beta' } }),
     entry({ name: '--b1', value: '#0f0', scope: { brand: 'acme' } }),
     entry({ name: '--b2', value: '#0f0', scope: { brand: 'beta' } }),
@@ -689,7 +815,12 @@ describe('Property 17: Token dataset scope-filtered value lookup', () => {
 
   const ds = new TokenDatasetImpl(tokens);
 
-  const cases: Array<{ label: string; value: string; scope: Record<string, string>; expectedNames: string[] }> = [
+  const cases: Array<{
+    label: string;
+    value: string;
+    scope: Record<string, string>;
+    expectedNames: string[];
+  }> = [
     {
       label: 'value=#f00, scope={brand:acme}',
       value: '#f00',
