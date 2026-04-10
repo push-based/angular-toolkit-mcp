@@ -23,24 +23,31 @@ import {
 
 /**
  * Parse a Storybook .stories.ts file into structured JSON.
- * Uses TypeScript AST as primary extraction with regex fallback.
+ * Uses TypeScript AST as primary extraction. Falls back to regex
+ * when the parser reports diagnostics (malformed / incomplete input).
  */
 export function parseStoryFile(
   content: string,
   filePath: string,
   kebabName: string,
 ): StoryFileData {
-  try {
-    const sourceFile = ts.createSourceFile(
-      filePath,
-      content,
-      ts.ScriptTarget.Latest,
-      true,
-    );
-    return extractFromAST(sourceFile, content, filePath, kebabName);
-  } catch {
+  const sourceFile = ts.createSourceFile(
+    filePath,
+    content,
+    ts.ScriptTarget.Latest,
+    true,
+  );
+
+  // parseDiagnostics is internal but reliably present on every SourceFile.
+  // Fall back to regex when the parser flagged syntax issues.
+  const diagnostics = (
+    sourceFile as unknown as { parseDiagnostics?: unknown[] }
+  ).parseDiagnostics;
+  if (diagnostics && diagnostics.length > 0) {
     return extractWithRegex(content, filePath, kebabName);
   }
+
+  return extractFromAST(sourceFile, content, filePath, kebabName);
 }
 
 // ============================================================================

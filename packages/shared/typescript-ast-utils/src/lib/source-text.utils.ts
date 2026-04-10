@@ -90,7 +90,8 @@ export function extractTemplateLiteral(
     i++;
   }
 
-  return result || null;
+  // Unterminated template literal — no closing backtick found
+  return null;
 }
 
 /**

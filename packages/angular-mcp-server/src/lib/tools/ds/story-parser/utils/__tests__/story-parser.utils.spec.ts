@@ -575,12 +575,48 @@ describe('extractTernaryElseBranch', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Tests: Regex fallback (malformed TypeScript)
+// Tests: Regex fallback (malformed TypeScript triggers parseDiagnostics)
 // ---------------------------------------------------------------------------
 
 describe('parseStoryFile regex fallback', () => {
-  it('should still produce output for content that AST can parse', () => {
-    // Even though AST can parse this, verify the regex path works too
+  // Deliberately malformed TS that produces parseDiagnostics,
+  // forcing the regex extraction path.
+  const MALFORMED_STORY = `
+import { DsBadge } from '@frontend/ui/badge';
+import { Meta, StoryObj } from '@storybook/angular';
+
+// Syntax error: missing closing brace on meta
+const meta: Meta = {
+  title: 'Components/Badge',
+  argTypes: {
+    label: {
+      type: 'string',
+    },
+  },
+;  // <-- deliberate syntax error
+
+export default meta;
+
+export const Default: Story = {
+  render: () => ({
+    template: \`<ds-badge>Label</ds-badge>\`,
+  }),
+};
+`;
+
+  it('should fall back to regex extraction when input has parse errors', () => {
+    const result = parseStoryFile(
+      MALFORMED_STORY,
+      'malformed.stories.ts',
+      'badge',
+    );
+
+    // Regex path should still extract the DS import
+    expect(result.imports.length).toBeGreaterThan(0);
+    expect(result.imports[0]).toContain('@frontend/ui/badge');
+  });
+
+  it('should use AST path for well-formed input', () => {
     const result = parseStoryFile(BADGE_STORY, 'badge.stories.ts', 'badge');
     expect(result.imports.length).toBeGreaterThan(0);
     expect(result.stories.length).toBeGreaterThan(0);
