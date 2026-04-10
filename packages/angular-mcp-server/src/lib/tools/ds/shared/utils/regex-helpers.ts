@@ -3,12 +3,14 @@
  * Consolidates regex patterns used across multiple tools to avoid duplication
  */
 
+import { escapeRegex } from '@push-based/utils';
+
 // CSS Processing Regexes
 export const CSS_REGEXES = {
   /**
    * Escapes special regex characters in a string for safe use in regex patterns
    */
-  escape: (str: string): string => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+  escape: escapeRegex,
 
   /**
    * Creates a regex to match CSS classes from a list of class names

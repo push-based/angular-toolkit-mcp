@@ -2,11 +2,7 @@
 // get-ds-story-data types
 // ============================================================================
 
-export interface SelectorInfo {
-  style: 'element' | 'attribute' | 'unknown';
-  selector: string;
-  note?: string;
-}
+export { SelectorInfo } from '../../shared/utils/template-helpers.js';
 
 export interface ArgTypeEntry {
   name: string;

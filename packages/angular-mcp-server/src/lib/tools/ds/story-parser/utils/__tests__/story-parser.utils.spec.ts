@@ -9,12 +9,14 @@ import {
   extractArgTypesRegex,
   extractStoriesAST,
   extractStoriesRegex,
+  extractTernaryElseBranch,
+} from '../story-parser.utils.js';
+import {
   extractSlotsFromTemplates,
   detectSelectorStyle,
   detectFormIntegration,
   cleanTemplate,
-  extractTernaryElseBranch,
-} from '../story-parser.utils.js';
+} from '../../../shared/utils/template-helpers.js';
 import * as ts from 'typescript';
 
 // ---------------------------------------------------------------------------
