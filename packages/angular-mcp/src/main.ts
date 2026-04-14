@@ -37,6 +37,30 @@ const argv = yargs(hideBin(process.argv))
       'The root directory of the actual Angular components relative from workspace root',
     type: 'string',
   })
+  .option('ds.generatedStylesRoot', {
+    describe: 'Path to generated styles directory relative from workspace root',
+    type: 'string',
+  })
+  .option('ds.tokens.filePattern', {
+    describe:
+      'Glob pattern used to discover token CSS files within ds.generatedStylesRoot (default: "**/semantic.css")',
+    type: 'string',
+  })
+  .option('ds.tokens.propertyPrefix', {
+    describe:
+      'When set, only CSS custom properties whose name starts with this prefix are extracted. When omitted all custom properties are included (default: null)',
+    type: 'string',
+  })
+  .option('ds.tokens.scopeStrategy', {
+    describe:
+      'How directory structure maps to token scope. "flat": no scope metadata. "brand-theme": path segments map to brand/theme scope keys (default: "flat")',
+    type: 'string',
+  })
+  .option('ds.tokens.categoryInference', {
+    describe:
+      'Strategy for categorising tokens. "by-prefix" uses longest prefix match from categoryPrefixMap, "by-value" infers category from the CSS value pattern (hex→color, px→spacing, etc.), "none" skips categorisation (default: "by-prefix")',
+    type: 'string',
+  })
   .option('sse', {
     describe: 'Configure the server to use SSE (Server-Sent Events)',
     type: 'boolean',
@@ -64,9 +88,22 @@ const { workspaceRoot, ds } = argv as unknown as {
     storybookDocsRoot?: string;
     deprecatedCssClassesPath?: string;
     uiRoot: string;
+    generatedStylesRoot?: string;
+    tokens?: {
+      filePattern?: string;
+      propertyPrefix?: string;
+      scopeStrategy?: string;
+      categoryInference?: string;
+    };
   };
 };
-const { storybookDocsRoot, deprecatedCssClassesPath, uiRoot } = ds;
+const {
+  storybookDocsRoot,
+  deprecatedCssClassesPath,
+  uiRoot,
+  generatedStylesRoot,
+  tokens,
+} = ds;
 
 async function startServer() {
   const server = await AngularMcpServerWrapper.create({
@@ -75,8 +112,10 @@ async function startServer() {
       storybookDocsRoot,
       deprecatedCssClassesPath,
       uiRoot,
+      generatedStylesRoot,
+      ...(tokens ? { tokens } : {}),
     },
-  });
+  } as Parameters<typeof AngularMcpServerWrapper.create>[0]);
 
   if (argv.sse) {
     const port = argv.port ?? 9921;

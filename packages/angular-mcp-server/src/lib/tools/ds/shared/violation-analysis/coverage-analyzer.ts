@@ -1,5 +1,6 @@
 import { dsComponentCoveragePlugin } from '@push-based/ds-component-coverage';
 import * as process from 'node:process';
+import { globToRegex } from '@push-based/utils';
 import { validateDsComponentsArray } from '../../../../validation/ds-components-file-loader.validation.js';
 import {
   ReportCoverageParams,
@@ -39,31 +40,9 @@ function normalizeExcludePatterns(
 }
 
 /**
- * Converts a glob pattern to a regular expression.
- * Supports: *, **, ?
+ * Converts a glob pattern to a regular expression — delegates to shared utility.
+ * Local `validateGlobPattern` kept for domain-specific error messaging.
  */
-function globToRegex(pattern: string): RegExp {
-  let regexPattern = pattern
-    .replace(/[.+^${}()|[\]\\]/g, '\\$&')
-    .replace(/\?/g, '[^/]')
-    .replace(/\*\*/g, '<!DOUBLESTAR!>')
-    .replace(/\*/g, '[^/]*')
-    .replace(/<!DOUBLESTAR!>/g, '.*');
-
-  if (pattern.startsWith('**/')) {
-    regexPattern = regexPattern.replace(/^\.\*\//, '');
-    regexPattern = `^(?:.*\\/)?${regexPattern}`;
-  } else {
-    regexPattern = `^${regexPattern}`;
-  }
-
-  if (!regexPattern.endsWith('$')) {
-    regexPattern = `${regexPattern}$`;
-  }
-
-  return new RegExp(regexPattern);
-}
-
 function validateGlobPattern(pattern: string): void {
   try {
     globToRegex(pattern);

@@ -93,14 +93,42 @@ The MCP SDK auto-validates every call against the schema – no manual parsing r
 
 ## 6. Configuration Options
 
+### Core Options
+
 | Option | Type | Description |
 |--------|------|-------------|
 | `workspaceRoot` | absolute path | Root of the Nx/Angular workspace. |
 | `ds.storybookDocsRoot` | relative path | Path (from root) to Storybook MDX/Docs for DS components. |
 | `ds.deprecatedCssClassesPath` | relative path | JS file mapping components → deprecated CSS classes. |
 | `ds.uiRoot` | relative path | Folder containing raw design-system component source. |
+| `ds.generatedStylesRoot` | relative path | Directory containing generated design token CSS files. Enables token-aware features when provided. |
+
+### Token Configuration (`ds.tokens.*`)
+
+These options control how design tokens are discovered, organised, and categorised. All have defaults and are only relevant when `ds.generatedStylesRoot` is configured.
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `ds.tokens.filePattern` | string | `**/semantic.css` | Glob pattern to discover token files inside `generatedStylesRoot`. |
+| `ds.tokens.propertyPrefix` | string \| null | `null` | When set, only properties starting with this prefix are loaded. |
+| `ds.tokens.scopeStrategy` | enum | `flat` | `flat` or `brand-theme`. Controls how directory structure maps to token scope metadata. `flat`: no scope. `brand-theme`: path segments → brand/theme scope keys. |
+| `ds.tokens.categoryInference` | enum | `by-prefix` | `by-prefix`, `by-value`, or `none`. Controls how tokens are assigned categories. |
+| `ds.tokens.categoryPrefixMap` | Record | `{ color: '--semantic-color', ... }` | Category → prefix mapping (used with `by-prefix`). |
 
 Validation is handled via **Zod** in `angular-mcp-server-options.schema.ts`.
+
+### Token Dataset Storage Model
+
+The token dataset stores one flat array of all loaded `TokenEntry` objects. At construction time, four index maps are built from that array for efficient lookups:
+
+| Index | Type | Behaviour |
+|-------|------|-----------|
+| `byName` | `Map<name, TokenEntry>` | Last-write-wins — only one entry per token name. When the same token appears in multiple brand files, only the last processed entry is kept. |
+| `byValue` | `Map<value, TokenEntry[]>` | All entries with that resolved value are kept. Enables reverse-lookup ("which tokens resolve to `#86b521`?"). |
+| `byCategory` | `Map<category, TokenEntry[]>` | All entries in that category are kept. |
+| `byScopeKey` | `Map<scopeKey, Map<scopeValue, TokenEntry[]>>` | All entries matching a scope dimension are kept. Enables scoped queries like "all tokens where brand = acme". |
+
+For example, if `--semantic-color-primary` appears in 30 brand files with different values, the `tokens` array has 30 entries. `byValue` and `byScopeKey` keep all 30. `byName` only keeps the last one processed.
 
 ---
 
@@ -110,11 +138,22 @@ Validation is handled via **Zod** in `angular-mcp-server-options.schema.ts`.
 models  (types & schemas)
 ├─ utils
 ├─ styles-ast-utils
-└─ angular-ast-utils
-    └─ ds-component-coverage  (top-level plugin)
+│   └─ scss-value-parser  (extracts property-value pairs per selector from SCSS)
+├─ angular-ast-utils
+└─ ds-component-coverage  (top-level plugin)
 ```
 
-These libraries provide AST parsing, file operations, and DS analysis. Tools import them directly; they are **framework-agnostic** and can be unit-tested in isolation.
+The `angular-mcp-server` package also contains shared token infrastructure:
+
+```
+tools/ds/shared/utils/
+├─ css-custom-property-parser.ts  (regex-based CSS --* extraction)
+├─ token-dataset.ts               (queryable token data structure)
+├─ token-dataset-loader.ts        (file discovery, scope, categorisation)
+└─ regex-helpers.ts                (shared regex patterns)
+```
+
+These libraries provide AST parsing, file operations, token loading, and DS analysis. Tools import them directly; they are **framework-agnostic** and can be unit-tested in isolation.
 
 ---
 

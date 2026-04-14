@@ -45,7 +45,8 @@ Instead of the palette-based flow, copy the manual configuration from your works
         "--workspaceRoot=/absolute/path/to/angular-toolkit-mcp",
         "--ds.storybookDocsRoot=packages/minimal-repo/packages/design-system/storybook-host-app/src/components",
         "--ds.deprecatedCssClassesPath=packages/minimal-repo/packages/design-system/component-options.mjs",
-        "--ds.uiRoot=packages/minimal-repo/packages/design-system/ui"
+        "--ds.uiRoot=packages/minimal-repo/packages/design-system/ui",
+        "--ds.generatedStylesRoot=dist/generated/styles"
       ]
     }
   }
@@ -53,6 +54,8 @@ Instead of the palette-based flow, copy the manual configuration from your works
 ```
 
 Add or edit this JSON in **Cursor → Settings → MCP Servers** (or the equivalent dialog in your editor).
+
+> **Note:** `ds.generatedStylesRoot` is optional. When provided, it enables token-aware features (token discovery, categorisation, and querying). When omitted, all existing tools work normally and token features are simply disabled.
 
 ---
 

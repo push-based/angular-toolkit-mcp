@@ -7,6 +7,7 @@ import { COMMON_ANNOTATIONS } from '../shared/models/schema-helpers.js';
 import { getComponentPathsInfo } from './utils/paths-helpers.js';
 import { getComponentDocPathsForName } from './utils/doc-helpers.js';
 import { resolveCrossPlatformPath } from '../shared/utils/cross-platform-path.js';
+import { walkDirectorySync } from '@push-based/utils';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -47,35 +48,6 @@ export const listDsComponentsToolSchema: ToolSchemaOptions = {
     ...COMMON_ANNOTATIONS.readOnly,
   },
 };
-
-function getAllFilesInDirectory(dirPath: string): string[] {
-  const files: string[] = [];
-
-  function walkDirectory(currentPath: string) {
-    try {
-      const items = fs.readdirSync(currentPath);
-
-      for (const item of items) {
-        const fullPath = path.join(currentPath, item);
-        const stat = fs.statSync(fullPath);
-
-        if (stat.isDirectory()) {
-          walkDirectory(fullPath);
-        } else {
-          files.push(fullPath);
-        }
-      }
-    } catch {
-      return;
-    }
-  }
-
-  if (fs.existsSync(dirPath)) {
-    walkDirectory(dirPath);
-  }
-
-  return files;
-}
 
 function kebabCaseToPascalCase(kebabCase: string): string {
   return (
@@ -166,7 +138,7 @@ export const listDsComponentsHandler = createHandler<
 
           let implementationFiles: string[] = [];
           if (includeImplementation) {
-            const srcFiles = getAllFilesInDirectory(pathsInfo.srcPath);
+            const srcFiles = walkDirectorySync(pathsInfo.srcPath);
             implementationFiles = srcFiles.map((file) => `file://${file}`);
           }
 

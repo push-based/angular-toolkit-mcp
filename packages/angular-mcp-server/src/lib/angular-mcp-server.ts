@@ -19,9 +19,15 @@ import { fileURLToPath } from 'node:url';
 import {
   AngularMcpServerOptionsSchema,
   AngularMcpServerOptions,
+  TokensConfig,
 } from './validation/angular-mcp-server-options.schema.js';
 import { validateAngularMcpServerFilesExist } from './validation/file-existence.js';
 import { validateDeprecatedCssClassesFile } from './validation/ds-components-file.validation.js';
+import {
+  loadTokenDataset,
+  createEmptyTokenDataset,
+} from './tools/ds/shared/utils/token-dataset-loader.js';
+import type { TokenDataset } from './tools/ds/shared/utils/token-dataset.js';
 
 export class AngularMcpServerWrapper {
   private readonly mcpServer: McpServer;
@@ -29,6 +35,9 @@ export class AngularMcpServerWrapper {
   private readonly storybookDocsRoot?: string;
   private readonly deprecatedCssClassesPath?: string;
   private readonly uiRoot: string;
+  private readonly generatedStylesRoot?: string;
+  private readonly tokensConfig: TokensConfig;
+  private tokenDataset?: TokenDataset;
 
   /**
    * Private constructor - use AngularMcpServerWrapper.create() instead.
@@ -42,6 +51,8 @@ export class AngularMcpServerWrapper {
     this.storybookDocsRoot = ds.storybookDocsRoot;
     this.deprecatedCssClassesPath = ds.deprecatedCssClassesPath;
     this.uiRoot = ds.uiRoot;
+    this.generatedStylesRoot = ds.generatedStylesRoot;
+    this.tokensConfig = ds.tokens;
 
     this.mcpServer = new McpServer({
       name: 'Angular MCP',
@@ -73,18 +84,35 @@ export class AngularMcpServerWrapper {
     const validatedConfig = AngularMcpServerOptionsSchema.parse(config);
 
     // Validate file existence (optional keys are checked only when provided)
-    validateAngularMcpServerFilesExist(validatedConfig);
+    // Uses returned config which may have generatedStylesRoot cleared if path is invalid
+    const finalConfig = validateAngularMcpServerFilesExist(validatedConfig);
 
     // Load and validate deprecatedCssClassesPath content only if provided
-    if (validatedConfig.ds.deprecatedCssClassesPath) {
-      await validateDeprecatedCssClassesFile(validatedConfig);
+    if (finalConfig.ds.deprecatedCssClassesPath) {
+      await validateDeprecatedCssClassesFile(finalConfig);
     }
 
-    return new AngularMcpServerWrapper(validatedConfig);
+    return new AngularMcpServerWrapper(finalConfig);
   }
 
   getMcpServer(): McpServer {
     return this.mcpServer;
+  }
+
+  async getTokenDataset(): Promise<TokenDataset> {
+    if (!this.generatedStylesRoot) {
+      return createEmptyTokenDataset(
+        '--ds.generatedStylesRoot is required for token functionality',
+      );
+    }
+    if (!this.tokenDataset) {
+      this.tokenDataset = await loadTokenDataset({
+        generatedStylesRoot: this.generatedStylesRoot,
+        workspaceRoot: this.workspaceRoot,
+        tokens: this.tokensConfig,
+      });
+    }
+    return this.tokenDataset;
   }
 
   private registerResources() {
@@ -258,6 +286,8 @@ export class AngularMcpServerWrapper {
                 uiRoot: this.uiRoot,
                 cwd: this.workspaceRoot,
                 workspaceRoot: this.workspaceRoot,
+                generatedStylesRoot: this.generatedStylesRoot,
+                tokensConfig: this.tokensConfig,
               },
             },
           });

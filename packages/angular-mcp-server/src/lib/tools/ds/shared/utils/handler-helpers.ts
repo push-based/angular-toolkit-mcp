@@ -2,6 +2,7 @@ import {
   CallToolRequest,
   CallToolResult,
 } from '@modelcontextprotocol/sdk/types.js';
+import type { TokensConfig } from '../../../../validation/angular-mcp-server-options.schema.js';
 import { validateComponentName } from './component-validation.js';
 import { buildTextResponse, throwError } from './output.utils.js';
 import * as process from 'node:process';
@@ -18,6 +19,8 @@ export interface BaseHandlerOptions {
   storybookDocsRoot?: string;
   deprecatedCssClassesPath?: string;
   uiRoot?: string;
+  generatedStylesRoot?: string;
+  tokensConfig?: TokensConfig;
 }
 
 /**
@@ -29,6 +32,8 @@ export interface HandlerContext {
   storybookDocsRoot?: string;
   deprecatedCssClassesPath?: string;
   uiRoot: string;
+  generatedStylesRoot?: string;
+  tokensConfig?: TokensConfig;
 }
 
 /**
@@ -63,6 +68,8 @@ export function setupHandlerEnvironment(
     storybookDocsRoot: params.storybookDocsRoot,
     deprecatedCssClassesPath: params.deprecatedCssClassesPath,
     uiRoot: params.uiRoot || '',
+    generatedStylesRoot: params.generatedStylesRoot,
+    tokensConfig: params.tokensConfig,
   };
 }
 
