@@ -51,9 +51,9 @@ const argv = yargs(hideBin(process.argv))
       'When set, only CSS custom properties whose name starts with this prefix are extracted. When omitted all custom properties are included (default: null)',
     type: 'string',
   })
-  .option('ds.tokens.directoryStrategy', {
+  .option('ds.tokens.scopeStrategy', {
     describe:
-      'Controls how directory structure maps to token scopes. "flat" treats all files as one set, "brand-theme" derives brand/theme scope from path segments, "auto" infers from directory depth (default: "flat")',
+      'How directory structure maps to token scope. "flat": no scope metadata. "brand-theme": path segments map to brand/theme scope keys (default: "flat")',
     type: 'string',
   })
   .option('ds.tokens.categoryInference', {
@@ -92,7 +92,7 @@ const { workspaceRoot, ds } = argv as unknown as {
     tokens?: {
       filePattern?: string;
       propertyPrefix?: string;
-      directoryStrategy?: string;
+      scopeStrategy?: string;
       categoryInference?: string;
     };
   };

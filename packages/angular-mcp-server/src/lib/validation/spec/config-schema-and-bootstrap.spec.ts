@@ -105,9 +105,9 @@ describe('AngularMcpServerOptionsSchema', () => {
       expect(result.ds.tokens.propertyPrefix).toBeNull();
     });
 
-    it('defaults directoryStrategy to flat', () => {
+    it('defaults scopeStrategy to flat', () => {
       const result = AngularMcpServerOptionsSchema.parse(baseConfig());
-      expect(result.ds.tokens.directoryStrategy).toBe('flat');
+      expect(result.ds.tokens.scopeStrategy).toBe('flat');
     });
 
     it('defaults categoryInference to by-prefix', () => {
@@ -126,26 +126,26 @@ describe('AngularMcpServerOptionsSchema', () => {
         size: '--semantic-size',
         opacity: '--semantic-opacity',
       });
-  });
+    });
   });
 
-  // ---- directoryStrategy enum validation (Req 2.6) ----
-  describe('ds.tokens.directoryStrategy enum', () => {
-    it.each(['flat', 'brand-theme', 'auto'] as const)(
+  // ---- scopeStrategy enum validation (Req 2.6) ----
+  describe('ds.tokens.scopeStrategy enum', () => {
+    it.each(['flat', 'brand-theme'] as const)(
       'accepts valid value: %s',
       (strategy) => {
         const result = AngularMcpServerOptionsSchema.safeParse(
-          baseConfig({ tokens: { directoryStrategy: strategy } }),
+          baseConfig({ tokens: { scopeStrategy: strategy } }),
         );
         expect(result.success).toBe(true);
       },
     );
 
-    it.each(['invalid', 'FLAT', 'brandTheme', ''])(
+    it.each(['invalid', 'FLAT', 'brandTheme', '', 'auto'])(
       'rejects invalid value: %s',
       (strategy) => {
         const result = AngularMcpServerOptionsSchema.safeParse(
-          baseConfig({ tokens: { directoryStrategy: strategy } }),
+          baseConfig({ tokens: { scopeStrategy: strategy } }),
         );
         expect(result.success).toBe(false);
       },
@@ -275,15 +275,16 @@ describe('Property 1: generatedStylesRoot path validation', () => {
 
 /**
  * **Validates: Requirements 2.6**
- * Property 2: Config schema validates directoryStrategy enum
+ * Property 2: Config schema validates scopeStrategy enum
  */
-describe('Property 2: directoryStrategy enum validation', () => {
-  const validValues = ['flat', 'brand-theme', 'auto'];
+describe('Property 2: scopeStrategy enum validation', () => {
+  const validValues = ['flat', 'brand-theme'];
   const invalidValues = [
     'invalid',
     'FLAT',
     'Brand-Theme',
     'AUTO',
+    'auto',
     'none',
     'custom',
     '',
@@ -293,13 +294,13 @@ describe('Property 2: directoryStrategy enum validation', () => {
     'brandTheme',
   ];
 
-  it.each(validValues)('accepts valid directoryStrategy: %s', (value) => {
-    const result = TokensConfigSchema.safeParse({ directoryStrategy: value });
+  it.each(validValues)('accepts valid scopeStrategy: %s', (value) => {
+    const result = TokensConfigSchema.safeParse({ scopeStrategy: value });
     expect(result.success).toBe(true);
   });
 
-  it.each(invalidValues)('rejects invalid directoryStrategy: %s', (value) => {
-    const result = TokensConfigSchema.safeParse({ directoryStrategy: value });
+  it.each(invalidValues)('rejects invalid scopeStrategy: %s', (value) => {
+    const result = TokensConfigSchema.safeParse({ scopeStrategy: value });
     expect(result.success).toBe(false);
   });
 });
@@ -396,7 +397,7 @@ describe('Property 21: Backward-compatible config parsing', () => {
       expect(parsed.ds.tokens).toBeDefined();
       expect(parsed.ds.tokens.filePattern).toBe('**/semantic.css');
       expect(parsed.ds.tokens.propertyPrefix).toBeNull();
-      expect(parsed.ds.tokens.directoryStrategy).toBe('flat');
+      expect(parsed.ds.tokens.scopeStrategy).toBe('flat');
       expect(parsed.ds.tokens.categoryInference).toBe('by-prefix');
     },
   );

@@ -44,13 +44,6 @@ export interface ScssParseResult {
   getConsumptions(): ScssPropertyEntry[];
 }
 
-/**
- * Options for the SCSS Value Parser.
- * Reserved for future extensions.
- */
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ScssValueParserOptions {}
-
 const VAR_REFERENCE_PATTERN = /var\(\s*--[\w-]+/;
 
 /**
@@ -77,10 +70,7 @@ function resolveSelector(node: Declaration): string {
  * - `consumption`: value contains a `var(--*)` reference
  * - `plain`: neither
  */
-function classifyEntry(
-  property: string,
-  value: string,
-): ScssClassification {
+function classifyEntry(property: string, value: string): ScssClassification {
   if (property.startsWith('--')) {
     return 'declaration';
   }
@@ -115,7 +105,6 @@ function createParseResult(entries: ScssPropertyEntry[]): ScssParseResult {
 export async function parseScssContent(
   content: string,
   filePath: string,
-  options?: ScssValueParserOptions,
 ): Promise<ScssParseResult> {
   const entries: ScssPropertyEntry[] = [];
 
@@ -143,7 +132,6 @@ export async function parseScssContent(
  */
 export async function parseScssValues(
   filePath: string,
-  options?: ScssValueParserOptions,
 ): Promise<ScssParseResult> {
   let content: string;
   try {
@@ -151,5 +139,5 @@ export async function parseScssValues(
   } catch {
     return createParseResult([]);
   }
-  return parseScssContent(content, filePath, options);
+  return parseScssContent(content, filePath);
 }

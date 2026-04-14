@@ -49,12 +49,8 @@ export async function loadTokenDataset(
     );
   }
 
-  // Determine effective directory strategy
-  const strategy = resolveDirectoryStrategy(
-    tokens.directoryStrategy,
-    files,
-    absRoot,
-  );
+  // Determine effective scope strategy
+  const strategy = resolveScopeStrategy(tokens.scopeStrategy);
 
   // Parse and build tokens
   const allTokens: TokenEntry[] = [];
@@ -110,28 +106,10 @@ function discoverFiles(absRoot: string, filePattern: string): string[] {
 
 type EffectiveStrategy = 'flat' | 'brand-theme';
 
-function resolveDirectoryStrategy(
-  configured: TokensConfig['directoryStrategy'],
-  files: string[],
-  absRoot: string,
+function resolveScopeStrategy(
+  configured: TokensConfig['scopeStrategy'],
 ): EffectiveStrategy {
-  if (configured === 'flat') return 'flat';
-  if (configured === 'brand-theme') return 'brand-theme';
-
-  // auto: infer from max directory depth
-  const maxDepth = computeMaxDepth(files, absRoot);
-  return maxDepth >= 2 ? 'brand-theme' : 'flat';
-}
-
-function computeMaxDepth(files: string[], absRoot: string): number {
-  let max = 0;
-  for (const filePath of files) {
-    const rel = path.relative(absRoot, path.dirname(filePath));
-    if (rel === '' || rel === '.') continue;
-    const depth = rel.split(path.sep).length;
-    if (depth > max) max = depth;
-  }
-  return max;
+  return configured;
 }
 
 function computeScope(

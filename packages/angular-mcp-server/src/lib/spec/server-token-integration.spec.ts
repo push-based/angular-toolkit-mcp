@@ -123,7 +123,7 @@ describe('Server bootstrap with token config (integration)', () => {
         uiRoot,
         tokens: {
           filePattern: '**/custom.css',
-          directoryStrategy: 'brand-theme',
+          scopeStrategy: 'brand-theme',
           categoryInference: 'by-value',
         },
       },

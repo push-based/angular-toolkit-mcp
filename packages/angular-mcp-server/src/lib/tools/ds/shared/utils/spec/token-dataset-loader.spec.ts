@@ -82,7 +82,7 @@ describe('loadTokenDataset — empty dataset with diagnostic when glob matches z
 // Unit Tests — flat directory strategy
 // ---------------------------------------------------------------------------
 
-describe('loadTokenDataset — flat directory strategy', () => {
+describe('loadTokenDataset — flat scope strategy', () => {
   it('produces empty scope for all tokens', async () => {
     const stylesDir = makeTempDir('flat-strategy');
     writeCssFile(
@@ -93,7 +93,7 @@ describe('loadTokenDataset — flat directory strategy', () => {
     const ds = await loadTokenDataset({
       generatedStylesRoot: path.relative(tmpRoot, stylesDir),
       workspaceRoot: tmpRoot,
-      tokens: { ...defaultTokensConfig(), directoryStrategy: 'flat' },
+      tokens: { ...defaultTokensConfig(), scopeStrategy: 'flat' },
     });
 
     expect(ds.isEmpty).toBe(false);
@@ -108,7 +108,7 @@ describe('loadTokenDataset — flat directory strategy', () => {
 // Unit Tests — brand-theme directory strategy
 // ---------------------------------------------------------------------------
 
-describe('loadTokenDataset — brand-theme directory strategy', () => {
+describe('loadTokenDataset — brand-theme scope strategy', () => {
   it('assigns correct scope from path segments', async () => {
     const stylesDir = makeTempDir('brand-theme-strategy');
     writeCssFile(
@@ -127,7 +127,7 @@ describe('loadTokenDataset — brand-theme directory strategy', () => {
     const ds = await loadTokenDataset({
       generatedStylesRoot: path.relative(tmpRoot, stylesDir),
       workspaceRoot: tmpRoot,
-      tokens: { ...defaultTokensConfig(), directoryStrategy: 'brand-theme' },
+      tokens: { ...defaultTokensConfig(), scopeStrategy: 'brand-theme' },
     });
 
     expect(ds.isEmpty).toBe(false);
@@ -156,53 +156,11 @@ describe('loadTokenDataset — brand-theme directory strategy', () => {
     const ds = await loadTokenDataset({
       generatedStylesRoot: path.relative(tmpRoot, stylesDir),
       workspaceRoot: tmpRoot,
-      tokens: { ...defaultTokensConfig(), directoryStrategy: 'brand-theme' },
+      tokens: { ...defaultTokensConfig(), scopeStrategy: 'brand-theme' },
     });
 
     expect(ds.tokens.length).toBe(1);
     expect(ds.tokens[0].scope).toEqual({ brand: 'acme' });
-  });
-});
-
-// ---------------------------------------------------------------------------
-// Unit Tests — auto directory strategy
-// ---------------------------------------------------------------------------
-
-describe('loadTokenDataset — auto directory strategy', () => {
-  it('infers flat when files are at root level (depth < 2)', async () => {
-    const stylesDir = makeTempDir('auto-flat');
-    writeCssFile(
-      path.join(stylesDir, 'semantic.css'),
-      `  --semantic-color-primary: #ff0000;`,
-    );
-
-    const ds = await loadTokenDataset({
-      generatedStylesRoot: path.relative(tmpRoot, stylesDir),
-      workspaceRoot: tmpRoot,
-      tokens: { ...defaultTokensConfig(), directoryStrategy: 'auto' },
-    });
-
-    expect(ds.isEmpty).toBe(false);
-    for (const token of ds.tokens) {
-      expect(token.scope).toEqual({});
-    }
-  });
-
-  it('infers brand-theme when files are at depth >= 2', async () => {
-    const stylesDir = makeTempDir('auto-brand-theme');
-    writeCssFile(
-      path.join(stylesDir, 'acme', 'dark', 'semantic.css'),
-      `  --semantic-color-primary: #111111;`,
-    );
-
-    const ds = await loadTokenDataset({
-      generatedStylesRoot: path.relative(tmpRoot, stylesDir),
-      workspaceRoot: tmpRoot,
-      tokens: { ...defaultTokensConfig(), directoryStrategy: 'auto' },
-    });
-
-    expect(ds.isEmpty).toBe(false);
-    expect(ds.tokens[0].scope).toEqual({ brand: 'acme', theme: 'dark' });
   });
 });
 
@@ -442,13 +400,13 @@ describe('loadTokenDataset — propertyPrefix filtering', () => {
 
 /**
  * **Validates: Requirements 5.1**
- * Property 7: Flat directory strategy produces scopeless tokens
+ * Property 7: Flat scope strategy produces scopeless tokens
  *
  * For any set of token files discovered under generatedStylesRoot with
- * directoryStrategy set to 'flat', all tokens in the resulting dataset
+ * scopeStrategy set to 'flat', all tokens in the resulting dataset
  * SHALL have an empty scope (no brand, no theme).
  */
-describe('Property 7: Flat directory strategy produces scopeless tokens', () => {
+describe('Property 7: Flat scope strategy produces scopeless tokens', () => {
   const cases = [
     {
       label: 'single file at root',
@@ -502,7 +460,7 @@ describe('Property 7: Flat directory strategy produces scopeless tokens', () => 
         workspaceRoot: tmpRoot,
         tokens: {
           ...defaultTokensConfig(),
-          directoryStrategy: 'flat',
+          scopeStrategy: 'flat',
           filePattern: filePattern ?? '**/semantic.css',
         },
       });
@@ -517,13 +475,13 @@ describe('Property 7: Flat directory strategy produces scopeless tokens', () => 
 
 /**
  * **Validates: Requirements 5.2, 5.4**
- * Property 8: Brand-theme directory strategy assigns correct scope
+ * Property 8: Brand-theme scope strategy assigns correct scope
  *
  * For any token file at path {generatedStylesRoot}/{segment1}/{segment2}/...
- * with directoryStrategy set to 'brand-theme', the resulting tokens SHALL have
+ * with scopeStrategy set to 'brand-theme', the resulting tokens SHALL have
  * scope keys mapped from the path segments (first → brand, second → theme).
  */
-describe('Property 8: Brand-theme directory strategy assigns correct scope', () => {
+describe('Property 8: Brand-theme scope strategy assigns correct scope', () => {
   const cases = [
     {
       label: 'brand/theme/file → { brand, theme }',
@@ -555,7 +513,7 @@ describe('Property 8: Brand-theme directory strategy assigns correct scope', () 
     const ds = await loadTokenDataset({
       generatedStylesRoot: path.relative(tmpRoot, stylesDir),
       workspaceRoot: tmpRoot,
-      tokens: { ...defaultTokensConfig(), directoryStrategy: 'brand-theme' },
+      tokens: { ...defaultTokensConfig(), scopeStrategy: 'brand-theme' },
     });
 
     expect(ds.isEmpty).toBe(false);

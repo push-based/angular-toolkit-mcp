@@ -11,7 +11,7 @@
 
 /**
  * Scope derived from directory path segments.
- * Keys are determined by the directoryStrategy config.
+ * Keys are determined by the scopeStrategy config.
  * Empty object for flat strategy.
  */
 export interface TokenScope {
