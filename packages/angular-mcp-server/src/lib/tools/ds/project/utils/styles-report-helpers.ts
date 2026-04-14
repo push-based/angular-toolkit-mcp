@@ -1,7 +1,7 @@
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import { parseStylesheet, visitEachChild } from '@push-based/styles-ast-utils';
-import { findAllFiles } from '@push-based/utils';
+import { findAllFiles, escapeRegex } from '@push-based/utils';
 import type { Rule } from 'postcss';
 
 export interface StyleFileReport {
@@ -16,7 +16,6 @@ export interface StyleFileReport {
 const STYLE_EXT = new Set(['.css', '.scss', '.sass', '.less']);
 
 const isStyleFile = (f: string) => STYLE_EXT.has(path.extname(f).toLowerCase());
-const escapeRegex = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 export async function findStyleFiles(dir: string): Promise<string[]> {
   const files: string[] = [];
