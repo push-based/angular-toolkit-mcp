@@ -120,14 +120,18 @@ describe('SCSS Value Parser', () => {
   });
 
   describe('classification: declaration', () => {
-    it('should classify property starting with componentTokenPrefix as declaration', async () => {
+    it('should classify any CSS custom property (starting with --) as declaration', async () => {
       const scss = `:host {
   --ds-button-bg: #ff0000;
+  --semantic-color-primary: #00ff00;
+  --anything: 10px;
 }`;
       const result = await parseScssContent(scss, 'test.scss');
 
-      expect(result.entries).toHaveLength(1);
+      expect(result.entries).toHaveLength(3);
       expect(result.entries[0].classification).toBe('declaration');
+      expect(result.entries[1].classification).toBe('declaration');
+      expect(result.entries[2].classification).toBe('declaration');
     });
   });
 
@@ -154,28 +158,6 @@ describe('SCSS Value Parser', () => {
       expect(result.entries).toHaveLength(2);
       expect(result.entries[0].classification).toBe('plain');
       expect(result.entries[1].classification).toBe('plain');
-    });
-  });
-
-  describe('configurable componentTokenPrefix', () => {
-    it('should use custom prefix for declaration classification', async () => {
-      const scss = `:host {
-  --custom-button-bg: #ff0000;
-  --ds-button-bg: #00ff00;
-}`;
-      const result = await parseScssContent(scss, 'test.scss', {
-        componentTokenPrefix: '--custom-',
-      });
-
-      const customEntry = result.entries.find(
-        (e) => e.property === '--custom-button-bg',
-      );
-      const dsEntry = result.entries.find(
-        (e) => e.property === '--ds-button-bg',
-      );
-
-      expect(customEntry?.classification).toBe('declaration');
-      expect(dsEntry?.classification).not.toBe('declaration');
     });
   });
 
@@ -321,65 +303,62 @@ describe('Property 18: SCSS property extraction round-trip', () => {
 
 /**
  * **Validates: Requirements 9.1, 9.3**
- * Property 19: Token declaration classification by configurable prefix
+ * Property 19: Token declaration classification by CSS custom property syntax
  *
- * For any CSS property name and any componentTokenPrefix, the SCSS Value Parser
- * SHALL classify the property as 'declaration' if and only if the property name
- * starts with the configured prefix.
+ * Any CSS custom property (starting with `--`) SHALL be classified as
+ * 'declaration'. Regular properties SHALL NOT be classified as 'declaration'.
  */
-describe('Property 19: Token declaration classification by configurable prefix', () => {
+describe('Property 19: Token declaration classification by CSS custom property syntax', () => {
   const testCases = [
     {
-      label: 'default prefix --ds- matches --ds-button-bg',
-      prefix: '--ds-',
+      label: '--ds-button-bg is a declaration',
       property: '--ds-button-bg',
       value: '#ff0000',
       expectedClassification: 'declaration' as const,
     },
     {
-      label: 'default prefix --ds- does not match --semantic-color',
-      prefix: '--ds-',
+      label: '--semantic-color is a declaration',
       property: '--semantic-color',
       value: '#ff0000',
-      expectedClassification: 'plain' as const,
+      expectedClassification: 'declaration' as const,
     },
     {
-      label: 'custom prefix --app- matches --app-header-bg',
-      prefix: '--app-',
+      label: '--app-header-bg is a declaration',
       property: '--app-header-bg',
       value: 'blue',
       expectedClassification: 'declaration' as const,
     },
     {
-      label: 'custom prefix --app- does not match --ds-button-bg',
-      prefix: '--app-',
-      property: '--ds-button-bg',
-      value: 'red',
-      expectedClassification: 'plain' as const,
-    },
-    {
-      label: 'prefix --comp- matches --comp-card-radius',
-      prefix: '--comp-',
+      label: '--comp-card-radius is a declaration',
       property: '--comp-card-radius',
       value: '4px',
       expectedClassification: 'declaration' as const,
     },
     {
-      label: 'empty-ish prefix -- matches any custom property',
-      prefix: '--',
+      label: '--anything is a declaration',
       property: '--anything',
       value: '10px',
       expectedClassification: 'declaration' as const,
+    },
+    {
+      label: 'color with var() is consumption, not declaration',
+      property: 'color',
+      value: 'var(--semantic-color-primary)',
+      expectedClassification: 'consumption' as const,
+    },
+    {
+      label: 'padding is plain',
+      property: 'padding',
+      value: '8px',
+      expectedClassification: 'plain' as const,
     },
   ];
 
   it.each(testCases)(
     '$label',
-    async ({ prefix, property, value, expectedClassification }) => {
+    async ({ property, value, expectedClassification }) => {
       const scss = `:host {\n  ${property}: ${value};\n}`;
-      const result = await parseScssContent(scss, 'test.scss', {
-        componentTokenPrefix: prefix,
-      });
+      const result = await parseScssContent(scss, 'test.scss');
 
       expect(result.entries).toHaveLength(1);
       expect(result.entries[0].classification).toBe(expectedClassification);

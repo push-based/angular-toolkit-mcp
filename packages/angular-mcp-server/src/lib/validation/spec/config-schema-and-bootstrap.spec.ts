@@ -126,12 +126,7 @@ describe('AngularMcpServerOptionsSchema', () => {
         size: '--semantic-size',
         opacity: '--semantic-opacity',
       });
-    });
-
-    it('defaults componentTokenPrefix to --ds-', () => {
-      const result = AngularMcpServerOptionsSchema.parse(baseConfig());
-      expect(result.ds.tokens.componentTokenPrefix).toBe('--ds-');
-    });
+  });
   });
 
   // ---- directoryStrategy enum validation (Req 2.6) ----
@@ -403,7 +398,6 @@ describe('Property 21: Backward-compatible config parsing', () => {
       expect(parsed.ds.tokens.propertyPrefix).toBeNull();
       expect(parsed.ds.tokens.directoryStrategy).toBe('flat');
       expect(parsed.ds.tokens.categoryInference).toBe('by-prefix');
-      expect(parsed.ds.tokens.componentTokenPrefix).toBe('--ds-');
     },
   );
 });

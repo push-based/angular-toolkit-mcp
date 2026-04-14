@@ -6,8 +6,8 @@ import { visitEachChild } from './stylesheet.walk.js';
 
 /**
  * Classification of a CSS property entry:
- * - `declaration`: property name starts with the configured componentTokenPrefix (token declaration)
- * - `consumption`: value contains a `var(--*)` reference (token consumption)
+ * - `declaration`: property is a CSS custom property (starts with `--`)
+ * - `consumption`: value contains a `var(--*)` reference
  * - `plain`: neither a declaration nor a consumption
  */
 export type ScssClassification = 'declaration' | 'consumption' | 'plain';
@@ -46,13 +46,11 @@ export interface ScssParseResult {
 
 /**
  * Options for the SCSS Value Parser.
+ * Reserved for future extensions.
  */
-export interface ScssValueParserOptions {
-  /** Prefix for component token declarations. Default: '--ds-' */
-  componentTokenPrefix?: string;
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface ScssValueParserOptions {}
 
-const DEFAULT_COMPONENT_TOKEN_PREFIX = '--ds-';
 const VAR_REFERENCE_PATTERN = /var\(\s*--[\w-]+/;
 
 /**
@@ -73,18 +71,17 @@ function resolveSelector(node: Declaration): string {
 }
 
 /**
- * Classifies a CSS property-value pair based on the configured prefix.
+ * Classifies a CSS property-value pair purely by syntax.
  *
- * - `declaration`: property name starts with componentTokenPrefix
+ * - `declaration`: property is a CSS custom property (starts with `--`)
  * - `consumption`: value contains a `var(--*)` reference
  * - `plain`: neither
  */
 function classifyEntry(
   property: string,
   value: string,
-  componentTokenPrefix: string,
 ): ScssClassification {
-  if (property.startsWith(componentTokenPrefix)) {
+  if (property.startsWith('--')) {
     return 'declaration';
   }
   if (VAR_REFERENCE_PATTERN.test(value)) {
@@ -120,8 +117,6 @@ export async function parseScssContent(
   filePath: string,
   options?: ScssValueParserOptions,
 ): Promise<ScssParseResult> {
-  const componentTokenPrefix =
-    options?.componentTokenPrefix ?? DEFAULT_COMPONENT_TOKEN_PREFIX;
   const entries: ScssPropertyEntry[] = [];
 
   const result = parseStylesheet(content, filePath);
@@ -133,11 +128,7 @@ export async function parseScssContent(
       const property = decl.prop;
       const value = decl.value;
       const line = decl.source?.start?.line ?? -1;
-      const classification = classifyEntry(
-        property,
-        value,
-        componentTokenPrefix,
-      );
+      const classification = classifyEntry(property, value);
 
       entries.push({ property, value, line, selector, classification });
     },

@@ -114,7 +114,6 @@ These options control how design tokens are discovered, organised, and categoris
 | `ds.tokens.directoryStrategy` | enum | `flat` | `flat`, `brand-theme`, or `auto`. Controls how directory structure maps to token scope. |
 | `ds.tokens.categoryInference` | enum | `by-prefix` | `by-prefix`, `by-value`, or `none`. Controls how tokens are assigned categories. |
 | `ds.tokens.categoryPrefixMap` | Record | `{ color: '--semantic-color', ... }` | Category → prefix mapping (used with `by-prefix`). |
-| `ds.tokens.componentTokenPrefix` | string | `--ds-` | Prefix identifying component token declarations in SCSS. |
 
 Validation is handled via **Zod** in `angular-mcp-server-options.schema.ts`.
 

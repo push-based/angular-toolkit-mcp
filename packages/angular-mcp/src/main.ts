@@ -41,11 +41,26 @@ const argv = yargs(hideBin(process.argv))
     describe: 'Path to generated styles directory relative from workspace root',
     type: 'string',
   })
-  .option('ds.tokens.filePattern', { type: 'string' })
-  .option('ds.tokens.propertyPrefix', { type: 'string' })
-  .option('ds.tokens.directoryStrategy', { type: 'string' })
-  .option('ds.tokens.categoryInference', { type: 'string' })
-  .option('ds.tokens.componentTokenPrefix', { type: 'string' })
+  .option('ds.tokens.filePattern', {
+    describe:
+      'Glob pattern used to discover token CSS files within ds.generatedStylesRoot (default: "**/semantic.css")',
+    type: 'string',
+  })
+  .option('ds.tokens.propertyPrefix', {
+    describe:
+      'When set, only CSS custom properties whose name starts with this prefix are extracted. When omitted all custom properties are included (default: null)',
+    type: 'string',
+  })
+  .option('ds.tokens.directoryStrategy', {
+    describe:
+      'Controls how directory structure maps to token scopes. "flat" treats all files as one set, "brand-theme" derives brand/theme scope from path segments, "auto" infers from directory depth (default: "flat")',
+    type: 'string',
+  })
+  .option('ds.tokens.categoryInference', {
+    describe:
+      'Strategy for categorising tokens. "by-prefix" uses longest prefix match from categoryPrefixMap, "by-value" infers category from the CSS value pattern (hex→color, px→spacing, etc.), "none" skips categorisation (default: "by-prefix")',
+    type: 'string',
+  })
   .option('sse', {
     describe: 'Configure the server to use SSE (Server-Sent Events)',
     type: 'boolean',
@@ -79,7 +94,6 @@ const { workspaceRoot, ds } = argv as unknown as {
       propertyPrefix?: string;
       directoryStrategy?: string;
       categoryInference?: string;
-      componentTokenPrefix?: string;
     };
   };
 };

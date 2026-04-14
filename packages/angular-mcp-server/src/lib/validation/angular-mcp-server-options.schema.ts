@@ -20,7 +20,6 @@ export const TokensConfigSchema = z
       size: '--semantic-size',
       opacity: '--semantic-opacity',
     }),
-    componentTokenPrefix: z.string().default('--ds-'),
   })
   .default({});
 

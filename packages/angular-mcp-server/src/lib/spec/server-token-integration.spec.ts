@@ -125,7 +125,6 @@ describe('Server bootstrap with token config (integration)', () => {
           filePattern: '**/custom.css',
           directoryStrategy: 'brand-theme',
           categoryInference: 'by-value',
-          componentTokenPrefix: '--custom-',
         },
       },
     } as Parameters<typeof AngularMcpServerWrapper.create>[0]);
