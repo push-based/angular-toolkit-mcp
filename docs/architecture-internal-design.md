@@ -117,6 +117,19 @@ These options control how design tokens are discovered, organised, and categoris
 
 Validation is handled via **Zod** in `angular-mcp-server-options.schema.ts`.
 
+### Token Dataset Storage Model
+
+The token dataset stores one flat array of all loaded `TokenEntry` objects. At construction time, four index maps are built from that array for efficient lookups:
+
+| Index | Type | Behaviour |
+|-------|------|-----------|
+| `byName` | `Map<name, TokenEntry>` | Last-write-wins — only one entry per token name. When the same token appears in multiple brand files, only the last processed entry is kept. |
+| `byValue` | `Map<value, TokenEntry[]>` | All entries with that resolved value are kept. Enables reverse-lookup ("which tokens resolve to `#86b521`?"). |
+| `byCategory` | `Map<category, TokenEntry[]>` | All entries in that category are kept. |
+| `byScopeKey` | `Map<scopeKey, Map<scopeValue, TokenEntry[]>>` | All entries matching a scope dimension are kept. Enables scoped queries like "all tokens where brand = acme". |
+
+For example, if `--semantic-color-primary` appears in 30 brand files with different values, the `tokens` array has 30 entries. `byValue` and `byScopeKey` keep all 30. `byName` only keeps the last one processed.
+
 ---
 
 ## 7. Shared Libraries in Play
