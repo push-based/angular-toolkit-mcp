@@ -7,16 +7,19 @@
       "path": "../shared/ds-component-coverage"
     },
     {
-      "path": "../shared/styles-ast-utils"
-    },
-    {
       "path": "../shared/angular-ast-utils"
     },
     {
-      "path": "../shared/utils"
+      "path": "../shared/styles-ast-utils"
+    },
+    {
+      "path": "../shared/typescript-ast-utils"
     },
     {
       "path": "../shared/models"
+    },
+    {
+      "path": "../shared/utils"
     },
     {
       "path": "./tsconfig.lib.json"

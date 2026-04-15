@@ -19,7 +19,7 @@ export type ScssClassification = 'declaration' | 'consumption' | 'plain';
 export interface ScssPropertyEntry {
   /** CSS property name, e.g. 'color' or '--ds-button-bg' */
   property: string;
-  /** CSS value, e.g. 'var(--semantic-color-primary)' */
+  /** CSS value, e.g. 'var(--semantic-color-primary)' — does NOT include `!important` */
   value: string;
   /** 1-based line number in the source file, or -1 if unavailable */
   line: number;
@@ -27,6 +27,8 @@ export interface ScssPropertyEntry {
   selector: string;
   /** Classification of this entry */
   classification: ScssClassification;
+  /** Whether the declaration has `!important` */
+  important: boolean;
 }
 
 /**
@@ -118,8 +120,16 @@ export async function parseScssContent(
       const value = decl.value;
       const line = decl.source?.start?.line ?? -1;
       const classification = classifyEntry(property, value);
+      const important = decl.important ?? false;
 
-      entries.push({ property, value, line, selector, classification });
+      entries.push({
+        property,
+        value,
+        line,
+        selector,
+        classification,
+        important,
+      });
     },
   });
 

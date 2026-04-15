@@ -44,8 +44,11 @@ export async function loadTokenDataset(
   const files = discoverFiles(absRoot, tokens.filePattern);
 
   if (files.length === 0) {
+    const patternDisplay = Array.isArray(tokens.filePattern)
+      ? tokens.filePattern.join(', ')
+      : tokens.filePattern;
     return createEmptyTokenDataset(
-      `No files matched pattern '${tokens.filePattern}' in '${generatedStylesRoot}'`,
+      `No files matched pattern '${patternDisplay}' in '${generatedStylesRoot}'`,
     );
   }
 
@@ -90,13 +93,20 @@ export { createEmptyTokenDataset } from './token-dataset.js';
 // ---------------------------------------------------------------------------
 
 /**
- * Discovers files matching a glob-like pattern under the given root.
+ * Discovers files matching one or more glob patterns under the given root.
  */
-function discoverFiles(absRoot: string, filePattern: string): string[] {
+function discoverFiles(
+  absRoot: string,
+  filePattern: string | string[],
+): string[] {
   const allFiles = walkDirectorySync(absRoot);
-  const regex = globToRegex(filePattern);
+  const patterns = Array.isArray(filePattern) ? filePattern : [filePattern];
+  const regexes = patterns.map(globToRegex);
   return allFiles
-    .filter((f) => regex.test(path.relative(absRoot, f).replace(/\\/g, '/')))
+    .filter((f) => {
+      const rel = path.relative(absRoot, f).replace(/\\/g, '/');
+      return regexes.some((re) => re.test(rel));
+    })
     .sort();
 }
 
