@@ -48,7 +48,6 @@ function simulateValidateDegradation(
     // Would run validate mode — return a minimal valid result
     validateResult = {
       semantic: { valid: [], invalid: [] },
-      component: { valid: [], invalid: [] },
     };
   }
 

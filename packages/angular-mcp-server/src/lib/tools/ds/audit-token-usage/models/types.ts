@@ -46,10 +46,6 @@ export interface ValidateResult {
     valid: ValidTokenRef[];
     invalid: InvalidTokenRef[];
   };
-  component: {
-    valid: ValidTokenRef[];
-    invalid: InvalidTokenRef[];
-  };
   brandWarnings?: BrandSpecificWarning[];
 }
 
@@ -62,8 +58,7 @@ export type OverrideMechanism =
   | 'ng-deep'
   | 'class-selector'
   | 'root-theme'
-  | 'important'
-  | 'encapsulation-none';
+  | 'important';
 
 export type OverrideClassification =
   | 'legitimate'
@@ -71,7 +66,6 @@ export type OverrideClassification =
   | 'inline-override'
   | 'deep-override'
   | 'important-override'
-  | 'encapsulation-none'
   | 'scope-violation';
 
 export interface OverrideItem {

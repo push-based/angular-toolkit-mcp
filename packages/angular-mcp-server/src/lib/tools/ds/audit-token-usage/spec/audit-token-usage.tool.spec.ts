@@ -24,23 +24,12 @@ import type {
 // Helpers
 // ---------------------------------------------------------------------------
 
-function makeValidateResult(
-  semanticInvalidCount: number,
-  componentInvalidCount: number,
-): ValidateResult {
+function makeValidateResult(semanticInvalidCount: number): ValidateResult {
   return {
     semantic: {
       valid: [],
       invalid: Array.from({ length: semanticInvalidCount }, (_, i) => ({
         token: `--semantic-invalid-${i}`,
-        file: `file-${i}.scss`,
-        line: i + 1,
-      })),
-    },
-    component: {
-      valid: [],
-      invalid: Array.from({ length: componentInvalidCount }, (_, i) => ({
-        token: `--ds-invalid-${i}`,
         file: `file-${i}.scss`,
         line: i + 1,
       })),
@@ -112,17 +101,10 @@ describe('resolveActiveModes', () => {
 // ---------------------------------------------------------------------------
 
 describe('Property 6: Output structure matches active modes', () => {
-  /**
-   * For any combination of active modes, the AuditTokenUsageResult must
-   * contain a key for each active mode and must not contain a key for
-   * inactive modes. The summary and diagnostics keys must always be present.
-   * **Validates: Requirements 11.1**
-   */
-
   it('both modes active: result has validate, overrides, summary, diagnostics', () => {
     const result = assembleResult(
       ['validate', 'overrides'],
-      makeValidateResult(1, 0),
+      makeValidateResult(1),
       makeOverridesResult(2),
     );
 
@@ -133,11 +115,7 @@ describe('Property 6: Output structure matches active modes', () => {
   });
 
   it('only validate active: result has validate but not overrides', () => {
-    const result = assembleResult(
-      ['validate'],
-      makeValidateResult(2, 1),
-      undefined,
-    );
+    const result = assembleResult(['validate'], makeValidateResult(2));
 
     expect(result).toHaveProperty('validate');
     expect(result).not.toHaveProperty('overrides');
@@ -161,7 +139,7 @@ describe('Property 6: Output structure matches active modes', () => {
   it('summary is always present even with zero issues', () => {
     const result = assembleResult(
       ['validate', 'overrides'],
-      makeValidateResult(0, 0),
+      makeValidateResult(0),
       makeOverridesResult(0),
     );
 
@@ -171,12 +149,9 @@ describe('Property 6: Output structure matches active modes', () => {
   });
 
   it('diagnostics is always present and is an array', () => {
-    const result = assembleResult(
-      ['validate'],
-      makeValidateResult(0, 0),
-      undefined,
-      ['validate mode skipped: token dataset is empty'],
-    );
+    const result = assembleResult(['validate'], makeValidateResult(0), undefined, [
+      'validate mode skipped: token dataset is empty',
+    ]);
 
     expect(result).toHaveProperty('diagnostics');
     expect(Array.isArray(result.diagnostics)).toBe(true);
@@ -185,7 +160,7 @@ describe('Property 6: Output structure matches active modes', () => {
   it('diagnostics is an empty array when no diagnostics exist', () => {
     const result = assembleResult(
       ['validate', 'overrides'],
-      makeValidateResult(1, 0),
+      makeValidateResult(1),
       makeOverridesResult(1),
     );
 
@@ -193,16 +168,10 @@ describe('Property 6: Output structure matches active modes', () => {
   });
 
   it('summary.byMode contains only keys for active modes with results', () => {
-    // Only validate active
-    const validateOnly = assembleResult(
-      ['validate'],
-      makeValidateResult(2, 1),
-      undefined,
-    );
+    const validateOnly = assembleResult(['validate'], makeValidateResult(2));
     expect(validateOnly.summary.byMode).toHaveProperty('validate');
     expect(validateOnly.summary.byMode).not.toHaveProperty('overrides');
 
-    // Only overrides active
     const overridesOnly = assembleResult(
       ['overrides'],
       undefined,
@@ -211,10 +180,9 @@ describe('Property 6: Output structure matches active modes', () => {
     expect(overridesOnly.summary.byMode).not.toHaveProperty('validate');
     expect(overridesOnly.summary.byMode).toHaveProperty('overrides');
 
-    // Both active
     const both = assembleResult(
       ['validate', 'overrides'],
-      makeValidateResult(1, 1),
+      makeValidateResult(1),
       makeOverridesResult(2),
     );
     expect(both.summary.byMode).toHaveProperty('validate');
@@ -227,39 +195,22 @@ describe('Property 6: Output structure matches active modes', () => {
 // ---------------------------------------------------------------------------
 
 describe('Property 7: Summary counts match actual issues', () => {
-  /**
-   * summary.totalIssues must equal the sum of validate.semantic.invalid.length +
-   * validate.component.invalid.length (when validate is present) plus
-   * overrides.items.length (when overrides is present).
-   * summary.byMode.validate must equal the count of invalid tokens, and
-   * summary.byMode.overrides must equal the count of override items.
-   * **Validates: Requirements 11.4**
-   */
-
   it('totalIssues equals invalid tokens + override items (both modes)', () => {
-    const validateResult = makeValidateResult(3, 2); // 5 invalid tokens
-    const overridesResult = makeOverridesResult(4); // 4 overrides
+    const validateResult = makeValidateResult(5);
+    const overridesResult = makeOverridesResult(4);
     const summary = buildSummary(validateResult, overridesResult);
 
-    const expectedValidateIssues =
-      validateResult.semantic.invalid.length +
-      validateResult.component.invalid.length;
-    const expectedOverridesIssues = overridesResult.items.length;
-
     expect(summary.totalIssues).toBe(
-      expectedValidateIssues + expectedOverridesIssues,
+      validateResult.semantic.invalid.length + overridesResult.items.length,
     );
     expect(summary.totalIssues).toBe(9);
   });
 
-  it('byMode.validate equals semantic.invalid + component.invalid count', () => {
-    const validateResult = makeValidateResult(4, 3); // 7 invalid tokens
+  it('byMode.validate equals semantic.invalid count', () => {
+    const validateResult = makeValidateResult(7);
     const summary = buildSummary(validateResult, undefined);
 
-    expect(summary.byMode.validate).toBe(
-      validateResult.semantic.invalid.length +
-        validateResult.component.invalid.length,
-    );
+    expect(summary.byMode.validate).toBe(validateResult.semantic.invalid.length);
     expect(summary.byMode.validate).toBe(7);
   });
 
@@ -272,10 +223,7 @@ describe('Property 7: Summary counts match actual issues', () => {
   });
 
   it('totalIssues is 0 when both modes have zero issues', () => {
-    const summary = buildSummary(
-      makeValidateResult(0, 0),
-      makeOverridesResult(0),
-    );
+    const summary = buildSummary(makeValidateResult(0), makeOverridesResult(0));
 
     expect(summary.totalIssues).toBe(0);
     expect(summary.byMode.validate).toBe(0);
@@ -283,7 +231,7 @@ describe('Property 7: Summary counts match actual issues', () => {
   });
 
   it('totalIssues counts only validate issues when overrides is undefined', () => {
-    const validateResult = makeValidateResult(2, 3);
+    const validateResult = makeValidateResult(5);
     const summary = buildSummary(validateResult, undefined);
 
     expect(summary.totalIssues).toBe(5);
@@ -309,8 +257,8 @@ describe('Property 7: Summary counts match actual issues', () => {
   });
 
   it('byMode breakdown sums to totalIssues', () => {
-    const validateResult = makeValidateResult(6, 2); // 8 invalid
-    const overridesResult = makeOverridesResult(3); // 3 overrides
+    const validateResult = makeValidateResult(6);
+    const overridesResult = makeOverridesResult(3);
     const summary = buildSummary(validateResult, overridesResult);
 
     const byModeSum =
@@ -319,8 +267,8 @@ describe('Property 7: Summary counts match actual issues', () => {
   });
 
   it('handles large counts correctly', () => {
-    const validateResult = makeValidateResult(50, 30); // 80 invalid
-    const overridesResult = makeOverridesResult(100); // 100 overrides
+    const validateResult = makeValidateResult(80);
+    const overridesResult = makeOverridesResult(100);
     const summary = buildSummary(validateResult, overridesResult);
 
     expect(summary.totalIssues).toBe(180);
@@ -337,7 +285,7 @@ describe('formatAuditResult', () => {
   it('includes summary line with total issues', () => {
     const result = assembleResult(
       ['validate', 'overrides'],
-      makeValidateResult(2, 1),
+      makeValidateResult(3),
       makeOverridesResult(3),
     );
     const lines = formatAuditResult(result);
@@ -347,22 +295,14 @@ describe('formatAuditResult', () => {
   });
 
   it('includes invalid token count in summary line', () => {
-    const result = assembleResult(
-      ['validate'],
-      makeValidateResult(3, 0),
-      undefined,
-    );
+    const result = assembleResult(['validate'], makeValidateResult(3));
     const lines = formatAuditResult(result);
 
     expect(lines[0]).toContain('3 invalid token(s)');
   });
 
   it('includes override count in summary line', () => {
-    const result = assembleResult(
-      ['overrides'],
-      undefined,
-      makeOverridesResult(5),
-    );
+    const result = assembleResult(['overrides'], undefined, makeOverridesResult(5));
     const lines = formatAuditResult(result);
 
     expect(lines[0]).toContain('5 override(s)');
@@ -384,7 +324,7 @@ describe('formatAuditResult', () => {
   it('returns array of strings', () => {
     const result = assembleResult(
       ['validate', 'overrides'],
-      makeValidateResult(1, 1),
+      makeValidateResult(1),
       makeOverridesResult(1),
     );
     const lines = formatAuditResult(result);

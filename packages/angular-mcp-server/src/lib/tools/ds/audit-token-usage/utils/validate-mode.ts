@@ -16,8 +16,7 @@ import type {
 // ---------------------------------------------------------------------------
 
 export interface ValidateModeOptions {
-  semanticPrefix: string | null;
-  componentPrefix: string;
+  tokenPrefix: string | null;
   brandName?: string;
   componentName?: string;
   cwd: string;
@@ -120,14 +119,10 @@ export async function runValidateMode(
 ): Promise<ValidateResult> {
   const semanticValid: ValidTokenRef[] = [];
   const semanticInvalid: InvalidTokenRef[] = [];
-  const componentValid: ValidTokenRef[] = [];
-  const componentInvalid: InvalidTokenRef[] = [];
   const brandWarnings: BrandSpecificWarning[] = [];
 
   for (const filePath of styleFiles) {
-    const parsed = await parseScssValues(filePath, {
-      componentTokenPrefix: options.componentPrefix,
-    });
+    const parsed = await parseScssValues(filePath);
     const consumptions = parsed.getConsumptions();
 
     for (const entry of consumptions) {
@@ -137,8 +132,8 @@ export async function runValidateMode(
       for (const tokenName of tokenNames) {
         // --- Semantic token validation ---
         if (
-          options.semanticPrefix &&
-          tokenName.startsWith(options.semanticPrefix)
+          options.tokenPrefix &&
+          tokenName.startsWith(options.tokenPrefix)
         ) {
           const existing = tokenDataset.getByName(tokenName);
 
@@ -164,37 +159,9 @@ export async function runValidateMode(
             const suggestion = findClosestToken(
               tokenName,
               tokenDataset,
-              options.semanticPrefix,
+              options.tokenPrefix,
             );
             semanticInvalid.push({
-              token: tokenName,
-              file: relPath,
-              line: entry.line,
-              ...(suggestion && {
-                suggestion: suggestion.name,
-                editDistance: suggestion.distance,
-              }),
-            });
-          }
-        }
-
-        // --- Component token validation ---
-        if (tokenName.startsWith(options.componentPrefix)) {
-          const existing = tokenDataset.getByName(tokenName);
-
-          if (existing) {
-            componentValid.push({
-              token: tokenName,
-              file: relPath,
-              line: entry.line,
-            });
-          } else {
-            const suggestion = findClosestToken(
-              tokenName,
-              tokenDataset,
-              options.componentPrefix,
-            );
-            componentInvalid.push({
               token: tokenName,
               file: relPath,
               line: entry.line,
@@ -211,7 +178,6 @@ export async function runValidateMode(
 
   return {
     semantic: { valid: semanticValid, invalid: semanticInvalid },
-    component: { valid: componentValid, invalid: componentInvalid },
     ...(brandWarnings.length > 0 && { brandWarnings }),
   };
 }

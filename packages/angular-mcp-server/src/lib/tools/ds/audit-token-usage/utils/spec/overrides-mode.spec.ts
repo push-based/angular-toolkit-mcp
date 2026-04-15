@@ -11,6 +11,9 @@ import type { OverrideMechanism, OverrideItem } from '../../models/types.js';
  * Tests for overrides mode correctness properties:
  * - Property 4: Declaration completeness — every declaration entry maps to an override item
  * - Property 5: Mechanism determinism — detectMechanism returns expected mechanism per priority rules
+ *
+ * Note: ViewEncapsulation.None is now handled separately in the encapsulation section,
+ * so it's not tested here as a mechanism.
  */
 
 // ---------------------------------------------------------------------------
@@ -23,7 +26,6 @@ const VALID_MECHANISMS: OverrideMechanism[] = [
   'class-selector',
   'root-theme',
   'important',
-  'encapsulation-none',
 ];
 
 function makeEntry(
@@ -50,13 +52,15 @@ function makeTokenEntry(
 /**
  * Simulates the overrides-mode pipeline mapping for a single declaration entry.
  * This mirrors the core logic in `runOverridesMode` without file I/O.
+ *
+ * Note: Encapsulation-none entries are now handled separately and don't go
+ * through this path.
  */
 function buildOverrideItem(
   entry: ScssPropertyEntry,
-  isEncapsulationNone: boolean,
   relPath: string,
 ): OverrideItem {
-  const mechanism = detectMechanism(entry, isEncapsulationNone);
+  const mechanism = detectMechanism(entry);
   return {
     file: relPath,
     line: entry.line,
@@ -86,7 +90,7 @@ describe('Property 4: Declaration completeness', () => {
       classification: 'declaration',
     });
 
-    const item = buildOverrideItem(entry, false, 'src/card.component.scss');
+    const item = buildOverrideItem(entry, 'src/card.component.scss');
 
     expect(item.token).toBe(entry.property);
     expect(item.newValue).toBe(entry.value);
@@ -118,7 +122,7 @@ describe('Property 4: Declaration completeness', () => {
     ];
 
     const items = entries.map((e) =>
-      buildOverrideItem(e, false, 'components/button.scss'),
+      buildOverrideItem(e, 'components/button.scss'),
     );
 
     expect(items).toHaveLength(entries.length);
@@ -143,7 +147,7 @@ describe('Property 4: Declaration completeness', () => {
 
     for (const selector of selectors) {
       const entry = makeEntry({ selector, classification: 'declaration' });
-      const item = buildOverrideItem(entry, false, 'test.scss');
+      const item = buildOverrideItem(entry, 'test.scss');
       expect(VALID_MECHANISMS).toContain(item.mechanism);
     }
   });
@@ -157,7 +161,7 @@ describe('Property 4: Declaration completeness', () => {
 
     for (const tokenName of tokenNames) {
       const entry = makeEntry({ property: tokenName });
-      const item = buildOverrideItem(entry, false, 'file.scss');
+      const item = buildOverrideItem(entry, 'file.scss');
       expect(item.token).toBe(tokenName);
     }
   });
@@ -173,7 +177,7 @@ describe('Property 4: Declaration completeness', () => {
 
     for (const value of values) {
       const entry = makeEntry({ value });
-      const item = buildOverrideItem(entry, false, 'file.scss');
+      const item = buildOverrideItem(entry, 'file.scss');
       expect(item.newValue).toBe(value);
     }
   });
@@ -183,22 +187,9 @@ describe('Property 4: Declaration completeness', () => {
 
     for (const line of lines) {
       const entry = makeEntry({ line });
-      const item = buildOverrideItem(entry, false, 'file.scss');
+      const item = buildOverrideItem(entry, 'file.scss');
       expect(item.line).toBe(line);
     }
-  });
-
-  it('handles encapsulation-none flag for declaration entries', () => {
-    const entry = makeEntry({
-      selector: ':host',
-      classification: 'declaration',
-    });
-    const item = buildOverrideItem(entry, true, 'encap.scss');
-
-    expect(item.token).toBe(entry.property);
-    expect(item.newValue).toBe(entry.value);
-    expect(item.mechanism).toBe('encapsulation-none');
-    expect(VALID_MECHANISMS).toContain(item.mechanism);
   });
 });
 
@@ -211,6 +202,10 @@ describe('Property 5: Mechanism determinism', () => {
    * detectMechanism returns expected mechanism for each selector/value
    * combination following priority rules, and same inputs always produce
    * same output.
+   *
+   * Note: ViewEncapsulation.None is now handled separately in the encapsulation
+   * section, so it's not tested here.
+   *
    * **Validates: Requirements 7.1, 7.2, 7.3, 7.4, 7.5**
    */
 
@@ -218,12 +213,7 @@ describe('Property 5: Mechanism determinism', () => {
   describe('!important (highest priority)', () => {
     it('returns "important" when value contains !important', () => {
       const entry = makeEntry({ value: 'red !important', selector: ':host' });
-      expect(detectMechanism(entry, false)).toBe('important');
-    });
-
-    it('!important takes priority over encapsulation-none', () => {
-      const entry = makeEntry({ value: 'red !important', selector: ':host' });
-      expect(detectMechanism(entry, true)).toBe('important');
+      expect(detectMechanism(entry)).toBe('important');
     });
 
     it('!important takes priority over ::ng-deep', () => {
@@ -231,7 +221,7 @@ describe('Property 5: Mechanism determinism', () => {
         value: 'red !important',
         selector: '::ng-deep .child',
       });
-      expect(detectMechanism(entry, false)).toBe('important');
+      expect(detectMechanism(entry)).toBe('important');
     });
 
     it('!important takes priority over :root[data-theme]', () => {
@@ -239,7 +229,7 @@ describe('Property 5: Mechanism determinism', () => {
         value: 'blue !important',
         selector: ':root[data-theme="dark"]',
       });
-      expect(detectMechanism(entry, false)).toBe('important');
+      expect(detectMechanism(entry)).toBe('important');
     });
 
     it('!important takes priority over class selector', () => {
@@ -247,41 +237,15 @@ describe('Property 5: Mechanism determinism', () => {
         value: '10px !important',
         selector: '.my-class',
       });
-      expect(detectMechanism(entry, false)).toBe('important');
+      expect(detectMechanism(entry)).toBe('important');
     });
   });
 
-  // --- Priority 2: encapsulation-none ---
-  describe('encapsulation-none (priority 2)', () => {
-    it('returns "encapsulation-none" when flag is true and no !important', () => {
-      const entry = makeEntry({ value: 'red', selector: ':host' });
-      expect(detectMechanism(entry, true)).toBe('encapsulation-none');
-    });
-
-    it('encapsulation-none takes priority over ::ng-deep', () => {
-      const entry = makeEntry({ value: 'red', selector: '::ng-deep .child' });
-      expect(detectMechanism(entry, true)).toBe('encapsulation-none');
-    });
-
-    it('encapsulation-none takes priority over :root[data-theme]', () => {
-      const entry = makeEntry({
-        value: 'red',
-        selector: ':root[data-theme="dark"]',
-      });
-      expect(detectMechanism(entry, true)).toBe('encapsulation-none');
-    });
-
-    it('encapsulation-none takes priority over class selector', () => {
-      const entry = makeEntry({ value: 'red', selector: '.wrapper' });
-      expect(detectMechanism(entry, true)).toBe('encapsulation-none');
-    });
-  });
-
-  // --- Priority 3: ::ng-deep ---
-  describe('::ng-deep (priority 3)', () => {
+  // --- Priority 2: ::ng-deep ---
+  describe('::ng-deep (priority 2)', () => {
     it('returns "ng-deep" when selector contains ::ng-deep', () => {
       const entry = makeEntry({ value: 'red', selector: '::ng-deep .child' });
-      expect(detectMechanism(entry, false)).toBe('ng-deep');
+      expect(detectMechanism(entry)).toBe('ng-deep');
     });
 
     it('returns "ng-deep" for ::ng-deep with :host prefix', () => {
@@ -289,36 +253,36 @@ describe('Property 5: Mechanism determinism', () => {
         value: 'red',
         selector: ':host ::ng-deep .inner',
       });
-      expect(detectMechanism(entry, false)).toBe('ng-deep');
+      expect(detectMechanism(entry)).toBe('ng-deep');
     });
   });
 
-  // --- Priority 4: :root[data-theme] ---
-  describe(':root[data-theme] (priority 4)', () => {
+  // --- Priority 3: :root[data-theme] ---
+  describe(':root[data-theme] (priority 3)', () => {
     it('returns "root-theme" when selector contains :root[data-theme', () => {
       const entry = makeEntry({
         value: 'red',
         selector: ':root[data-theme="dark"]',
       });
-      expect(detectMechanism(entry, false)).toBe('root-theme');
+      expect(detectMechanism(entry)).toBe('root-theme');
     });
 
     it('returns "root-theme" for :root[data-theme without closing bracket', () => {
       const entry = makeEntry({ value: 'red', selector: ':root[data-theme' });
-      expect(detectMechanism(entry, false)).toBe('root-theme');
+      expect(detectMechanism(entry)).toBe('root-theme');
     });
   });
 
-  // --- Priority 5: :host ---
-  describe(':host (priority 5)', () => {
+  // --- Priority 4: :host ---
+  describe(':host (priority 4)', () => {
     it('returns "host" when selector contains :host', () => {
       const entry = makeEntry({ value: 'red', selector: ':host' });
-      expect(detectMechanism(entry, false)).toBe('host');
+      expect(detectMechanism(entry)).toBe('host');
     });
 
     it('returns "host" for :host with context selector', () => {
       const entry = makeEntry({ value: 'red', selector: ':host(.active)' });
-      expect(detectMechanism(entry, false)).toBe('host');
+      expect(detectMechanism(entry)).toBe('host');
     });
 
     it('returns "host" for :host-context', () => {
@@ -326,25 +290,25 @@ describe('Property 5: Mechanism determinism', () => {
         value: 'red',
         selector: ':host-context(.theme-dark)',
       });
-      expect(detectMechanism(entry, false)).toBe('host');
+      expect(detectMechanism(entry)).toBe('host');
     });
   });
 
-  // --- Priority 6: class-selector ---
-  describe('class-selector (priority 6)', () => {
+  // --- Priority 5: class-selector ---
+  describe('class-selector (priority 5)', () => {
     it('returns "class-selector" for a simple class selector', () => {
       const entry = makeEntry({ value: 'red', selector: '.my-class' });
-      expect(detectMechanism(entry, false)).toBe('class-selector');
+      expect(detectMechanism(entry)).toBe('class-selector');
     });
 
     it('returns "class-selector" for compound class selector', () => {
       const entry = makeEntry({ value: 'red', selector: '.wrapper .inner' });
-      expect(detectMechanism(entry, false)).toBe('class-selector');
+      expect(detectMechanism(entry)).toBe('class-selector');
     });
 
     it('returns "class-selector" for element.class selector', () => {
       const entry = makeEntry({ value: 'red', selector: 'div.container' });
-      expect(detectMechanism(entry, false)).toBe('class-selector');
+      expect(detectMechanism(entry)).toBe('class-selector');
     });
   });
 
@@ -352,88 +316,52 @@ describe('Property 5: Mechanism determinism', () => {
   describe('fallback to host', () => {
     it('returns "host" for bare element selector', () => {
       const entry = makeEntry({ value: 'red', selector: 'div' });
-      expect(detectMechanism(entry, false)).toBe('host');
+      expect(detectMechanism(entry)).toBe('host');
     });
 
     it('returns "host" for empty selector', () => {
       const entry = makeEntry({ value: 'red', selector: '' });
-      expect(detectMechanism(entry, false)).toBe('host');
+      expect(detectMechanism(entry)).toBe('host');
     });
 
     it('returns "host" for :root without data-theme', () => {
       const entry = makeEntry({ value: 'red', selector: ':root' });
-      expect(detectMechanism(entry, false)).toBe('host');
+      expect(detectMechanism(entry)).toBe('host');
     });
   });
 
   // --- Determinism ---
   describe('determinism', () => {
     it('same inputs always produce the same output', () => {
-      const testCases: Array<{
-        entry: ScssPropertyEntry;
-        isEncapNone: boolean;
-      }> = [
-        {
-          entry: makeEntry({ value: 'red !important', selector: ':host' }),
-          isEncapNone: false,
-        },
-        {
-          entry: makeEntry({ value: 'red', selector: ':host' }),
-          isEncapNone: true,
-        },
-        {
-          entry: makeEntry({ value: 'red', selector: '::ng-deep .child' }),
-          isEncapNone: false,
-        },
-        {
-          entry: makeEntry({
-            value: 'red',
-            selector: ':root[data-theme="dark"]',
-          }),
-          isEncapNone: false,
-        },
-        {
-          entry: makeEntry({ value: 'red', selector: ':host' }),
-          isEncapNone: false,
-        },
-        {
-          entry: makeEntry({ value: 'red', selector: '.my-class' }),
-          isEncapNone: false,
-        },
-        {
-          entry: makeEntry({ value: 'red', selector: 'div' }),
-          isEncapNone: false,
-        },
+      const testCases: ScssPropertyEntry[] = [
+        makeEntry({ value: 'red !important', selector: ':host' }),
+        makeEntry({ value: 'red', selector: '::ng-deep .child' }),
+        makeEntry({ value: 'red', selector: ':root[data-theme="dark"]' }),
+        makeEntry({ value: 'red', selector: ':host' }),
+        makeEntry({ value: 'red', selector: '.my-class' }),
+        makeEntry({ value: 'red', selector: 'div' }),
       ];
 
-      for (const { entry, isEncapNone } of testCases) {
-        const result1 = detectMechanism(entry, isEncapNone);
-        const result2 = detectMechanism(entry, isEncapNone);
-        const result3 = detectMechanism(entry, isEncapNone);
+      for (const entry of testCases) {
+        const result1 = detectMechanism(entry);
+        const result2 = detectMechanism(entry);
+        const result3 = detectMechanism(entry);
         expect(result1).toBe(result2);
         expect(result2).toBe(result3);
       }
     });
 
-    it('returns consistent results across all 6 mechanism types', () => {
+    it('returns consistent results across all 5 mechanism types', () => {
       const cases: Array<{
         entry: ScssPropertyEntry;
-        isEncapNone: boolean;
         expected: OverrideMechanism;
       }> = [
         {
           entry: makeEntry({ value: 'red !important', selector: ':host' }),
-          isEncapNone: false,
           expected: 'important',
         },
         {
-          entry: makeEntry({ value: 'red', selector: ':host' }),
-          isEncapNone: true,
-          expected: 'encapsulation-none',
-        },
-        {
           entry: makeEntry({ value: 'red', selector: '::ng-deep .child' }),
-          isEncapNone: false,
           expected: 'ng-deep',
         },
         {
@@ -441,23 +369,20 @@ describe('Property 5: Mechanism determinism', () => {
             value: 'red',
             selector: ':root[data-theme="dark"]',
           }),
-          isEncapNone: false,
           expected: 'root-theme',
         },
         {
           entry: makeEntry({ value: 'red', selector: ':host' }),
-          isEncapNone: false,
           expected: 'host',
         },
         {
           entry: makeEntry({ value: 'red', selector: '.wrapper' }),
-          isEncapNone: false,
           expected: 'class-selector',
         },
       ];
 
-      for (const { entry, isEncapNone, expected } of cases) {
-        expect(detectMechanism(entry, isEncapNone)).toBe(expected);
+      for (const { entry, expected } of cases) {
+        expect(detectMechanism(entry)).toBe(expected);
       }
     });
   });
@@ -468,21 +393,19 @@ describe('Property 5: Mechanism determinism', () => {
 // ---------------------------------------------------------------------------
 
 describe('classifyOverride', () => {
-  it('returns "encapsulation-none" when isEncapsulationNone is true', () => {
-    const entry = makeEntry({ selector: ':host' });
-    expect(classifyOverride(entry, undefined, true)).toBe('encapsulation-none');
-  });
+  /**
+   * Note: ViewEncapsulation.None is now handled separately in the encapsulation
+   * section, so classifyOverride no longer handles it.
+   */
 
   it('returns "important-override" when value contains !important', () => {
     const entry = makeEntry({ value: 'red !important', selector: ':host' });
-    expect(classifyOverride(entry, undefined, false)).toBe(
-      'important-override',
-    );
+    expect(classifyOverride(entry, undefined)).toBe('important-override');
   });
 
   it('returns "deep-override" when selector contains ::ng-deep', () => {
     const entry = makeEntry({ value: 'red', selector: '::ng-deep .child' });
-    expect(classifyOverride(entry, undefined, false)).toBe('deep-override');
+    expect(classifyOverride(entry, undefined)).toBe('deep-override');
   });
 
   it('returns "legitimate" when original token has theme scope', () => {
@@ -490,7 +413,7 @@ describe('classifyOverride', () => {
     const original = makeTokenEntry('--ds-button-bg', '#000', {
       theme: 'dark',
     });
-    expect(classifyOverride(entry, original, false)).toBe('legitimate');
+    expect(classifyOverride(entry, original)).toBe('legitimate');
   });
 
   it('returns "legitimate" when selector contains :root[data-theme', () => {
@@ -498,23 +421,21 @@ describe('classifyOverride', () => {
       value: 'red',
       selector: ':root[data-theme="dark"]',
     });
-    expect(classifyOverride(entry, undefined, false)).toBe('legitimate');
+    expect(classifyOverride(entry, undefined)).toBe('legitimate');
   });
 
   it('returns "component-override" when selector contains :host', () => {
     const entry = makeEntry({ value: 'red', selector: ':host' });
-    expect(classifyOverride(entry, undefined, false)).toBe(
-      'component-override',
-    );
+    expect(classifyOverride(entry, undefined)).toBe('component-override');
   });
 
   it('returns "inline-override" when selector is a class selector', () => {
     const entry = makeEntry({ value: 'red', selector: '.my-class' });
-    expect(classifyOverride(entry, undefined, false)).toBe('inline-override');
+    expect(classifyOverride(entry, undefined)).toBe('inline-override');
   });
 
   it('returns "scope-violation" as fallback', () => {
     const entry = makeEntry({ value: 'red', selector: 'div' });
-    expect(classifyOverride(entry, undefined, false)).toBe('scope-violation');
+    expect(classifyOverride(entry, undefined)).toBe('scope-violation');
   });
 });

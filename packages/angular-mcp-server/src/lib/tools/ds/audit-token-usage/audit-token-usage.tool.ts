@@ -10,6 +10,7 @@ import {
 import { resolveCrossPlatformPath } from '../shared/utils/cross-platform-path.js';
 import { DEFAULT_OUTPUT_BASE } from '../shared/constants.js';
 import { loadTokenDataset } from '../shared/utils/token-dataset-loader.js';
+import type { TokenDataset } from '../shared/utils/token-dataset.js';
 import { findStyleFiles } from '../project/utils/styles-report-helpers.js';
 
 import { auditTokenUsageSchema } from './models/schema.js';
@@ -31,8 +32,21 @@ import { runOverridesMode } from './utils/overrides-mode.js';
 const AUDIT_OUTPUT_SUBDIR = 'audit-token-usage';
 
 // ---------------------------------------------------------------------------
-// Exported helpers (for testing in Task 7.2)
+// Exported helpers
 // ---------------------------------------------------------------------------
+
+/**
+ * Derives the token prefix from the dataset when not explicitly configured.
+ * Extracts the leading segment from the first token name
+ * (e.g. '--semantic-color-primary' → '--semantic-').
+ * Falls back to '--semantic-' if the dataset is empty or the pattern doesn't match.
+ */
+export function deriveSemanticPrefix(dataset: TokenDataset): string {
+  const first = dataset.tokens[0];
+  if (!first) return '--semantic-';
+  const match = first.name.match(/^(--[\w]+-)/);
+  return match ? match[1] : '--semantic-';
+}
 
 /**
  * Resolves the active audit modes from the user-provided `modes` parameter.
@@ -55,19 +69,13 @@ export function buildSummary(
   overridesResult: OverridesResult | undefined,
 ): AuditSummary {
   const validateIssues = validateResult
-    ? validateResult.semantic.invalid.length +
-      validateResult.component.invalid.length
+    ? validateResult.semantic.invalid.length
     : 0;
-
   const overridesIssues = overridesResult ? overridesResult.items.length : 0;
 
   const byMode: AuditSummary['byMode'] = {};
-  if (validateResult !== undefined) {
-    byMode.validate = validateIssues;
-  }
-  if (overridesResult !== undefined) {
-    byMode.overrides = overridesIssues;
-  }
+  if (validateResult !== undefined) byMode.validate = validateIssues;
+  if (overridesResult !== undefined) byMode.overrides = overridesIssues;
 
   return {
     totalIssues: validateIssues + overridesIssues,
@@ -84,10 +92,8 @@ function applyExcludePatterns(
   patterns: string | string[] | undefined,
 ): string[] {
   if (!patterns) return files;
-
   const normalized = Array.isArray(patterns) ? patterns : [patterns];
   if (normalized.length === 0) return files;
-
   const regexes = normalized.map(globToRegex);
   return files.filter(
     (f) => !regexes.some((re) => re.test(f.replace(/\\/g, '/'))),
@@ -107,13 +113,12 @@ async function persistResult(
   result: AuditTokenUsageResult,
   directory: string,
   cwd: string,
-): Promise<string> {
+): Promise<void> {
   const outputDir = join(cwd, DEFAULT_OUTPUT_BASE, AUDIT_OUTPUT_SUBDIR);
   const filename = generateFilename(directory);
   const filePath = join(outputDir, filename);
   await mkdir(outputDir, { recursive: true });
   await writeFile(filePath, JSON.stringify(result, null, 2), 'utf-8');
-  return filePath;
 }
 
 // ---------------------------------------------------------------------------
@@ -152,7 +157,7 @@ export function formatAuditResult(result: AuditTokenUsageResult): string[] {
 
   // ── Invalid tokens (validate mode) ──
   if (result.validate) {
-    const { semantic, component } = result.validate;
+    const { semantic } = result.validate;
 
     if (semantic.invalid.length > 0) {
       lines.push('');
@@ -163,20 +168,8 @@ export function formatAuditResult(result: AuditTokenUsageResult): string[] {
         let entry = `  ${ref.token}  ${ref.file}:${ref.line}`;
         if (ref.suggestion) {
           entry += `  → did you mean "${ref.suggestion}"? (distance ${ref.editDistance})`;
-        }
-        lines.push(entry);
-      }
-    }
-
-    if (component.invalid.length > 0) {
-      lines.push('');
-      lines.push(DIVIDER);
-      lines.push(`❌ Invalid component tokens (${component.invalid.length})`);
-      lines.push(DIVIDER);
-      for (const ref of component.invalid) {
-        let entry = `  ${ref.token}  ${ref.file}:${ref.line}`;
-        if (ref.suggestion) {
-          entry += `  → did you mean "${ref.suggestion}"? (distance ${ref.editDistance})`;
+        } else {
+          entry += `  [not found]`;
         }
         lines.push(entry);
       }
@@ -205,7 +198,7 @@ export function formatAuditResult(result: AuditTokenUsageResult): string[] {
     lines.push(DIVIDER);
     for (const item of result.overrides.items) {
       let entry = `  ${item.token}  ${item.file}:${item.line}  [${item.mechanism}]`;
-      if (item.classification && item.classification !== item.mechanism) {
+      if (item.classification) {
         entry += `  (${item.classification})`;
       }
       if (item.newValue) {
@@ -219,7 +212,7 @@ export function formatAuditResult(result: AuditTokenUsageResult): string[] {
     }
 
     lines.push('');
-    lines.push(`  Mechanism breakdown:`);
+    lines.push(`\r\n  Mechanism breakdown:`);
     for (const [mechanism, count] of Object.entries(
       result.overrides.byMechanism,
     )) {
@@ -227,6 +220,7 @@ export function formatAuditResult(result: AuditTokenUsageResult): string[] {
     }
 
     if (result.overrides.byClassification) {
+      lines.push('');
       lines.push(`  Classification breakdown:`);
       for (const [classification, count] of Object.entries(
         result.overrides.byClassification,
@@ -255,11 +249,9 @@ async function handleAuditTokenUsage(
   let styleFiles = await findStyleFiles(absDir);
   styleFiles = applyExcludePatterns(styleFiles, params.excludePatterns);
 
-  // 3. Resolve token prefixes
-  const semanticPrefix =
+  // 3. Resolve token prefix: explicit param > config > derived from dataset > null
+  const configuredPrefix =
     params.tokenPrefix ?? context.tokensConfig?.propertyPrefix ?? null;
-  const componentPrefix =
-    params.tokenPrefix ?? context.tokensConfig?.componentTokenPrefix ?? '--ds-';
 
   // 4. Load token dataset (if generatedStylesRoot available)
   const tokenDataset =
@@ -275,6 +267,13 @@ async function handleAuditTokenUsage(
   let validateResult: ValidateResult | undefined;
   let overridesResult: OverridesResult | undefined;
 
+  // Derive tokenPrefix: configured value takes priority, otherwise infer from dataset
+  const tokenPrefix =
+    configuredPrefix ??
+    (tokenDataset && !tokenDataset.isEmpty
+      ? deriveSemanticPrefix(tokenDataset)
+      : null);
+
   // 5. Run validate mode
   if (activeModes.includes('validate')) {
     if (!tokenDataset) {
@@ -288,8 +287,7 @@ async function handleAuditTokenUsage(
       );
     } else {
       validateResult = await runValidateMode(styleFiles, tokenDataset, {
-        semanticPrefix,
-        componentPrefix,
+        tokenPrefix,
         brandName: params.brandName,
         componentName: params.componentName,
         cwd: context.cwd,
@@ -306,8 +304,7 @@ async function handleAuditTokenUsage(
     }
     overridesResult = await runOverridesMode(styleFiles, {
       tokenDataset,
-      componentPrefix,
-      semanticPrefix,
+      tokenPrefix,
       cwd: context.cwd,
       workspaceRoot: context.workspaceRoot,
     });
@@ -331,10 +328,9 @@ async function handleAuditTokenUsage(
     );
   }
 
-  // 8. Build summary
+  // 8. Build summary and assemble result
   const summary = buildSummary(validateResult, overridesResult);
 
-  // 9. Assemble result
   const result: AuditTokenUsageResult = {
     ...(validateResult && { validate: validateResult }),
     ...(overridesResult && { overrides: overridesResult }),
@@ -342,7 +338,7 @@ async function handleAuditTokenUsage(
     diagnostics,
   };
 
-  // 10. Persist if requested
+  // 9. Persist if requested
   if (params.saveAsFile) {
     await persistResult(result, params.directory, context.cwd);
   }
