@@ -13,26 +13,23 @@ import type {
 /**
  * Determines the CSS mechanism used for a token override.
  *
- * Note: `ViewEncapsulation.None` is handled separately in the encapsulation
- * section, so it's not included here.
- *
  * Priority order (first match wins):
  * 1. `!important` in value
  * 2. `::ng-deep` in selector
  * 3. `:root[data-theme` in selector
  * 4. `:host` in selector
  * 5. Class selector (`.className`) in selector
- * 6. Fallback: `host`
+ * 6. Fallback: `unknown` (bare element selectors, `:root` without data-theme, etc.)
  */
 export function detectMechanism(entry: ScssPropertyEntry): OverrideMechanism {
   const selector = entry.selector;
-  if (entry.value.includes('!important')) return 'important';
+  if (entry.important) return 'important';
   if (selector.includes('::ng-deep')) return 'ng-deep';
   if (selector.includes(':root[data-theme')) return 'root-theme';
   if (selector.includes(':host')) return 'host';
   // Class selector: has a dot-prefixed class but not :host or ::ng-deep
   if (/\.\w/.test(selector)) return 'class-selector';
-  return 'host'; // fallback for :root or bare selectors
+  return 'unknown';
 }
 
 // ---------------------------------------------------------------------------
@@ -41,9 +38,6 @@ export function detectMechanism(entry: ScssPropertyEntry): OverrideMechanism {
 
 /**
  * Classifies a token override by intent.
- *
- * Note: `encapsulation-none` is handled separately in the encapsulation
- * section, so it's not included here.
  *
  * Classification priority:
  * 1. `important-override` — value contains `!important`
@@ -57,7 +51,7 @@ export function classifyOverride(
   entry: ScssPropertyEntry,
   originalToken: TokenEntry | undefined,
 ): OverrideClassification {
-  if (entry.value.includes('!important')) return 'important-override';
+  if (entry.important) return 'important-override';
   if (entry.selector.includes('::ng-deep')) return 'deep-override';
 
   // Legitimate: override in a theme file (scope has theme key)

@@ -45,7 +45,7 @@ const argv = yargs(hideBin(process.argv))
     describe:
       'Glob pattern used to discover token CSS files within ds.generatedStylesRoot (default: "**/semantic.css")',
     type: 'string',
-    array: true
+    array: true,
   })
   .option('ds.tokens.propertyPrefix', {
     describe:

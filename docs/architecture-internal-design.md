@@ -110,7 +110,7 @@ These options control how design tokens are discovered, organised, and categoris
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `ds.tokens.filePattern` | string | `**/semantic.css` | Glob pattern to discover token files inside `generatedStylesRoot`. |
-| `ds.tokens.propertyPrefix` | string \| null | `null` | When set, only properties starting with this prefix are loaded. |
+| `ds.tokens.propertyPrefix` | string \| null | `null` | When set, only properties starting with this prefix are loaded into the token dataset. **Note**: setting this to a single prefix (e.g. `--semantic-`) means the `report-audit-token-usage` tool will only validate and detect overrides for tokens matching that prefix. Leave as `null` to load all tokens and let the tool derive all prefixes automatically (e.g. `--semantic-` and `--ds-`). |
 | `ds.tokens.scopeStrategy` | enum | `flat` | `flat` or `brand-theme`. Controls how directory structure maps to token scope metadata. `flat`: no scope. `brand-theme`: path segments → brand/theme scope keys. |
 | `ds.tokens.categoryInference` | enum | `by-prefix` | `by-prefix`, `by-value`, or `none`. Controls how tokens are assigned categories. |
 | `ds.tokens.categoryPrefixMap` | Record | `{ color: '--semantic-color', ... }` | Category → prefix mapping (used with `by-prefix`). |

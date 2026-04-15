@@ -11,9 +11,6 @@ import type { OverrideMechanism, OverrideItem } from '../../models/types.js';
  * Tests for overrides mode correctness properties:
  * - Property 4: Declaration completeness — every declaration entry maps to an override item
  * - Property 5: Mechanism determinism — detectMechanism returns expected mechanism per priority rules
- *
- * Note: ViewEncapsulation.None is now handled separately in the encapsulation section,
- * so it's not tested here as a mechanism.
  */
 
 // ---------------------------------------------------------------------------
@@ -26,6 +23,7 @@ const VALID_MECHANISMS: OverrideMechanism[] = [
   'class-selector',
   'root-theme',
   'important',
+  'unknown',
 ];
 
 function makeEntry(
@@ -37,6 +35,7 @@ function makeEntry(
     line: 10,
     selector: ':host',
     classification: 'declaration',
+    important: false,
     ...overrides,
   };
 }
@@ -52,9 +51,6 @@ function makeTokenEntry(
 /**
  * Simulates the overrides-mode pipeline mapping for a single declaration entry.
  * This mirrors the core logic in `runOverridesMode` without file I/O.
- *
- * Note: Encapsulation-none entries are now handled separately and don't go
- * through this path.
  */
 function buildOverrideItem(
   entry: ScssPropertyEntry,
@@ -203,22 +199,19 @@ describe('Property 5: Mechanism determinism', () => {
    * combination following priority rules, and same inputs always produce
    * same output.
    *
-   * Note: ViewEncapsulation.None is now handled separately in the encapsulation
-   * section, so it's not tested here.
-   *
    * **Validates: Requirements 7.1, 7.2, 7.3, 7.4, 7.5**
    */
 
   // --- Priority 1: !important ---
   describe('!important (highest priority)', () => {
-    it('returns "important" when value contains !important', () => {
-      const entry = makeEntry({ value: 'red !important', selector: ':host' });
+    it('returns "important" when entry has !important', () => {
+      const entry = makeEntry({ important: true, selector: ':host' });
       expect(detectMechanism(entry)).toBe('important');
     });
 
     it('!important takes priority over ::ng-deep', () => {
       const entry = makeEntry({
-        value: 'red !important',
+        important: true,
         selector: '::ng-deep .child',
       });
       expect(detectMechanism(entry)).toBe('important');
@@ -226,7 +219,7 @@ describe('Property 5: Mechanism determinism', () => {
 
     it('!important takes priority over :root[data-theme]', () => {
       const entry = makeEntry({
-        value: 'blue !important',
+        important: true,
         selector: ':root[data-theme="dark"]',
       });
       expect(detectMechanism(entry)).toBe('important');
@@ -234,7 +227,7 @@ describe('Property 5: Mechanism determinism', () => {
 
     it('!important takes priority over class selector', () => {
       const entry = makeEntry({
-        value: '10px !important',
+        important: true,
         selector: '.my-class',
       });
       expect(detectMechanism(entry)).toBe('important');
@@ -312,21 +305,21 @@ describe('Property 5: Mechanism determinism', () => {
     });
   });
 
-  // --- Fallback: host ---
-  describe('fallback to host', () => {
-    it('returns "host" for bare element selector', () => {
+  // --- Fallback: unknown ---
+  describe('fallback to unknown', () => {
+    it('returns "unknown" for bare element selector', () => {
       const entry = makeEntry({ value: 'red', selector: 'div' });
-      expect(detectMechanism(entry)).toBe('host');
+      expect(detectMechanism(entry)).toBe('unknown');
     });
 
-    it('returns "host" for empty selector', () => {
+    it('returns "unknown" for empty selector', () => {
       const entry = makeEntry({ value: 'red', selector: '' });
-      expect(detectMechanism(entry)).toBe('host');
+      expect(detectMechanism(entry)).toBe('unknown');
     });
 
-    it('returns "host" for :root without data-theme', () => {
+    it('returns "unknown" for :root without data-theme', () => {
       const entry = makeEntry({ value: 'red', selector: ':root' });
-      expect(detectMechanism(entry)).toBe('host');
+      expect(detectMechanism(entry)).toBe('unknown');
     });
   });
 
@@ -334,7 +327,7 @@ describe('Property 5: Mechanism determinism', () => {
   describe('determinism', () => {
     it('same inputs always produce the same output', () => {
       const testCases: ScssPropertyEntry[] = [
-        makeEntry({ value: 'red !important', selector: ':host' }),
+        makeEntry({ important: true, selector: ':host' }),
         makeEntry({ value: 'red', selector: '::ng-deep .child' }),
         makeEntry({ value: 'red', selector: ':root[data-theme="dark"]' }),
         makeEntry({ value: 'red', selector: ':host' }),
@@ -357,7 +350,7 @@ describe('Property 5: Mechanism determinism', () => {
         expected: OverrideMechanism;
       }> = [
         {
-          entry: makeEntry({ value: 'red !important', selector: ':host' }),
+          entry: makeEntry({ important: true, selector: ':host' }),
           expected: 'important',
         },
         {
@@ -393,13 +386,8 @@ describe('Property 5: Mechanism determinism', () => {
 // ---------------------------------------------------------------------------
 
 describe('classifyOverride', () => {
-  /**
-   * Note: ViewEncapsulation.None is now handled separately in the encapsulation
-   * section, so classifyOverride no longer handles it.
-   */
-
-  it('returns "important-override" when value contains !important', () => {
-    const entry = makeEntry({ value: 'red !important', selector: ':host' });
+  it('returns "important-override" when entry has !important', () => {
+    const entry = makeEntry({ important: true, selector: ':host' });
     expect(classifyOverride(entry, undefined)).toBe('important-override');
   });
 
@@ -437,5 +425,226 @@ describe('classifyOverride', () => {
   it('returns "scope-violation" as fallback', () => {
     const entry = makeEntry({ value: 'red', selector: 'div' });
     expect(classifyOverride(entry, undefined)).toBe('scope-violation');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// runOverridesMode pipeline tests
+// ---------------------------------------------------------------------------
+
+import { runOverridesMode } from '../overrides-mode.js';
+import * as path from 'node:path';
+import * as os from 'node:os';
+import * as fs from 'node:fs';
+import { TokenDatasetImpl } from '../../../shared/utils/token-dataset.js';
+
+function makeTempScss(content: string): string {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'overrides-test-'));
+  const file = path.join(dir, 'test.scss');
+  fs.writeFileSync(file, content, 'utf-8');
+  return file;
+}
+
+describe('runOverridesMode pipeline', () => {
+  const cwd = process.cwd();
+
+  // --- Declaration detection ---
+
+  it('detects a token declaration override via :host selector', async () => {
+    const file = makeTempScss(':host { --ds-button-color-bg: red; }');
+    const result = await runOverridesMode([file], {
+      tokenDataset: null,
+      tokenPrefix: '--ds-',
+      cwd,
+    });
+
+    expect(result.items).toHaveLength(1);
+    expect(result.items[0].token).toBe('--ds-button-color-bg');
+    expect(result.items[0].newValue).toBe('red');
+    expect(result.items[0].mechanism).toBe('host');
+    expect(result.items[0].file).toBe(path.relative(cwd, file));
+  });
+
+  it('detects a token declaration override via ::ng-deep selector', async () => {
+    const file = makeTempScss('::ng-deep .inner { --ds-card-color-bg: blue; }');
+    const result = await runOverridesMode([file], {
+      tokenDataset: null,
+      tokenPrefix: '--ds-',
+      cwd,
+    });
+
+    expect(result.items).toHaveLength(1);
+    expect(result.items[0].mechanism).toBe('ng-deep');
+  });
+
+  // --- matchesPrefix logic ---
+
+  it('skips declarations that do not match tokenPrefix when no dataset', async () => {
+    const file = makeTempScss(':host { --other-token: red; }');
+    const result = await runOverridesMode([file], {
+      tokenDataset: null,
+      tokenPrefix: '--ds-',
+      cwd,
+    });
+
+    expect(result.items).toHaveLength(0);
+  });
+
+  it('detects declarations matched via dataset lookup when tokenPrefix is null', async () => {
+    const dataset = new TokenDatasetImpl([
+      {
+        name: '--ds-button-color-bg',
+        value: '#000',
+        scope: {},
+        sourceFile: 'tokens.css',
+      },
+    ]);
+    const file = makeTempScss(':host { --ds-button-color-bg: red; }');
+    const result = await runOverridesMode([file], {
+      tokenDataset: dataset,
+      tokenPrefix: null,
+      cwd,
+    });
+
+    expect(result.items).toHaveLength(1);
+    expect(result.items[0].token).toBe('--ds-button-color-bg');
+  });
+
+  it('skips declarations not in dataset when tokenPrefix is null', async () => {
+    const dataset = new TokenDatasetImpl([
+      {
+        name: '--ds-button-color-bg',
+        value: '#000',
+        scope: {},
+        sourceFile: 'tokens.css',
+      },
+    ]);
+    const file = makeTempScss(':host { --ds-unknown-token: red; }');
+    const result = await runOverridesMode([file], {
+      tokenDataset: dataset,
+      tokenPrefix: null,
+      cwd,
+    });
+
+    expect(result.items).toHaveLength(0);
+  });
+
+  // --- !important consumption path ---
+
+  it('detects !important on a token consumption', async () => {
+    const file = makeTempScss(
+      '.foo { color: var(--ds-button-color-text) !important; }',
+    );
+    const result = await runOverridesMode([file], {
+      tokenDataset: null,
+      tokenPrefix: '--ds-',
+      cwd,
+    });
+
+    expect(result.items).toHaveLength(1);
+    expect(result.items[0].mechanism).toBe('important');
+    // PostCSS strips !important from value into decl.important — value is clean
+    expect(result.items[0].newValue).toBe('var(--ds-button-color-text)');
+  });
+
+  it('skips !important consumption when tokenPrefix is null', async () => {
+    const file = makeTempScss(
+      '.foo { color: var(--ds-button-color-text) !important; }',
+    );
+    const result = await runOverridesMode([file], {
+      tokenDataset: null,
+      tokenPrefix: null,
+      cwd,
+    });
+
+    // No prefix and no dataset — !important consumption path requires prefix match
+    expect(result.items).toHaveLength(0);
+  });
+
+  // --- byClassification aggregation ---
+
+  it('populates byClassification when dataset is available', async () => {
+    const dataset = new TokenDatasetImpl([
+      {
+        name: '--ds-button-color-bg',
+        value: '#000',
+        scope: {},
+        sourceFile: 'tokens.css',
+      },
+    ]);
+    const file = makeTempScss(':host { --ds-button-color-bg: red; }');
+    const result = await runOverridesMode([file], {
+      tokenDataset: dataset,
+      tokenPrefix: '--ds-',
+      cwd,
+    });
+
+    expect(result.byClassification).toBeDefined();
+    expect(Object.keys(result.byClassification!).length).toBeGreaterThan(0);
+  });
+
+  it('omits byClassification when no dataset is available', async () => {
+    const file = makeTempScss(':host { --ds-button-color-bg: red; }');
+    const result = await runOverridesMode([file], {
+      tokenDataset: null,
+      tokenPrefix: '--ds-',
+      cwd,
+    });
+
+    expect(result.byClassification).toBeUndefined();
+  });
+
+  // --- Zero-config mode ---
+
+  it('returns empty result when both tokenDataset and tokenPrefix are null', async () => {
+    const file = makeTempScss(':host { --ds-button-color-bg: red; }');
+    const result = await runOverridesMode([file], {
+      tokenDataset: null,
+      tokenPrefix: null,
+      cwd,
+    });
+
+    expect(result.items).toHaveLength(0);
+    expect(result.byMechanism).toEqual({});
+    expect(result.byClassification).toBeUndefined();
+  });
+
+  // --- byMechanism aggregation ---
+
+  it('counts mechanisms correctly across multiple overrides', async () => {
+    const file = makeTempScss(`
+      :host { --ds-button-color-bg: red; }
+      :host { --ds-button-color-text: blue; }
+      ::ng-deep .inner { --ds-card-color-bg: green; }
+    `);
+    const result = await runOverridesMode([file], {
+      tokenDataset: null,
+      tokenPrefix: '--ds-',
+      cwd,
+    });
+
+    expect(result.byMechanism['host']).toBe(2);
+    expect(result.byMechanism['ng-deep']).toBe(1);
+  });
+
+  // --- originalValue from dataset ---
+
+  it('includes originalValue when token exists in dataset', async () => {
+    const dataset = new TokenDatasetImpl([
+      {
+        name: '--ds-button-color-bg',
+        value: 'var(--semantic-color-primary)',
+        scope: {},
+        sourceFile: 'tokens.css',
+      },
+    ]);
+    const file = makeTempScss(':host { --ds-button-color-bg: red; }');
+    const result = await runOverridesMode([file], {
+      tokenDataset: dataset,
+      tokenPrefix: '--ds-',
+      cwd,
+    });
+
+    expect(result.items[0].originalValue).toBe('var(--semantic-color-primary)');
   });
 });

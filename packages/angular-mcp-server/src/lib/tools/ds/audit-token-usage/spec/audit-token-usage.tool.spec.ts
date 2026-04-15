@@ -149,9 +149,12 @@ describe('Property 6: Output structure matches active modes', () => {
   });
 
   it('diagnostics is always present and is an array', () => {
-    const result = assembleResult(['validate'], makeValidateResult(0), undefined, [
-      'validate mode skipped: token dataset is empty',
-    ]);
+    const result = assembleResult(
+      ['validate'],
+      makeValidateResult(0),
+      undefined,
+      ['validate mode skipped: token dataset is empty'],
+    );
 
     expect(result).toHaveProperty('diagnostics');
     expect(Array.isArray(result.diagnostics)).toBe(true);
@@ -210,7 +213,9 @@ describe('Property 7: Summary counts match actual issues', () => {
     const validateResult = makeValidateResult(7);
     const summary = buildSummary(validateResult, undefined);
 
-    expect(summary.byMode.validate).toBe(validateResult.semantic.invalid.length);
+    expect(summary.byMode.validate).toBe(
+      validateResult.semantic.invalid.length,
+    );
     expect(summary.byMode.validate).toBe(7);
   });
 
@@ -302,7 +307,11 @@ describe('formatAuditResult', () => {
   });
 
   it('includes override count in summary line', () => {
-    const result = assembleResult(['overrides'], undefined, makeOverridesResult(5));
+    const result = assembleResult(
+      ['overrides'],
+      undefined,
+      makeOverridesResult(5),
+    );
     const lines = formatAuditResult(result);
 
     expect(lines[0]).toContain('5 override(s)');

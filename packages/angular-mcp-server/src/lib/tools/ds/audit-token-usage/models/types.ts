@@ -58,7 +58,8 @@ export type OverrideMechanism =
   | 'ng-deep'
   | 'class-selector'
   | 'root-theme'
-  | 'important';
+  | 'important'
+  | 'unknown';
 
 export type OverrideClassification =
   | 'legitimate'

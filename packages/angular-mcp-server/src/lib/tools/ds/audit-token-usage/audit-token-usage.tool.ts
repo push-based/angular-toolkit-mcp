@@ -36,16 +36,21 @@ const AUDIT_OUTPUT_SUBDIR = 'audit-token-usage';
 // ---------------------------------------------------------------------------
 
 /**
- * Derives the token prefix from the dataset when not explicitly configured.
- * Extracts the leading segment from the first token name
- * (e.g. '--semantic-color-primary' → '--semantic-').
- * Falls back to '--semantic-' if the dataset is empty or the pattern doesn't match.
+ * Derives all distinct token prefixes from the dataset.
+ * Extracts the leading `--segment-` from every token name and deduplicates.
+ *
+ * Example: dataset with `--semantic-color-primary` and `--ds-button-color-bg`
+ * returns `['--semantic-', '--ds-']`.
+ *
+ * Falls back to `['--semantic-']` if the dataset is empty or no names match.
  */
-export function deriveSemanticPrefix(dataset: TokenDataset): string {
-  const first = dataset.tokens[0];
-  if (!first) return '--semantic-';
-  const match = first.name.match(/^(--[\w]+-)/);
-  return match ? match[1] : '--semantic-';
+export function deriveTokenPrefixes(dataset: TokenDataset): string[] {
+  const prefixes = new Set<string>();
+  for (const token of dataset.tokens) {
+    const match = token.name.match(/^(--[\w]+-)/);
+    if (match) prefixes.add(match[1]);
+  }
+  return prefixes.size > 0 ? [...prefixes] : ['--semantic-'];
 }
 
 /**
@@ -94,7 +99,7 @@ function applyExcludePatterns(
   if (!patterns) return files;
   const normalized = Array.isArray(patterns) ? patterns : [patterns];
   if (normalized.length === 0) return files;
-  const regexes = normalized.map(globToRegex);
+  const regexes = normalized.map((p) => globToRegex(p.replace(/\\/g, '/')));
   return files.filter(
     (f) => !regexes.some((re) => re.test(f.replace(/\\/g, '/'))),
   );
@@ -105,7 +110,10 @@ function applyExcludePatterns(
 // ---------------------------------------------------------------------------
 
 function generateFilename(directory: string): string {
-  const sanitised = directory.replace(/[/\\]/g, '-').replace(/^-+|-+$/g, '');
+  const sanitised = directory
+    .replace(/^\.?[/\\]+/, '') // strip leading ./ or /
+    .replace(/[/\\]/g, '-')
+    .replace(/^-+|-+$/g, '');
   return `${sanitised}-audit.json`;
 }
 
@@ -212,7 +220,7 @@ export function formatAuditResult(result: AuditTokenUsageResult): string[] {
     }
 
     lines.push('');
-    lines.push(`\r\n  Mechanism breakdown:`);
+    lines.push('  Mechanism breakdown:');
     for (const [mechanism, count] of Object.entries(
       result.overrides.byMechanism,
     )) {
@@ -249,7 +257,7 @@ async function handleAuditTokenUsage(
   let styleFiles = await findStyleFiles(absDir);
   styleFiles = applyExcludePatterns(styleFiles, params.excludePatterns);
 
-  // 3. Resolve token prefix: explicit param > config > derived from dataset > null
+  // 3. Resolve token prefix: explicit param > config > null
   const configuredPrefix =
     params.tokenPrefix ?? context.tokensConfig?.propertyPrefix ?? null;
 
@@ -267,12 +275,17 @@ async function handleAuditTokenUsage(
   let validateResult: ValidateResult | undefined;
   let overridesResult: OverridesResult | undefined;
 
-  // Derive tokenPrefix: configured value takes priority, otherwise infer from dataset
-  const tokenPrefix =
-    configuredPrefix ??
-    (tokenDataset && !tokenDataset.isEmpty
-      ? deriveSemanticPrefix(tokenDataset)
-      : null);
+  // Resolve tokenPrefixes for validate mode: explicit config takes priority,
+  // otherwise derive all distinct prefixes from the dataset (e.g. ['--semantic-', '--ds-']).
+  const tokenPrefixes: string[] | null =
+    configuredPrefix != null
+      ? [configuredPrefix]
+      : tokenDataset && !tokenDataset.isEmpty
+        ? deriveTokenPrefixes(tokenDataset)
+        : null;
+
+  // Single-prefix string for overrides mode (dataset-based lookup handles multi-prefix there).
+  const tokenPrefix = configuredPrefix;
 
   // 5. Run validate mode
   if (activeModes.includes('validate')) {
@@ -287,7 +300,7 @@ async function handleAuditTokenUsage(
       );
     } else {
       validateResult = await runValidateMode(styleFiles, tokenDataset, {
-        tokenPrefix,
+        tokenPrefixes,
         brandName: params.brandName,
         componentName: params.componentName,
         cwd: context.cwd,
@@ -306,7 +319,6 @@ async function handleAuditTokenUsage(
       tokenDataset,
       tokenPrefix,
       cwd: context.cwd,
-      workspaceRoot: context.workspaceRoot,
     });
   }
 

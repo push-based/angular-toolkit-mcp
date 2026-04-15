@@ -14,7 +14,6 @@ export interface OverridesModeOptions {
   tokenDataset: TokenDataset | null;
   tokenPrefix: string | null;
   cwd: string;
-  workspaceRoot: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -87,7 +86,7 @@ export async function runOverridesMode(
 
     // --- Token consumptions — detect !important only ---
     for (const entry of consumptions) {
-      if (!entry.value.includes('!important')) continue;
+      if (!entry.important) continue;
 
       const tokenMatch = entry.value.match(/var\(\s*(--[\w-]+)/);
       if (!tokenMatch) continue;

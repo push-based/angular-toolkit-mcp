@@ -16,7 +16,7 @@ import type {
 // ---------------------------------------------------------------------------
 
 export interface ValidateModeOptions {
-  tokenPrefix: string | null;
+  tokenPrefixes: string[] | null;
   brandName?: string;
   componentName?: string;
   cwd: string;
@@ -40,6 +40,7 @@ export function extractVarReferences(value: string): string[] {
 /**
  * Finds the closest token name within Levenshtein distance ≤ 3.
  * Returns `null` when no candidate is close enough.
+ * Short-circuits immediately on an exact match (distance 0).
  */
 export function findClosestToken(
   name: string,
@@ -51,6 +52,7 @@ export function findClosestToken(
 
   for (const candidate of candidates) {
     const dist = levenshtein(name, candidate.name);
+    if (dist === 0) return { name: candidate.name, distance: 0 };
     if (dist <= 3 && (best === null || dist < best.distance)) {
       best = { name: candidate.name, distance: dist };
     }
@@ -108,9 +110,12 @@ function checkBrandSpecific(
  * For every style file:
  * 1. Parse with `parseScssValues` to get classified entries.
  * 2. Iterate consumptions and extract `var()` references.
- * 3. Validate each reference against the `TokenDataset`.
- * 4. Compute typo suggestions via Levenshtein distance (threshold ≤ 3).
- * 5. Optionally check brand-specific token availability.
+ * 3. For each reference, check if it starts with any of the configured prefixes.
+ * 4. Validate each matching reference against the `TokenDataset`.
+ * 5. Compute typo suggestions via Levenshtein distance (threshold ≤ 3).
+ * 6. Optionally check brand-specific token availability.
+ *
+ * When `tokenPrefixes` is null, all var() references found in the dataset are validated.
  */
 export async function runValidateMode(
   styleFiles: string[],
@@ -130,47 +135,53 @@ export async function runValidateMode(
       const relPath = path.relative(options.cwd, filePath);
 
       for (const tokenName of tokenNames) {
-        // --- Semantic token validation ---
-        if (
-          options.tokenPrefix &&
-          tokenName.startsWith(options.tokenPrefix)
-        ) {
-          const existing = tokenDataset.getByName(tokenName);
+        // Determine which prefix this token matches, if any
+        const matchedPrefix = options.tokenPrefixes
+          ? options.tokenPrefixes.find((p) => tokenName.startsWith(p))
+          : tokenDataset.getByName(tokenName) !== undefined
+            ? ''
+            : undefined;
 
-          if (existing) {
-            semanticValid.push({
-              token: tokenName,
-              file: relPath,
-              line: entry.line,
-            });
+        if (matchedPrefix === undefined) continue;
 
-            // Brand-specific check
-            if (options.brandName) {
-              checkBrandSpecific(
-                tokenName,
-                tokenDataset,
-                options.brandName,
-                relPath,
-                entry.line,
-                brandWarnings,
-              );
-            }
-          } else {
-            const suggestion = findClosestToken(
+        const existing = tokenDataset.getByName(tokenName);
+
+        if (existing) {
+          semanticValid.push({
+            token: tokenName,
+            file: relPath,
+            line: entry.line,
+          });
+
+          // Brand-specific check
+          if (options.brandName) {
+            checkBrandSpecific(
               tokenName,
               tokenDataset,
-              options.tokenPrefix,
+              options.brandName,
+              relPath,
+              entry.line,
+              brandWarnings,
             );
-            semanticInvalid.push({
-              token: tokenName,
-              file: relPath,
-              line: entry.line,
-              ...(suggestion && {
-                suggestion: suggestion.name,
-                editDistance: suggestion.distance,
-              }),
-            });
           }
+        } else {
+          // Use the matched prefix for scoped candidate search; fall back to full scan
+          const searchPrefix =
+            matchedPrefix || tokenName.match(/^(--[\w]+-)/)?.[1] || '--';
+          const suggestion = findClosestToken(
+            tokenName,
+            tokenDataset,
+            searchPrefix,
+          );
+          semanticInvalid.push({
+            token: tokenName,
+            file: relPath,
+            line: entry.line,
+            ...(suggestion && {
+              suggestion: suggestion.name,
+              editDistance: suggestion.distance,
+            }),
+          });
         }
       }
     }
