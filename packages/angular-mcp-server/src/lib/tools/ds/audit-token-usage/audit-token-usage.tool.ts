@@ -55,12 +55,12 @@ export function deriveTokenPrefixes(dataset: TokenDataset): string[] {
 
 /**
  * Resolves the active audit modes from the user-provided `modes` parameter.
- * Default (`undefined` or `'all'`) → both modes.
+ * Default (`undefined`) or including `'all'` → both modes.
  */
 export function resolveActiveModes(
   modes: AuditTokenUsageOptions['modes'],
 ): AuditMode[] {
-  if (!modes || modes === 'all') {
+  if (!modes || modes.includes('all')) {
     return ['validate', 'overrides'];
   }
   return modes;

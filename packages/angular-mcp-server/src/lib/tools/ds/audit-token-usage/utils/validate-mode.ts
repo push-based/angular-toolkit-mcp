@@ -37,6 +37,11 @@ export function extractVarReferences(value: string): string[] {
   return [...matches].map((m) => m[1]);
 }
 
+export interface TokenSuggestion {
+  name: string;
+  distance: number;
+}
+
 /**
  * Finds the closest token name within Levenshtein distance ≤ 3.
  * Returns `null` when no candidate is close enough.
@@ -46,9 +51,9 @@ export function findClosestToken(
   name: string,
   dataset: TokenDataset,
   prefix: string,
-): { name: string; distance: number } | null {
+): TokenSuggestion | null {
   const candidates = dataset.getByPrefix(prefix);
-  let best: { name: string; distance: number } | null = null;
+  let best: TokenSuggestion | null = null;
 
   for (const candidate of candidates) {
     const dist = levenshtein(name, candidate.name);

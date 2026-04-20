@@ -14,16 +14,11 @@ export const auditTokenUsageSchema: ToolSchemaOptions = {
     'Default mode "all" runs both.',
   inputSchema: createProjectAnalysisSchema({
     modes: {
-      anyOf: [
-        {
-          type: 'array',
-          items: { type: 'string', enum: ['validate', 'overrides'] },
-        },
-        { type: 'string', enum: ['all'] },
-      ],
+      type: 'array',
+      items: { type: 'string', enum: ['validate', 'overrides', 'all'] },
       description:
-        'Modes to run. Default: "all" (both validate and overrides).',
-      default: 'all',
+        'Modes to run. Use "all" to run both validate and overrides. Default: ["all"].',
+      default: ['all'],
     },
     brandName: {
       type: 'string',

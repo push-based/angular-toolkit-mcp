@@ -16,7 +16,10 @@ function extractBraces(pattern: string): {
   const replaced = pattern.replace(
     /\{([^}]+)\}/g,
     (_, alternatives: string) => {
-      const parts = alternatives.split(',').map((s: string) => s.trim());
+      const parts = alternatives
+        .split(',')
+        .map((s: string) => s.trim())
+        .map((s: string) => s.replace(/[.+^${}()|[\]\\*?]/g, '\\$&'));
       const key = `<!BRACE_${counter++}!>`;
       sentinels.set(key, `(${parts.join('|')})`);
       return key;

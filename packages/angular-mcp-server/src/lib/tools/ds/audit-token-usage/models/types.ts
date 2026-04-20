@@ -4,11 +4,11 @@ import type { BaseHandlerOptions } from '../../shared/utils/handler-helpers.js';
 // Input types
 // ============================================================================
 
-export type AuditMode = 'validate' | 'overrides';
+export type AuditMode = 'validate' | 'overrides' | 'all';
 
 export interface AuditTokenUsageOptions extends BaseHandlerOptions {
   directory: string;
-  modes?: AuditMode[] | 'all';
+  modes?: AuditMode[];
   brandName?: string;
   componentName?: string;
   tokenPrefix?: string;

@@ -11,24 +11,9 @@ import {
   TokenDatasetImpl,
 } from '../../shared/utils/token-dataset.js';
 
-/**
- * Validates: Requirements 13.1, 13.2, 13.3, 13.4, 13.5
- *
- * Tests for graceful degradation behaviour:
- * - undefined generatedStylesRoot → validate skipped with diagnostic
- * - empty TokenDataset → validate skipped, diagnostics forwarded
- * - overrides mode works without token dataset (detection-only)
- * - both modes cannot run → actionable error message
- */
-
 // ---------------------------------------------------------------------------
-// Helpers — simulate the handler's degradation logic
+// Helpers
 // ---------------------------------------------------------------------------
-
-/**
- * Mirrors the handler's degradation logic for validate mode.
- * Returns { validateResult, diagnostics } based on the token dataset state.
- */
 function simulateValidateDegradation(
   tokenDataset: { isEmpty: boolean; diagnostics: string[] } | null,
 ): { validateResult: ValidateResult | undefined; diagnostics: string[] } {
@@ -54,10 +39,6 @@ function simulateValidateDegradation(
   return { validateResult, diagnostics };
 }
 
-/**
- * Simulates the handler's degradation logic for overrides mode.
- * Overrides mode always runs, but emits a diagnostic when no token dataset.
- */
 function simulateOverridesDegradation(
   tokenDataset: { isEmpty: boolean; diagnostics: string[] } | null,
 ): { overridesResult: OverridesResult; diagnostics: string[] } {
@@ -78,9 +59,6 @@ function simulateOverridesDegradation(
   return { overridesResult, diagnostics };
 }
 
-/**
- * Assembles a full AuditTokenUsageResult from degradation simulation outputs.
- */
 function assembleResult(
   validateResult: ValidateResult | undefined,
   overridesResult: OverridesResult | undefined,
@@ -96,10 +74,8 @@ function assembleResult(
 }
 
 // ---------------------------------------------------------------------------
-// Requirement 13.1 — undefined generatedStylesRoot → validate skipped
-// ---------------------------------------------------------------------------
 
-describe('Requirement 13.1: validate skipped when generatedStylesRoot is undefined', () => {
+describe('validate skipped when generatedStylesRoot is undefined', () => {
   it('emits diagnostic explaining generatedStylesRoot is required', () => {
     const { validateResult, diagnostics } = simulateValidateDegradation(null);
 
@@ -141,10 +117,8 @@ describe('Requirement 13.1: validate skipped when generatedStylesRoot is undefin
 });
 
 // ---------------------------------------------------------------------------
-// Requirement 13.2 — empty TokenDataset → validate skipped, diagnostics forwarded
-// ---------------------------------------------------------------------------
 
-describe('Requirement 13.2: validate skipped when TokenDataset is empty', () => {
+describe('validate skipped when TokenDataset is empty', () => {
   it('forwards the dataset diagnostic when dataset is empty', () => {
     const emptyDataset = createEmptyTokenDataset(
       "No files matched pattern '**/semantic.css' in 'generated-styles'",
@@ -197,10 +171,8 @@ describe('Requirement 13.2: validate skipped when TokenDataset is empty', () => 
 });
 
 // ---------------------------------------------------------------------------
-// Requirement 13.3 — overrides mode works without token dataset (detection-only)
-// ---------------------------------------------------------------------------
 
-describe('Requirement 13.3: overrides mode runs in detection-only mode without token dataset', () => {
+describe('overrides mode runs in detection-only mode without token dataset', () => {
   it('emits detection-only diagnostic when no token dataset', () => {
     const { diagnostics } = simulateOverridesDegradation(null);
 
@@ -249,10 +221,8 @@ describe('Requirement 13.3: overrides mode runs in detection-only mode without t
 });
 
 // ---------------------------------------------------------------------------
-// Requirement 13.4 — both modes cannot run → actionable error message
-// ---------------------------------------------------------------------------
 
-describe('Requirement 13.4: actionable error when neither mode produces results', () => {
+describe('actionable error when neither mode produces results', () => {
   it('includes actionable guidance when validate is skipped and overrides is empty', () => {
     // Simulate: validate skipped (no generatedStylesRoot), overrides ran but found nothing
     const { validateResult, diagnostics: valDiag } =
@@ -311,10 +281,8 @@ describe('Requirement 13.4: actionable error when neither mode produces results'
 });
 
 // ---------------------------------------------------------------------------
-// Requirement 13.5 — diagnostics array lists skipped modes and reasons
-// ---------------------------------------------------------------------------
 
-describe('Requirement 13.5: diagnostics array lists skipped modes and reasons', () => {
+describe('diagnostics array lists skipped modes and reasons', () => {
   it('collects diagnostics from both validate and overrides degradation', () => {
     const { diagnostics: valDiag } = simulateValidateDegradation(null);
     const { diagnostics: ovDiag } = simulateOverridesDegradation(null);

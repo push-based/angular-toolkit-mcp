@@ -8,15 +8,6 @@ import {
 import { levenshtein } from '../edit-distance.js';
 import type { InvalidTokenRef } from '../../models/types.js';
 
-/**
- * Validates: Requirements 3.1, 3.5, 3.6, 4.1, 4.4, 4.5
- *
- * Tests for validate mode correctness properties:
- * - Property 1: Prefix filtering — extractVarReferences + prefix filter returns only matching tokens
- * - Property 2: Suggestion threshold — findClosestToken returns suggestion iff distance ≤ 3
- * - Property 3: Invalid token report fields — InvalidTokenRef has all required fields
- */
-
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -34,12 +25,6 @@ function buildDataset(tokens: TokenEntry[]): TokenDatasetImpl {
 // ---------------------------------------------------------------------------
 
 describe('Property 1: Prefix filtering', () => {
-  /**
-   * extractVarReferences extracts all var() token names, and filtering by
-   * prefix retains only those starting with the given prefix.
-   * **Validates: Requirements 3.1, 4.1**
-   */
-
   it('extracts a single var() reference', () => {
     const refs = extractVarReferences('var(--ds-button-bg)');
     expect(refs).toEqual(['--ds-button-bg']);
@@ -117,12 +102,6 @@ describe('Property 1: Prefix filtering', () => {
 // ---------------------------------------------------------------------------
 
 describe('Property 2: Suggestion threshold', () => {
-  /**
-   * findClosestToken returns a suggestion iff a candidate exists within
-   * Levenshtein distance ≤ 3, and the returned distance is correct.
-   * **Validates: Requirements 3.5, 4.4**
-   */
-
   const tokens = [
     makeToken('--ds-button-color-bg'),
     makeToken('--ds-button-color-text'),
@@ -220,12 +199,6 @@ describe('Property 2: Suggestion threshold', () => {
 // ---------------------------------------------------------------------------
 
 describe('Property 3: Invalid token report fields', () => {
-  /**
-   * InvalidTokenRef must have non-empty token, file, and line fields.
-   * When a suggestion exists, suggestion and editDistance must also be present.
-   * **Validates: Requirements 3.6, 4.5**
-   */
-
   it('InvalidTokenRef without suggestion has required fields', () => {
     const ref: InvalidTokenRef = {
       token: '--ds-nonexistent-token',

@@ -5,14 +5,6 @@ import type { ScssPropertyEntry } from '@push-based/styles-ast-utils';
 import type { TokenEntry } from '../../../shared/utils/token-dataset.js';
 import type { OverrideMechanism, OverrideItem } from '../../models/types.js';
 
-/**
- * Validates: Requirements 6.1, 6.3, 7.1–7.5
- *
- * Tests for overrides mode correctness properties:
- * - Property 4: Declaration completeness — every declaration entry maps to an override item
- * - Property 5: Mechanism determinism — detectMechanism returns expected mechanism per priority rules
- */
-
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -71,12 +63,6 @@ function buildOverrideItem(
 // ---------------------------------------------------------------------------
 
 describe('Property 4: Declaration completeness', () => {
-  /**
-   * Every ScssPropertyEntry with classification === 'declaration' must appear
-   * in overrides.items with correct token, newValue, file, line, and valid mechanism.
-   * **Validates: Requirements 6.1, 6.3**
-   */
-
   it('maps a single declaration entry to an override item with correct fields', () => {
     const entry = makeEntry({
       property: '--ds-card-color-bg',
@@ -194,14 +180,6 @@ describe('Property 4: Declaration completeness', () => {
 // ---------------------------------------------------------------------------
 
 describe('Property 5: Mechanism determinism', () => {
-  /**
-   * detectMechanism returns expected mechanism for each selector/value
-   * combination following priority rules, and same inputs always produce
-   * same output.
-   *
-   * **Validates: Requirements 7.1, 7.2, 7.3, 7.4, 7.5**
-   */
-
   // --- Priority 1: !important ---
   describe('!important (highest priority)', () => {
     it('returns "important" when entry has !important', () => {

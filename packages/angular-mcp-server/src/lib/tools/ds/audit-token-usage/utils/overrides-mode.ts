@@ -92,11 +92,12 @@ export async function runOverridesMode(
       if (!tokenMatch) continue;
 
       const tokenName = tokenMatch[1];
-      if (
-        options.tokenPrefix == null ||
-        !tokenName.startsWith(options.tokenPrefix)
-      )
-        continue;
+      const matchesConfiguredToken =
+        options.tokenPrefix != null
+          ? tokenName.startsWith(options.tokenPrefix)
+          : options.tokenDataset?.getByName(tokenName) != null;
+
+      if (!matchesConfiguredToken) continue;
 
       const mechanism = 'important' as const;
       mechanismCounts[mechanism] = (mechanismCounts[mechanism] ?? 0) + 1;
@@ -104,7 +105,7 @@ export async function runOverridesMode(
       overrideItems.push({
         file: relPath,
         line: entry.line,
-        token: entry.property,
+        token: tokenName,
         newValue: entry.value,
         mechanism,
         ...(options.tokenDataset && {

@@ -12,14 +12,6 @@ import type {
   OverridesResult,
 } from '../models/types.js';
 
-/**
- * Validates: Requirements 11.1, 11.4
- *
- * Tests for output correctness properties:
- * - Property 6 — Output structure: result contains keys for active modes only, plus summary and diagnostics always present
- * - Property 7 — Summary counts: summary.totalIssues equals sum of invalid tokens + override items, and byMode breakdown matches
- */
-
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -76,8 +68,8 @@ describe('resolveActiveModes', () => {
     expect(resolveActiveModes(undefined)).toEqual(['validate', 'overrides']);
   });
 
-  it('returns both modes for "all" input', () => {
-    expect(resolveActiveModes('all')).toEqual(['validate', 'overrides']);
+  it('returns both modes for ["all"] input', () => {
+    expect(resolveActiveModes(['all'])).toEqual(['validate', 'overrides']);
   });
 
   it('returns only validate when given ["validate"]', () => {
