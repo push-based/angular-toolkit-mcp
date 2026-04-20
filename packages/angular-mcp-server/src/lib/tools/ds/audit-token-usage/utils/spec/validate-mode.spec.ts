@@ -25,6 +25,11 @@ function buildDataset(tokens: TokenEntry[]): TokenDatasetImpl {
 // ---------------------------------------------------------------------------
 
 describe('Property 1: Prefix filtering', () => {
+  /**
+   * extractVarReferences extracts all var() token names, and filtering by
+   * prefix retains only those starting with the given prefix.
+   */
+
   it('extracts a single var() reference', () => {
     const refs = extractVarReferences('var(--ds-button-bg)');
     expect(refs).toEqual(['--ds-button-bg']);
@@ -102,6 +107,11 @@ describe('Property 1: Prefix filtering', () => {
 // ---------------------------------------------------------------------------
 
 describe('Property 2: Suggestion threshold', () => {
+  /**
+   * findClosestToken returns a suggestion iff a candidate exists within
+   * Levenshtein distance ≤ 3, and the returned distance is correct.
+   */
+
   const tokens = [
     makeToken('--ds-button-color-bg'),
     makeToken('--ds-button-color-text'),
@@ -199,6 +209,11 @@ describe('Property 2: Suggestion threshold', () => {
 // ---------------------------------------------------------------------------
 
 describe('Property 3: Invalid token report fields', () => {
+  /**
+   * InvalidTokenRef must have non-empty token, file, and line fields.
+   * When a suggestion exists, suggestion and editDistance must also be present.
+   */
+
   it('InvalidTokenRef without suggestion has required fields', () => {
     const ref: InvalidTokenRef = {
       token: '--ds-nonexistent-token',

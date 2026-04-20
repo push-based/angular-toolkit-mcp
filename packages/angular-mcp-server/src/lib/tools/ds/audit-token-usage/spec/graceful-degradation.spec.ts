@@ -14,6 +14,11 @@ import {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
+
+/**
+ * Mirrors the handler's degradation logic for validate mode.
+ * Returns { validateResult, diagnostics } based on the token dataset state.
+ */
 function simulateValidateDegradation(
   tokenDataset: { isEmpty: boolean; diagnostics: string[] } | null,
 ): { validateResult: ValidateResult | undefined; diagnostics: string[] } {
@@ -39,6 +44,10 @@ function simulateValidateDegradation(
   return { validateResult, diagnostics };
 }
 
+/**
+ * Simulates the handler's degradation logic for overrides mode.
+ * Overrides mode always runs, but emits a diagnostic when no token dataset.
+ */
 function simulateOverridesDegradation(
   tokenDataset: { isEmpty: boolean; diagnostics: string[] } | null,
 ): { overridesResult: OverridesResult; diagnostics: string[] } {
@@ -59,6 +68,9 @@ function simulateOverridesDegradation(
   return { overridesResult, diagnostics };
 }
 
+/**
+ * Assembles a full AuditTokenUsageResult from degradation simulation outputs.
+ */
 function assembleResult(
   validateResult: ValidateResult | undefined,
   overridesResult: OverridesResult | undefined,

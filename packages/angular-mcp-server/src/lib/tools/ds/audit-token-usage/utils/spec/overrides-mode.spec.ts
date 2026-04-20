@@ -63,6 +63,11 @@ function buildOverrideItem(
 // ---------------------------------------------------------------------------
 
 describe('Property 4: Declaration completeness', () => {
+  /**
+   * Every ScssPropertyEntry with classification === 'declaration' must appear
+   * in overrides.items with correct token, newValue, file, line, and valid mechanism.
+   */
+
   it('maps a single declaration entry to an override item with correct fields', () => {
     const entry = makeEntry({
       property: '--ds-card-color-bg',
@@ -180,6 +185,12 @@ describe('Property 4: Declaration completeness', () => {
 // ---------------------------------------------------------------------------
 
 describe('Property 5: Mechanism determinism', () => {
+  /**
+   * detectMechanism returns expected mechanism for each selector/value
+   * combination following priority rules, and same inputs always produce
+   * same output.
+   */
+
   // --- Priority 1: !important ---
   describe('!important (highest priority)', () => {
     it('returns "important" when entry has !important', () => {

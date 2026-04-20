@@ -2,6 +2,10 @@ import { describe, it, expect } from 'vitest';
 import { levenshtein } from '../edit-distance.js';
 
 describe('levenshtein – edit-distance', () => {
+  /**
+   * Property 8 — Identity:
+   * levenshtein(a, b) === 0 if and only if a === b
+   */
   describe('Property 8: Identity', () => {
     it('returns 0 for two empty strings', () => {
       expect(levenshtein('', '')).toBe(0);
@@ -34,6 +38,10 @@ describe('levenshtein – edit-distance', () => {
     });
   });
 
+  /**
+   * Property 9 — Symmetry:
+   * levenshtein(a, b) === levenshtein(b, a)
+   */
   describe('Property 9: Symmetry', () => {
     const pairs: [string, string][] = [
       ['', ''],
@@ -52,6 +60,10 @@ describe('levenshtein – edit-distance', () => {
     }
   });
 
+  /**
+   * Property 10 — Empty string base case:
+   * levenshtein(a, '') === a.length and levenshtein('', a) === a.length
+   */
   describe('Property 10: Empty string base case', () => {
     const strings = ['', 'a', 'ab', 'hello', '--ds-button-enabled-color-bg'];
 
