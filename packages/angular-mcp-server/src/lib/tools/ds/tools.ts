@@ -15,6 +15,7 @@ import {
   diffComponentContractTools,
   listComponentContractsTools,
 } from './component-contract/index.js';
+import { auditTokenUsageTools } from './audit-token-usage/index.js';
 import { getDsStoryDataTools } from './story-parser/index.js';
 
 export const dsTools: ToolsConfig[] = [
@@ -35,4 +36,6 @@ export const dsTools: ToolsConfig[] = [
   ...getDeprecatedCssClassesTools,
   // Story parser tools
   ...getDsStoryDataTools,
+  // Audit tools
+  ...auditTokenUsageTools,
 ];

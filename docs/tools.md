@@ -33,6 +33,26 @@ This document provides comprehensive guidance for AI agents working with Angular
 - With `saveAsFile: true`: File path and statistics (components, files, lines)
 **Best Practice**: Use `saveAsFile: true` to persist results for grouping workflows or large-scale migration planning. The saved file can be used as input for work distribution grouping tools.
 
+#### `report-audit-token-usage`
+**Purpose**: Audits design token usage in style files — validates `var()` references for typos and detects token overrides
+**AI Usage**: Use to identify invalid token references (with suggestions) and find places where tokens are being overridden instead of consumed
+**Key Parameters**:
+- `directory`: Target directory to scan
+- `modes`: `"all"` (default), `["validate"]`, or `["overrides"]`
+- `brandName`: Optional — primary brand context for brand-specific token warnings
+- `tokenPrefix`: Optional — overrides the prefix derived from the token dataset
+- `excludePatterns`: Optional glob pattern(s) to exclude files/directories
+- `saveAsFile`: Optional boolean — persists results to `tmp/.angular-toolkit-mcp/audit-token-usage/`
+**Output**:
+- `validate`: Invalid token references with typo suggestions (Levenshtein distance ≤ 3) and valid references
+- `overrides`: Token re-declarations grouped by mechanism (`host`, `ng-deep`, `class-selector`, `root-theme`, `important`, `unknown`) with optional classification (`legitimate`, `component-override`, `deep-override`, `important-override`, `inline-override`, `scope-violation`)
+- `summary`: Total issue count broken down by mode
+- `diagnostics`: Warnings when modes are skipped or running in degraded state
+**Modes**:
+- `validate` — requires `generatedStylesRoot` to be configured; skipped with diagnostic if unavailable
+- `overrides` — works without token data (detection-only); classification requires `generatedStylesRoot`
+**Best Practice**: Leave `ds.tokens.propertyPrefix` as `null` in config so the tool loads all token prefixes (e.g. both `--semantic-` and `--ds-`) and validates references across all of them. Setting a single prefix limits both validation and override detection to that prefix only.
+
 #### `get-project-dependencies`
 **Purpose**: Analyzes project structure, dependencies, and buildability
 **AI Usage**: Validate project architecture before suggesting refactoring strategies

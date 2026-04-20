@@ -6,7 +6,9 @@ const isRelativePath = (val: string) => !path.isAbsolute(val);
 
 export const TokensConfigSchema = z
   .object({
-    filePattern: z.string().default('**/semantic.css'),
+    filePattern: z
+      .union([z.string(), z.array(z.string())])
+      .default('**/semantic.css'),
     propertyPrefix: z.string().nullable().default(null),
     /**
      * How directory structure under generatedStylesRoot maps to token scope metadata.

@@ -18,16 +18,19 @@
       "path": "../shared/ds-component-coverage/tsconfig.lib.json"
     },
     {
-      "path": "../shared/styles-ast-utils/tsconfig.lib.json"
-    },
-    {
       "path": "../shared/angular-ast-utils/tsconfig.lib.json"
     },
     {
-      "path": "../shared/utils/tsconfig.lib.json"
+      "path": "../shared/styles-ast-utils/tsconfig.lib.json"
+    },
+    {
+      "path": "../shared/typescript-ast-utils/tsconfig.lib.json"
     },
     {
       "path": "../shared/models/tsconfig.lib.json"
+    },
+    {
+      "path": "../shared/utils/tsconfig.lib.json"
     }
   ]
 }
