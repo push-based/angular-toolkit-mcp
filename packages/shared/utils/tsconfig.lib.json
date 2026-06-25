@@ -18,6 +18,9 @@
     },
     {
       "path": "../models/tsconfig.lib.json"
+    },
+    {
+      "path": "../../../testing/utils/tsconfig.lib.json"
     }
   ],
   "exclude": [

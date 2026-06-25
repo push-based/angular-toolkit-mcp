@@ -10,6 +10,9 @@
       "path": "../models"
     },
     {
+      "path": "../../../testing/utils"
+    },
+    {
       "path": "./tsconfig.lib.json"
     },
     {
